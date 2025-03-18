@@ -7,12 +7,13 @@ import { ref, getDownloadURL, uploadBytes, listAll, deleteObject } from "firebas
 import { getAuthenticatedRequest, getAccessToken } from "../utils/authService";
 import "../styles/SharedMaterials.css";
 
-function SharedMaterials() {
+function SharedMaterials( { socket }) {
     const [files, setFiles] = useState([]);
     const [fileModalOpen, setFileModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [roomCode, setRoomCode] = useState(null);
 
+    // Fetch files and setup websocket receiver
     useEffect(() => {
         const fetchFiles = async () => {
             const data = await getAuthenticatedRequest("/shared_materials/", "GET");
@@ -33,7 +34,32 @@ function SharedMaterials() {
         };
 
         fetchFiles();
-    }, [roomCode]);
+
+        // Listen for websocket messages
+        if (socket) {
+            const handleWebSocketMessage = (event) => {
+                const data = JSON.parse(event.data);
+
+                if (data.type === "file_uploaded") {
+                    // Add the new file to the list
+                    setFiles((prevFiles) => [...prevFiles, data.file]);
+                } else if (data.type === "file_deleted") {
+                    // Remove the deleted file from the list
+                    setFiles((prevFiles) => prevFiles.filter(file => file.name !== data.fileName));
+                }
+            };
+
+            socket.addEventListener("message", handleWebSocketMessage);
+
+            // Clean up WebSocket listener on unmount
+            return () => {
+                socket.removeEventListener("message", handleWebSocketMessage);
+            };
+        }
+    }, [roomCode, socket]);
+
+
+    // Code for uploading a file
 
     const handleUploadFile = async (event) => {
         const file = event.target.files[0];
@@ -51,13 +77,25 @@ function SharedMaterials() {
 
         const fileRef = ref(storage, `shared-materials/${roomCode}/${file.name}`);
         try {
+            // Download the file from firebase
             await uploadBytes(fileRef, file);
             const fileUrl = await getDownloadURL(fileRef);
+            const newFile = { name: file.name, url: fileUrl, type: file.type };
 
             setFiles((prevFiles) => [
                 ...prevFiles,
                 { name: file.name, url: fileUrl, type: file.type }
             ]);
+
+            // Notify other users via WebSocket
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                const message = JSON.stringify({
+                    type: "file_uploaded",
+                    file: newFile,
+                });
+                console.log("Sharing a file via websocket! :", message);
+                socket.send(message);
+            }
 
             //clear the previous file to allow same file to be uploaded whilst still triggering onChange
             event.target.value = "";
@@ -69,11 +107,25 @@ function SharedMaterials() {
         }
     }
 
+
+    // Code for deleting a file
+
     const handleDeleteFile = async (fileName) => {
         const fileRef = ref(storage, `shared-materials/${roomCode}/${fileName}`);
         try {
             await deleteObject(fileRef);
             setFiles((prevFiles) => prevFiles.filter(file => file.name !== fileName));
+
+            // Notify other users via WebSocket
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                const message = JSON.stringify({
+                    type: "file_deleted",
+                    fileName: fileName,
+                });
+                console.log("Deleting file via websocket! :", message);
+                socket.send(message);
+            }
+
             toast.success("File Deleted Successfully!");
         } catch (error) {
             toast.error("Error Deleting File");

@@ -93,7 +93,7 @@ function ProfileBox() {
     localStorage.removeItem("user_id");
     localStorage.removeItem("loggedInUser");
     toast.success("Logged out successfully!");
-    navigate("/login");
+    navigate("/");
   };
 
   const handleSaveDescription = async () => {

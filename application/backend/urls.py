@@ -40,7 +40,7 @@ urlpatterns = [
     # Default for logged-in user
     path("api/analytics/", get_analytics, name="analytics"),
     path("api/share_analytics/", update_analytics, name="update_analytics"),
-    
+
     path('api/login/', views.login, name='login'),
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -84,6 +84,6 @@ urlpatterns = [
 
     path('api/shared_materials/', get_current_session, name='get_current_session'),
 
-    path('api/events/', event_list, name='event-list'),  
+    path('api/events/', event_list, name='event-list'),
     path('api/events/<int:pk>/', event_detail, name='event-detail')
 ]

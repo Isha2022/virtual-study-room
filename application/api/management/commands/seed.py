@@ -45,9 +45,7 @@ class Command(BaseCommand):
             call_command('loaddata', 'api/tests/fixtures/default_lists.json')
             call_command('loaddata', 'api/tests/fixtures/default_permissions.json')
             call_command('loaddata', 'api/tests/fixtures/default_list_task.json')
-            
-            call_command('loaddata', 'api/tests/fixtures/default_study_session.json')
-            # call_command('loaddata', 'api/tests/fixtures/default_session_users.json')
+        
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error while seeding database: {e}'))
       
@@ -67,8 +65,7 @@ class Command(BaseCommand):
         self.generate_random_toDoLists()
         self.generate_toDoListUsers()
         self.generate_events()
-        self.generating_study_sessions()
-        self.generating_session_users()
+        
 
     def generate_random_friends(self):
         friends_count = Friends.objects.count()
@@ -306,103 +303,7 @@ class Command(BaseCommand):
                     status=random.choice(['Pending', 'Confirmed', 'Cancelled']),
                 )
         self.stdout.write(self.style.SUCCESS('Successfully seeded events for all users.'))
-
-    """Seeder for Study Sessions"""
-    def generating_study_sessions(self):
-        for x in range(self.SESSION_COUNT):
-            print(f"Seeding study session {x+1}/{self.SESSION_COUNT}", end='\r')
-            self.generate_random_study_session()
-        print("Study Sessions seeding complete!")
-
-    def generate_random_study_session(self):
-        user = choice(User.objects.all())
-        session_name = self.faker.sentence(nb_words=4)
-        start_time = now()
-
-        # Decide if session has ended or is ongoing
-        is_ongoing = randint(0, 1)  # 50% chance of session being ongoing
-        if is_ongoing:
-            end_time = None  # Session is still ongoing
-        else:
-            # Session has ended
-            end_time = start_time + timedelta(hours=randint(1, 5))
-
-        session_date = date.today()
-
-        try:
-            StudySession.objects.create(
-                createdBy=user, 
-                sessionName=session_name, 
-                startTime=start_time, 
-                endTime=end_time, 
-                date=session_date
-            )
-        except Exception as e:
-            print(f"Failed to create study session: {e}")
-    
-    """Seeder for Study Session Users"""
-    def generating_session_users(self):
-        sessions = list(StudySession.objects.all())
-        users = list(User.objects.all())
-        session_user_count = 0
-
-        if not sessions or not users:
-            print("No sessions or no users found. Skipping session user seeding.")
-            return
         
-        #Making sure every session has at least 1 user 
-        for session in sessions:
-            user = choice(users)
-            if user.id < 4:
-                self.create_session_user(user, session)
-                session_user_count += 1
-                if session_user_count >= self.SESSION_USER_COUNT:
-                    return
-        
-        #Add remaining random no. of users to random sessions
-        while session_user_count < self.SESSION_USER_COUNT:
-            user = choice(users)
-            if user.id < 4:
-                session = choice(sessions)
-                self.create_session_user(user, session)
-                session_user_count +=1
-        
-        print("Study Session Users seeding complete!")
-
-    def create_session_user(self, user, session):
-        joined_at_time = now()
-    
-        if session.endTime is None:
-            # Session is ongoing
-            has_left = randint(0, 1)  # 50% chance user has left
-            
-            if has_left:
-                # User left sometime after 1 or 2 hrs
-                left_at_time = joined_at_time + timedelta(hours=randint(1,2))
-            else:
-                # User is still in the session
-                left_at_time = None
-        else:
-            # Session has ended, so all users must have left
-            # User left sometime between joining and session end
-            end_time = session.endTime
-
-            max_duration = (end_time - joined_at_time).total_seconds()
-            random_duration = randint(60, int(max_duration)) if max_duration > 60 else 60
-            left_at_time = joined_at_time + timedelta(seconds=random_duration)
-        try:
-            SessionUser.objects.create(
-                user=user,
-                session=session,
-                status=choice(['FOCUSED', 'CASUAL']),
-                focus_target=self.faker.sentence(nb_words=6) if randint(0, 1) else None,
-                joined_at= joined_at_time,
-                left_at = left_at_time
-            )
-        except Exception as e:
-            print(f"Failed to create session user: {e}")
-        
-
 
     # Helper functions
     def create_username(self, first_name, last_name):

@@ -17,14 +17,15 @@ def get_participants(request):
 
     print("Retrieving participants for the study room", room_code)
 
-    # get the room
-    study_session = StudySession.objects.get(roomCode=room_code)
-    participants = study_session.participants.all()
-    participants_list = [{
-        'username': participant.username,
-    } for participant in participants]
-
     try:
+        # get the room
+        study_session = StudySession.objects.get(roomCode=room_code)
+        participants = study_session.participants.all()
+        participants_list = [{
+            'username': participant.username,
+        } for participant in participants]
+
+
         return Response({"participantsList" : participants_list})
         # returns the room ID as the room code
     except Exception as e:

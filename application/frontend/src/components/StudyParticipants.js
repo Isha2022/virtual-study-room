@@ -14,6 +14,7 @@ const StudyParticipants = () => {
   const [roomCode, setRoomCode] = useState(""); // Ensure that the room code is defined
   const [roomName, setRoomName] = useState("");
   const [participants, setParticipants] = useState([]); // State to store participants
+  const [socket, setSocket] = useState(null);
 
   // Use to navigate to the created room / joined room
   const navigate = useNavigate(); // initialise
@@ -22,36 +23,38 @@ const StudyParticipants = () => {
 
   console.log("The room code is: ", roomCode);
   // Fetch participants when the component mounts or roomCode changes
+
   useEffect(() => {
     if (urlRoomCode) {
       setRoomCode(urlRoomCode); // Set the roomCode state
       fetchParticipants(urlRoomCode);
       fetchUserData();
+      setupWebSocket(urlRoomCode);
+      }
+  }, [urlRoomCode])
 
       // Set up WebSocket connection
-      const socket = new WebSocket(
-        `ws://localhost:8000/ws/room/${urlRoomCode}/`
-      );
+  const setupWebSocket = (roomCode) =>{
+   const socket = new WebSocket(`ws://localhost:8000/ws/room/${roomCode}/`);
 
-      // Listen for participants updates
-      socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.type === "participants_update") {
-          setParticipants(data.participants);
-        }
-      };
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "participants_update") {
+        setParticipants(data.participants);
+      }
+    };
 
-      // Handle WebSocket errors
-      socket.onerror = (error) => {
-        console.error("WebSocket error:", error);
-      };
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
 
-      // Cleanup WebSocket connection on unmount
-      return () => {
-        socket.close();
-      };
-    }
-  }, []);
+    setSocket(socket);
+
+    return () => {
+      socket.close();
+      console.log("Study Participants Websocket is closed")
+    };
+  };
 
   // Function to fetch participants
   const fetchParticipants = async (roomCode) => {

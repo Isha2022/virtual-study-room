@@ -12,10 +12,17 @@ import { getAuthenticatedRequest } from "../utils/authService";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "../styles/ChatBox.css";
-import "react-toastify/dist/ReactToastify.css";
+import 'react-toastify/dist/ReactToastify.css';
+import defaultAvatar from "../assets/avatars/avatar_2.png";
+import { storage } from "../firebase-config";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import SharedMaterials from "./SharedMaterials.js";
 
+
 function GroupStudyPage() {
+
+  const [participants, setParticipants] = useState([]); // State to store participants
+
   // Location object used for state
   const location = useLocation();
   const navigate = useNavigate(); // initialise
@@ -44,71 +51,126 @@ function GroupStudyPage() {
   // for websockets
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
-  //const [input, setInput] = useState("");
 
-  // const [input, setInput] = useState("");
   const [customInput, setCustomInput] = useState(""); // For the customisation box
-  const [chatInput, setChatInput] = useState(""); //Fot chat box
+  const [chatInput, setChatInput] = useState(""); //For chat box
 
-  const [username, setUsername] = useState("ANON_USER"); // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
+  const [username, setUsername] = useState("");
 
   const [isTyping, setIsTyping] = useState(false);
   const [typingUser, setTypingUser] = useState("");
 
+  const [shouldReconnect, setShouldReconnect] = useState(true);  // Determines whether or not to auto-reconnect user to websocket server
+
+
+  // Updates the websocket saved everytime it changes
   useEffect(() => {
-    //Fetches logged in user's username when component mounts
-    //Updates username state with fetched data or defaults to 'anonymous'
-    const fetchUserData = async () => {
-      try {
-        const data = await getAuthenticatedRequest("/profile/", "GET");
-        setUsername(data.username || "Anonymous"); // Fallback in case username is missing
-      } catch (error) {
-        console.error("Error fetching user data", error);
-      }
-    };
-    fetchUserData();
-
-    // Ensure room code is given
-    if (!finalRoomCode) {
-      console.error("Room code is missing.");
-      return;
+    if (socket) {
+        console.log("Socket state updated:", socket);
     }
+  }, [socket]); // This effect runs whenever `socket` changes
 
-    const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
 
-    //Logs when connection is established
-    ws.onopen = () => {
-      console.log("Connected to Websocket");
-      setSocket(ws);
+  useEffect(() => {
+        // Ensure room code is given
+        if (!finalRoomCode) {
+          console.error("Room code is missing.");
+          return;
+        }
+
+        console.log("GroupStudyPage UseEffect is being called now!")
+
+
+        if (finalRoomCode) {
+          // Get the logged in user's data
+          fetchUserData();
+
+
+          // Retrieves the room participants currently in the room when joining
+          // Fetches the data for each user ( username and profile picture from firebase )
+          fetchParticipants(finalRoomCode);
+          }
+
+
+        // If the user disconnects by accident due to a timeout, will auto-reconnect
+        setShouldReconnect(true);
+
+        // Initial connection to the websocket
+        connectWebSocket();
+
+        // Cleanup function to prevent reconnect attempts after the component unmounts
+        return () => {
+            setShouldReconnect(false); // Signal not to reconnect anymore
+            if (socket) {
+                console.log("Closing WebSocket connection on unmount...");
+                socket.close();
+            }
+
     };
+  }, [finalRoomCode, shouldReconnect]);
 
-    //Handles incoming messages.
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === "chat_message") {
-        //if message type is 'chat_message' then add to messages state
-        // Ensure the message is structured as an object with `sender` and `text`
-        setMessages((prev) => [
-          ...prev,
-          { sender: data.sender, text: data.message },
-        ]);
-      } else if (data.type === "typing") {
-        setTypingUser(data.sender);
 
-        // Remove "typing" message after 3 seconds
-        setTimeout(() => {
-          setTypingUser("");
-        }, 3000);
-      }
+// Method for connecting to the websocket
+  const connectWebSocket = () => {
+        // Check if a WebSocket connection already exists, not sure if this actually does anything?
+        if (socket === WebSocket.OPEN) {
+            console.log("Using existing WebSocket connection");
+            return; // Reuse the existing connection
+        }
+
+        const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
+
+        //Logs when connection is established
+        ws.onopen = () => {
+            console.log("Connected to Websocket");
+            setSocket(ws);
+            console.log("socket", ws);
+        };
+
+        //Handles incoming messages.
+        ws.onmessage = async (event) => {
+            const data = JSON.parse(event.data);
+            console.log("Received WebSocket Message:", data);
+            if (data.type === "chat_message") { //if message type is 'chat_message' then add to messages state
+                // Ensure the message is structured as an object with `sender` and `text`
+                console.log("Received message:", data); // Debugging
+                setMessages((prev) => [...prev, { sender: data.sender, text: data.message }]);
+            }
+            if (data.type === "participants_update") {
+                console.log("Re-rendering the participants on the page...")
+                 // Update the participants list
+                // Update the participants list
+                const updatedParticipants = await Promise.all(
+                    data.participants.map(async (username) => {
+                        const imageUrl = await fetchParticipantData(username);
+                        return { username, imageUrl };
+                    })
+                );
+                setParticipants(updatedParticipants);
+            }
+            else if (data.type === "typing") {
+                setTypingUser(data.sender);
+
+                // Remove "typing" message after 3 seconds
+                setTimeout(() => {
+                    setTypingUser("");
+                }, 3000);
+
+            }
+        };
+
+        //Logs when the connection is closed
+        ws.onclose = () => {
+        console.log("Disconnected from WebSocket");
+        if (shouldReconnect) {
+            console.log("Reconnecting");
+            setTimeout(connectWebSocket, 1000); // Attempt to reconnect after 1 seconds
+        }
     };
-
-    ws.onclose = () => console.log("Disconnected from Websocket");
-
     setSocket(ws);
+    };
 
-    return () => ws.close();
-  }, [finalRoomCode, location.state]);
-
+  //Sends chat message through websocket connection
   const sendMessage = () => {
     if (!socket || socket.readyState !== WebSocket.OPEN) {
       console.error("WebSocket not connected.");
@@ -134,6 +196,65 @@ function GroupStudyPage() {
     setChatInput(""); //resets chatinput field after sending message
   };
   // end of websockets stuff
+
+    //Fetches logged in user's username when component mounts
+    //Updates username state with fetched data or defaults to 'anonymous'
+    const fetchUserData = async () => {
+        try {
+            const data = await getAuthenticatedRequest("/profile/", "GET");
+            setUsername(data.username || "Anonymous"); // Fallback in case username is missing
+        } catch (error) {
+            console.error("Error fetching user data", error);
+        }
+    };
+
+  // Function to fetch participants
+  const fetchParticipants = async (roomCode) => {
+    console.log("Fetching participants")
+
+    try {
+      const response = await getAuthenticatedRequest(
+        `/get-participants/?roomCode=${roomCode}`,
+        "GET"
+      );
+      console.log("Participants", response.participantsList);
+
+      // Fetch profile pictures for each participant
+      const participantsWithImages = await Promise.all(
+        response.participantsList.map(async (participant) => {
+          const imageUrl = await fetchParticipantData(participant.username);
+          return { ...participant, imageUrl }; // Add imageUrl to the participant object
+        })
+      );
+
+      setParticipants(participantsWithImages); // Update participants state with image URLs
+    } catch (error) {
+      console.error("Error fetching participants:", error);
+    }
+  };
+
+  // Function to get user profiles
+  const fetchParticipantData = async (username) => {
+    if (!username) {
+        return defaultAvatar; // Return a default avatar if username is undefined
+    }
+    console.log("fetched user data", username)
+
+    try {
+      const data = await getAuthenticatedRequest("/profile/", "GET");
+
+      //fetch profile picture from firebase using user_id
+      const imageRef = ref(storage, `avatars/${username}`);
+      const imageUrl = await getDownloadURL(imageRef).catch(
+        () => defaultAvatar
+      ); //default image if not found
+      return imageUrl; // Return the imageUrl
+    } catch (error) {
+      toast.error("Error fetching user data");
+      return defaultAvatar; // IF there is an error return default avatar
+    }
+  };
+
 
   const handleMouseDown = (btnType) => {
     //when the button is pressed then the variable setIsActive is set to True
@@ -167,7 +288,22 @@ function GroupStudyPage() {
 
   // Method to leave room
   const leaveRoom = useCallback(async () => {
+
+    // User is leaving so they should not reconnect to the room automatically
+    setShouldReconnect(false)
+
     try {
+
+      // Close the WebSocket connection if it exists
+        if (socket) {
+            console.log("Closing WebSocket connection...");
+            socket.close(); // Close the WebSocket connection
+            setSocket(null);
+        }
+        else {
+            console.log("Connection to websocket already terminated.")
+        }
+
       // This stuff gets sent to the backend!
       const response = await getAuthenticatedRequest("/leave-room/", "POST", {
         roomCode: finalRoomCode, // Sends the room name to the backend
@@ -199,24 +335,23 @@ function GroupStudyPage() {
     };
   }, [leaveRoom]);
 
-  const handleCopy = () => {
-    if (finalRoomCode) {
-      navigator.clipboard
-        .writeText(finalRoomCode)
-        .then(() => {
-          toast.success("Code copied to clipboard!", {
-            position: "top-center",
-            autoClose: 1000,
-            closeOnClick: true,
-            pauseOnHover: true,
-          });
-        })
-        .catch((err) => {
-          console.error("Failed to copy: ", err);
-          toast.error("Failed to copy code!");
-        });
-    }
-  };
+    const handleCopy = () => {
+        if (finalRoomCode) {
+            navigator.clipboard.writeText(finalRoomCode)
+                .then(() => {
+                    toast.success("Code copied to clipboard!", {
+                        position: "top-center",
+                        autoClose: 100,
+                        closeOnClick: true,
+                        pauseOnHover: true, 
+                    });
+                })
+                .catch(err => {
+                    console.error("Failed to copy: ", err);
+                    toast.error("Failed to copy code!");
+                });
+        }
+    };
 
   const handleExit = () => {
     navigate("/dashboard");
@@ -266,12 +401,11 @@ function GroupStudyPage() {
             <ToDoList isShared={true} listId={roomList} />
           </div>
         </div>
-
         <div
           className="sharedMaterials-container"
           data-testid="sharedMaterials-container"
         >
-          <SharedMaterials />
+          <SharedMaterials socket = {socket} />
         </div>
       </div>
       {/*2nd Column */}
@@ -279,10 +413,6 @@ function GroupStudyPage() {
         <div className="user-list-container" data-testid="user-list-container">
           <h2 className="heading"> Study Room: {roomName} </h2>
           <h3 className="gs-heading2"> Code: {finalRoomCode}</h3>
-          {/* Debugging messages */}
-          {messages.map((msg, index) => (
-            <p key={index}>{msg}</p>
-          ))}
           <div className="utility-bar" data-testid="utility-bar">
             <button
               type="button"
@@ -327,8 +457,24 @@ function GroupStudyPage() {
             >
               <img src={exitLogo} alt="Exit" />
             </button>
-          </div>
-          <StudyParticipants />
+                  </div>
+                   <div className="users">
+              {/* Dynamically render participants */}
+              {participants.map((participant, index) => (
+                <div key={index} className="user-circle">
+                  <div className="user-image">
+                    <img
+                      src={participant.imageUrl}
+                      alt="profile"
+                      className="user-image"
+                    />
+                  </div>
+                  <div className="user-name">{participant.username}</div>
+                </div>
+              ))}
+            </div>
+          );
+        };
         </div>
         <MotivationalMessage data-testid="motivationalMessage-container" />
       </div>
