@@ -22,7 +22,7 @@ jest.mock('react-toastify', () => {
 });
 
 
-describe('ProfileBox', () => {
+describe('SharedMaterials', () => {
   beforeEach(() => {
     getDownloadURL.mockResolvedValue('https://example.com/avatar.png');
     uploadBytes.mockResolvedValue();

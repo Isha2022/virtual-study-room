@@ -4,8 +4,10 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from ..models import SessionUser, User
+from ..models import SessionUser, User, toDoList
 from ..models.study_session import StudySession
+
+from .to_do_list import ViewToDoList
 
 # for websockets
 from channels.layers import get_channel_layer
@@ -211,6 +213,10 @@ def leave_room(request):
         try:
             session_user = SessionUser.objects.get(user=user, session=study_session)
             session_user.leave_session()
+
+            if (study_session.participants.count() == 0):
+                destroy_room(request, study_session)
+
             return Response({"message": "Left successfully!"})
         except SessionUser.DoesNotExist:
             return Response({"error": "User is not in the session"}, status=404)
@@ -228,4 +234,21 @@ def notify_participants(room_code, participants):
             'participants': [participant.username for participant in participants],
         }
     )
+
+# destroy the room if there are no participants in it
+def destroy_room(request, study_session):
+
+    toDo = ViewToDoList()
+
+    # delete the to do list in the room
+    toDoList = study_session.toDoList.pk
+    if toDoList:
+        toDo.delete_list(request = request, list_id = toDoList)
+    print("to do list deleted")
+    print("session name: ", study_session.sessionName)
+    study_session.delete()
+    print("session deleted")
+
+
+
 

@@ -10,6 +10,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
         self.room_group_name = None
         self.room_code = None
         self.username = None
+        self.list_id = None
 
     # Methods for joining and leaving the study room
 
@@ -43,8 +44,18 @@ class RoomConsumer(AsyncWebsocketConsumer):
     @sync_to_async
     def get_participants(self):
         # Fetch participants from the StudySession model
-        study_session = StudySession.objects.get(roomCode=self.room_code)
+        try:
+            print("Yes")
+            print(StudySession.objects.filter(roomCode=self.room_code))
+            study_session = StudySession.objects.get(roomCode=self.room_code)
+        except StudySession.DoesNotExist:
+            print(f"StudySession with room code {self.room_code} does not exist.")
+            # You can also add some handling logic here, for example:
+            # - Return a message to the user
+            # - Try again or handle the error in a way that doesn't crash the program
+            study_session = None  # Or handle it appropriately
         participants = study_session.participants.all()
+        
         return [participant.username for participant in participants]
 
 
@@ -58,7 +69,44 @@ class RoomConsumer(AsyncWebsocketConsumer):
             }
         )
 
-    # Receive an update
+   # Method to send to-do list updates to all group participants
+    async def broadcast_todo_list(self, text_data):
+        data = json.loads(text_data)
+        message_type = data.get("type")
+
+        if message_type == "add_task":
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "add_task",
+                    "task": data["task"],
+                }
+            )
+        elif message_type == "remove_task":
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "remove_task",
+                    "task_id": data["task_id"],
+                }
+            )
+        elif message_type == "toggle_task":
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "toggle_task",
+                    "task_id": data["task_id"],
+                }
+            )
+            # MAY NOT NEED FUNCTIONALITY TO DELETE LIST, CHECK WITH YULIIA
+        elif message_type == "delete_list":
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "delete_list",
+                    "list_id": data["list_id"],
+                }
+            )
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -89,6 +137,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
                     "sender":data["sender"],
                 }
             )
+
         elif message_type == "file_uploaded":
             # Broadcast the new file to all the users in the study room
             await self.channel_layer.group_send(
@@ -136,6 +185,33 @@ class RoomConsumer(AsyncWebsocketConsumer):
             "sender" : event["sender"],
         }))
 
+
+    # Methods TO SEND SIGNALS for to do list
+    async def add_task(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "add_task",
+            "task": event["task"],
+        }))
+
+    async def remove_task(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "remove_task",
+            "task_id": event["task_id"],
+        }))
+
+    async def toggle_task(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "toggle_task",
+            "task_id": event["task_id"],
+            "is_completed": event["is_completed"],
+        }))
+
+    async def delete_list(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "delete_list",
+            "list_id": event["list_id"],
+        }))
+        
     # Methods for Shared Materials
 
     async def file_uploaded(self, event):
