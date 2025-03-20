@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from api.credentials import REDIRECT_URI, CLIENT_ID, CLIENT_SECRET
 from rest_framework.views import APIView
@@ -81,21 +82,92 @@ class GetAlbumTracks(APIView):
             return Response({"Error": "Failed to fetch album tracks"}, status=response.status_code)
 
         return Response(response.json(), status=status.HTTP_200_OK)
-    
 class GetSpotifyToken(APIView):
-    def get(self, request, format=None):
+    def get(self, request, *args, **kwargs):
         session_id = request.session.session_key
         if not session_id:
             request.session.create()
             session_id = request.session.session_key
-            print(f"New session created: {session_id}")
-        else:
-            print(f"Existing session: {session_id}")
-
+        
         token = SpotifyToken.objects.filter(user=session_id).first()
         if token:
-            print(f"Token found for session_id={session_id}: {token.access_token}")
-            return Response({'access_token': token.access_token}, status=status.HTTP_200_OK)
+            return JsonResponse({'access_token': token.access_token}, safe=False)
         else:
-            print(f"No token found for session_id={session_id}")
-            return Response({'error': 'No token available'}, status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse({'error': 'No token available'}, status=404)
+        
+class CurrentSong(APIView):
+    def get(self, request, format=None):
+        endpoint = "player/currently-playing"
+        spotify_api = Spotify_API()
+        session_id = request.session.session_key
+        response = spotify_api.execute_spotify_api_request(session_id, endpoint)
+        print(response)
+        
+        if 'error' in response or 'item' not in response:
+            return Response({}, status=status.HTTP_200_OK)
+        
+        item = response.get("item")
+        duration = item.get("duration_ms")
+        progress = response.get("progress_ms")
+        album_cover = item.get('album').get('images')[0].get('url')
+        is_playing = response.get('is_playing')
+        song_id = item.get('id')
+
+        artist_string = ""
+
+        for i, artist in enumerate(item.get("artists")):
+            if i > 0:
+                artist_string += ", "
+            name = artist.get("name")
+            artist_string += name
+
+        song = {
+            'title': item.get('name'),
+            'artist': artist_string,
+            'duration': duration,
+            'time': progress,
+            'image_url': album_cover,
+            'is_playing': is_playing,
+            'votes': 0,
+            'id': song_id
+        }
+
+        return Response(song, status=status.HTTP_200_OK)
+    
+class PlaySong(APIView):
+    def put(self, request, format=None):
+        session_id = request.session.session_key
+        print(f"Session ID: {session_id}")
+        spotify_api = Spotify_API()
+        print("Attempting to play song...")
+
+        if not session_id:
+            return Response({"detail": "User session not found."}, status=status.HTTP_403_FORBIDDEN)
+
+        result = spotify_api.play_song(session_id)
+        print(f"Spotify API Response: {result}")  # Debugging output
+
+        if "Error" in result:
+            return Response({"detail": result["Error"]}, status=status.HTTP_403_FORBIDDEN)
+
+        return Response({"detail": "Success"}, status=status.HTTP_204_NO_CONTENT)
+
+class PauseSong(APIView):
+    def put(self, request, format=None):
+        session_id = request.session.session_key
+        print(f"Session ID: {session_id}")
+        spotify_api = Spotify_API()
+        print("Attempting to pause song...")
+
+        if not session_id:
+            return Response({"detail": "User session not found."}, status=status.HTTP_403_FORBIDDEN)
+
+        result = spotify_api.pause_song(session_id)
+        print(f"Spotify API Response: {result}")  # Debugging output
+
+        if "Error" in result:
+            return Response({"detail": result["Error"]}, status=status.HTTP_403_FORBIDDEN)
+
+        return Response({"detail": "Success"}, status=status.HTTP_204_NO_CONTENT)
+    
+

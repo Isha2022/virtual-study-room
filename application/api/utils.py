@@ -5,7 +5,9 @@ from .models.events import Appointments
 from .models.spotify_token import SpotifyToken
 from django.utils import timezone
 from api.credentials import CLIENT_ID, CLIENT_SECRET
-from requests import post, get
+from requests import post, get, put
+
+BASE_URL = "http://api.spotify.com/v1/me/"
 
 class Calendar(HTMLCalendar):
 	def __init__(self, year=None, month=None):
@@ -105,7 +107,7 @@ class Spotify_API():
 		access_token = response.get('access_token')
 		token_type = response.get('token_type')
 		expires_in = response.get('expires_in')
-		refresh_token = response.get('refresh_token')
+
 
 		self.update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
 
@@ -120,6 +122,30 @@ class Spotify_API():
 			return response.json()
 		else:
 			return {'error': 'Failed to fetch data from Spotify', 'status_code': response.status_code}
+		
+
+	def execute_spotify_api_request(self, session_id, endpoint, post_=False, put_=False):
+		tokens = self.get_user_tokens(session_id)
+		headers = {'Content-Type': 'application/json',
+               'Authorization': "Bearer " + tokens.access_token}
+		if post_:
+			post(BASE_URL + endpoint, headers=headers)
+		if put_:
+			put(BASE_URL + endpoint, headers=headers)
+			
+		response = get(BASE_URL + endpoint, {}, headers=headers)
+		try:
+			return response.json()
+		except:
+			return {'Error': 'Issue with request'}
+		
+	def play_song(self, session_id):
+		return self.execute_spotify_api_request(session_id, "player/play", put_=True)
+	
+	def pause_song(self, session_id):
+		return self.execute_spotify_api_request(session_id, "player/pause", put_=True)
+
+
 
 
 	
