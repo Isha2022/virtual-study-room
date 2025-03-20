@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [
     ##"http://127.0.0.1:8000/api", # Localhost IP
     "127.0.0.1",  # Localhost IP
     "https://virtual-study-room-phi.vercel.app", # real website
+    "*"
 ]
 
 
