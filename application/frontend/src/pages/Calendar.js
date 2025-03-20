@@ -143,50 +143,54 @@ const CalendarPage = () => {
             />
 
             {showPopup && (
-                <div className="event-popup">
-                    <div className="popup-content">
-                        <h2 className="eventbutton">Add Event</h2>
-                        <form onSubmit={handleSubmit}>
-                            <div>
-                                <label>Title: </label>
-                                <input
-                                    type="text"
-                                    value={eventTitle}
-                                    onChange={(e) => setEventTitle(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label>Description: </label>
-                                <textarea
-                                    value={eventDescription}
-                                    onChange={(e) => setEventDescription(e.target.value)}
-                                />
-                            </div>
-                            <div>
-                                <label>Start: </label>
-                                <input
-                                    type="datetime-local"
-                                    value={eventStart}
-                                    onChange={(e) => setEventStart(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label>End: </label>
-                                <input
-                                    type="datetime-local"
-                                    value={eventEnd}
-                                    onChange={(e) => setEventEnd(e.target.value)}
-                                />
-                            </div>
-                            <button type="submit">Save Event</button>
-                            <button type="button" onClick={closeAddEventPopup}>
-                                Cancel
-                            </button>
-                        </form>
+            <div className="event-popup">
+                <div className="popup-content">
+                <h2 className="eventbutton">Add Event</h2>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                    <label htmlFor="title">Title:</label>
+                    <input
+                        id="title"
+                        type="text"
+                        value={eventTitle}
+                        onChange={(e) => setEventTitle(e.target.value)}
+                        required
+                    />
                     </div>
+                    <div>
+                    <label htmlFor="description">Description:</label>
+                    <textarea
+                        id="description"
+                        value={eventDescription}
+                        onChange={(e) => setEventDescription(e.target.value)}
+                    />
+                    </div>
+                    <div>
+                    <label htmlFor="start">Start:</label>
+                    <input
+                        id="start"
+                        type="datetime-local"
+                        value={eventStart}
+                        onChange={(e) => setEventStart(e.target.value)}
+                        required
+                    />
+                    </div>
+                    <div>
+                    <label htmlFor="end">End:</label>
+                    <input
+                        id="end"
+                        type="datetime-local"
+                        value={eventEnd}
+                        onChange={(e) => setEventEnd(e.target.value)}
+                    />
+                    </div>
+                    <button type="submit">Save Event</button>
+                    <button type="button" onClick={closeAddEventPopup}>
+                    Cancel
+                    </button>
+                </form>
                 </div>
+            </div>
             )}
 
             {selectedEvent && (

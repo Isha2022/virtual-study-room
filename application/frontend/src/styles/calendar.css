@@ -16,8 +16,6 @@
     overflow: hidden;
     justify-content: center;
     margin: 0;
-    /*height: 100vh; /* Ensures it fits within the viewport */
-    /*width: 100vw; /* Ensures it takes up the full width */
     box-sizing: border-box; /* Ensure padding/border don't increase its size */
     background-color: #F6F0F0;
 }
