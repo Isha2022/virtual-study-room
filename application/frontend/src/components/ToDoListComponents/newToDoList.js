@@ -108,27 +108,25 @@ const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }
         <div className={isFullScreen ? "todo-container full-screen" : "todo-container"}>
             {/* Header */}
             <div className="todo-header">
+                <h3>To-Do Lists</h3>
                 {!isShared ? (
-                    <>
-                        <h3>To-Do Lists</h3>
-                        <div className="header-buttons">
-                            <button onClick={handleAddList} className="btn btn-success btn-sm" aria-label="Add List">
-                                <i className="bi bi-plus-circle"></i>
-                            </button>
-                            <button onClick={toggleFullScreen} className="full-screen-btn">
-                                {isFullScreen ? (
-                                    <>
-                                        <i className="bi bi-box-arrow-in-down"></i> Exit View
-                                    </>
-                                ) : (
-                                    <>
-                                        <i className="bi bi-arrows-fullscreen">View All</i>
-                                    </>
-                                )}
-                            </button>
-                        </div>
-                    </>) : (<></>)
-                }
+                    <div className="header-buttons">
+                        <button onClick={handleAddList} className="btn btn-success btn-sm" aria-label="Add List">
+                            <i className="bi bi-plus-circle"></i>
+                        </button>
+                        <button onClick={toggleFullScreen} className="full-screen-btn">
+                            {isFullScreen ? (
+                                <>
+                                    <i className="bi bi-box-arrow-in-down"></i> Exit View
+                                </>
+                            ) : (
+                                <>
+                                    <i className="bi bi-arrows-fullscreen">View All</i>
+                                </>
+                            )}
+                        </button>
+                    </div>
+                ) : null}
             </div>
             {/* Task list rendering */}
             <div className="todo-list">
