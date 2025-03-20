@@ -371,18 +371,17 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
             </div>
           ) : !isRunning ? (
             <div className="p-4 w-80 min-height flex flex-col bg-[#F0F3FC] timer-handle">
-              <div className="timer-handle mb-2 px-8 mt-2">
-                <h1 className="text-2xl vt323" style={{ color: '#b2b2b2' }}>Study Timer</h1>
-              </div>
-              
               <div className="flex flex-col items-center px-8">
                 <div className="text-2xl mb-4 press-start" style={{ color: '#bac6f1' }}>
                   Set Your Study Timer
                 </div>
                 
-                <div className="w-full space-y-4">
+                <div className="w-full space-y-3">
                   <div className="flex flex-col items-center space-y-2">
-                    <label className="vt323 text-sm" style={{ color: '#d1cbed' }}>Study Time</label>
+                    <label className="input-label" style={{ 
+                      color: '#d1cbed',
+                      fontSize: '20px'
+                    }}>Study Time</label>
                     <div className="flex justify-center gap-4">
                       <input
                         type="number"
@@ -427,7 +426,10 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                   </div>
 
                   <div className="flex flex-col items-center space-y-2">
-                    <label className="vt323 text-sm" style={{ color: '#d1cbed' }}>Break Time</label>
+                    <label className="input-label" style={{ 
+                      color: '#d1cbed',
+                      fontSize: '20px'
+                    }}>Break Time</label>
                     <div className="flex justify-center gap-4">
                       <input
                         type="number"
@@ -471,34 +473,59 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-center">
-                    <label className="vt323 text-sm text-center mb-2" style={{ color: '#d1cbed' }}>Rounds</label>
+                  <div className="flex flex-col items-center" style={{ width: 'auto', position: 'relative' }}>
+                    <label className="input-label" style={{ 
+                      color: '#d1cbed',
+                      fontSize: '20px'
+                    }}>Rounds</label>
                     
-                    <div className="flex flex-row items-center"> 
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0' }}>
                       <input
                         type="number"
                         value={rounds}
                         onChange={(e) => setRounds(parseInt(e.target.value) || 1)}
                         min="1"
                         placeholder="4"
+                        style={{ width: '3rem' }}
                       />
-                      
-                      <span 
-                        className="heart-toggle ml-6"
-                        onClick={() => setPlaySound(!playSound)}
-                        role="button"
-                        aria-label="Toggle sound"
-                      >
-                        {playSound ? '💜' : '🤍'}
-                      </span>
-                      <span className="vt323 text-sm ml-2" style={{ color: '#d1cbed' }}>
-                        Play sound when timer ends
-                      </span>
+                      <div style={{ 
+                        display: 'flex', 
+                        flexDirection: 'row', 
+                        alignItems: 'center',
+                        marginLeft: '0',
+                        position: 'absolute',
+                        left: '5rem'
+                      }}>
+                        <button
+                          onClick={(e) => setPlaySound(!playSound)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontSize: '20px',
+                            padding: '0',
+                            display: 'flex',
+                            alignItems: 'center'
+                          }}
+                        >
+                          {playSound ? '💜' : '🤍'}
+                        </button>
+                        <span className="input-label" style={{ 
+                          color: '#d1cbed',
+                          fontSize: '20px',
+                          marginLeft: '10px',
+                          width: '150px',
+                          lineHeight: '1.2',
+                          textAlign: 'left'
+                        }}>
+                          Play sound when timer ends
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="w-full px-4">
+                <div className="w-full px-4" style={{ marginTop: '10px' }}>
                   <button
                     onClick={startTimer}
                     className="start-timer-button"

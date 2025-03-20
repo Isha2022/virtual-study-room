@@ -23,7 +23,7 @@ jest.mock('@fullcalendar/timegrid', () => () => <div>Mocked TimeGridPlugin</div>
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useLocation: jest.fn().mockReturnValue({ state: { userId: '123' } }),
+  //useLocation: jest.fn().mockReturnValue({ state: { userId: '123' } }),
 }));
 
 describe('CalendarPage Component', () => {

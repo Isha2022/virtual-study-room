@@ -18,8 +18,7 @@ class StudySession(models.Model):
     date = models.DateField(default=datetime.date.today)
     toDoList = models.ForeignKey(List, on_delete=models.CASCADE, null=True, blank=True)
     participants = models.ManyToManyField(User, related_name='study_sessions', blank = True)
-
-
+    
     def generate_room_code(self):
         """To generate an 8-digit room code with uppercase letters and numbers"""
         characters = string.ascii_uppercase + string.digits

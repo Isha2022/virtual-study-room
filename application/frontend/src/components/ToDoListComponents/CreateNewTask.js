@@ -3,7 +3,7 @@ import "../../styles/toDoList/CreateNewTask.css";
 
 import { getAuthenticatedRequest } from "../../utils/authService";
 
-const AddTaskModal = ({ addTaskWindow, setAddTaskWindow, listId, setLists }) => {
+const AddTaskModal = ({ addTaskWindow, setAddTaskWindow, listId, setLists, isShared }) => {
     const [formData, setFormData] = useState({ listId: listId, taskTitle: "", taskContent: "", isCompleted: false });
 
     const handleSubmit = (e) => {
@@ -32,14 +32,17 @@ const AddTaskModal = ({ addTaskWindow, setAddTaskWindow, listId, setLists }) => 
             });
 
             console.log("Task being added to list:", response);
-
-            setLists(prevLists =>
-                prevLists.map(list =>
-                    list.id === listId
-                        ? { ...list, tasks: [...list.tasks, response] }
-                        : list
-                )
-            );
+            
+            
+            if (!isShared) {
+                setLists(prevLists =>
+                    prevLists.map(list =>
+                        list.id === listId
+                            ? { ...list, tasks: [...list.tasks, response] }
+                            : list
+                    )
+                );
+            }
             setAddTaskWindow(false);
             console.log("Task Created:", response);
 
