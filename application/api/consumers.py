@@ -7,6 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import StudySession
 from asgiref.sync import sync_to_async
 
+from asgiref.sync import async_to_sync
+
 class RoomConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -49,7 +51,12 @@ class RoomConsumer(AsyncWebsocketConsumer):
         await self.broadcast_participants()
 
         # disconnect from websocket
-        await self.close(self)
+        await self.close()
+    # def disconnect(self, close_code):
+    #     print(f"User {self.scope['user']} disconnected from {self.room_name}")
+    #     async_to_sync(self.channel_layer.group_discard)(
+    #         self.room_group_name, self.channel_name
+    #     )
 
 
     # Methods for updating the users in the study room for all participants
@@ -57,19 +64,29 @@ class RoomConsumer(AsyncWebsocketConsumer):
     @sync_to_async
     def get_participants(self):
         # Fetch participants from the StudySession model
+        # try:
+        #     print("Yes")
+        #     print(StudySession.objects.filter(roomCode=self.room_code))
+        #     study_session = StudySession.objects.get(roomCode=self.room_code)
+        # except StudySession.DoesNotExist:
+        #     print(f"StudySession with room code {self.room_code} does not exist.")
+        #     # You can also add some handling logic here, for example:
+        #     # - Return a message to the user
+        #     # - Try again or handle the error in a way that doesn't crash the program
+        #     study_session = None  # Or handle it appropriately
+        # participants = study_session.participants.all()
+        
+        # return [participant.username for participant in participants]
+        if not self.study_session:
+            return []  # Return an empty list if study_session is None
+
         try:
-            print("Yes")
-            print(StudySession.objects.filter(roomCode=self.room_code))
             study_session = StudySession.objects.get(roomCode=self.room_code)
+            participants = study_session.participants.all()
+            return [participant.username for participant in participants]
         except StudySession.DoesNotExist:
             print(f"StudySession with room code {self.room_code} does not exist.")
-            # You can also add some handling logic here, for example:
-            # - Return a message to the user
-            # - Try again or handle the error in a way that doesn't crash the program
-            study_session = None  # Or handle it appropriately
-        participants = study_session.participants.all()
-        
-        return [participant.username for participant in participants]
+            return []  # Return an empty list if the StudySession does not exist
 
 
     async def broadcast_participants(self):
@@ -134,6 +151,9 @@ class RoomConsumer(AsyncWebsocketConsumer):
                     "sender": data["sender"],
                 }
             )
+        elif message_type == "update_participants":
+            # Trigger a participants update
+            await self.update_participants()
         elif message_type == "study_update":
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -243,3 +263,14 @@ class RoomConsumer(AsyncWebsocketConsumer):
             }))
         except Exception as e:
             print(f"Error in file_deleted: {e}")
+
+    async def update_participants(self):
+        """Fetch the updated list of participants and broadcast it to the room."""
+        participants = await self.get_participants()
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "participants_update",
+                "participants": participants,
+            }
+        )

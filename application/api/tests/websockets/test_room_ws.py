@@ -1,3 +1,4 @@
+import asyncio
 from channels.testing import WebsocketCommunicator
 from api.consumers import RoomConsumer
 from api.models import StudySession, User
@@ -83,6 +84,11 @@ class RoomConsumerTests(TestCase):
         # Add user to the study session
         await database_sync_to_async(study_session.participants.add)(user)
 
+        # Explicitly trigger a participants update
+        await communicator.send_json_to({
+            "type": "update_participants",
+        })
+        
         # Receive the participants update
         response = await communicator.receive_json_from()
         self.assertEqual(response, {
@@ -113,6 +119,11 @@ class RoomConsumerTests(TestCase):
         user2 = self.user2
         await database_sync_to_async(study_session.participants.add)(user1, user2)
 
+        # Explicitly trigger a participants update
+        await communicator1.send_json_to({
+            "type": "update_participants",
+        })
+
         # Function to wait for the correct message
         async def wait_for_correct_message(communicator, expected_message):
             while True:
@@ -140,19 +151,23 @@ class RoomConsumerTests(TestCase):
 
     async def test_user_leaves_room(self):
         # Create a test StudySession and User
-        study_session = await database_sync_to_async(StudySession.objects.create)(createdBy=self.user,
-                                                                                  sessionName="Test Room")
+        study_session = await database_sync_to_async(StudySession.objects.create)(
+            createdBy=self.user, sessionName="Test Room"
+        )
         user = self.user
         await database_sync_to_async(study_session.participants.add)(user)
 
         # Connect to the WebSocket
         communicator = WebsocketCommunicator(application, f"ws/room/{study_session.roomCode}/")
         connected, _ = await communicator.connect()
-        self.assertTrue(connected)
+        self.assertTrue(connected)  # Verify the connection is successful
 
         # Disconnect the user
         await communicator.disconnect()
-        self.assertFalse(connected)
+
+        # Ensure further communication is not possible after disconnection
+        with self.assertRaises(asyncio.TimeoutError):  
+            await communicator.receive_json_from()  # Expecting it to fail since it's disconnected
 
 
     async def test_invalid_room_code(self):
