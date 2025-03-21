@@ -170,4 +170,18 @@ class PauseSong(APIView):
 
         return Response({"detail": "Success"}, status=status.HTTP_204_NO_CONTENT)
     
+class SkipSong(APIView):
+    def post(self, request, format=None):
+        session_id = request.session.session_key
+        spotify_api = Spotify_API()
+        result = spotify_api.skip_song(session_id)
+        if not session_id:
+            return Response({"detail": "User session not found."}, status=status.HTTP_403_FORBIDDEN)
+        else:
+            if "Error" in result:
+                return Response({"detail": result["Error"]}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"detail": "Success"}, status=status.HTTP_204_NO_CONTENT)
+            
+
+
 

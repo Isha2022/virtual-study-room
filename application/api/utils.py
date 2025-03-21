@@ -144,6 +144,9 @@ class Spotify_API():
 	
 	def pause_song(self, session_id):
 		return self.execute_spotify_api_request(session_id, "player/pause", put_=True)
+	
+	def skip_song(self, session_id):
+		return self.execute_spotify_api_request(session_id, "player/next", put_=True)
 
 
 
