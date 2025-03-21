@@ -23,7 +23,7 @@ export default class MusicPlayer extends Component{
             if (!response.ok) {
                 let data = await response.json().catch(() => ({ detail: "An unknown error occurred." })); // Fallback error message
 
-                if (response.status === 403) {
+                if (response.status === 400) {
                     toast.error("Access denied: You need a Spotify Premium account to use this feature.");
                 } else {
                     toast.error(data.detail || "An error occurred. Please try again.");
@@ -47,7 +47,7 @@ export default class MusicPlayer extends Component{
             if (!response.ok) {
                 let data = await response.json().catch(() => ({ detail: "An unknown error occurred." })); // Fallback error message
 
-                if (response.status === 403) {
+                if (response.status === 400) {
                     toast.error("Access denied: You need a Spotify Premium account to use this feature.");
                 } else {
                     toast.error(data.detail || "An error occurred. Please try again.");
@@ -71,7 +71,7 @@ export default class MusicPlayer extends Component{
             if (!response.ok) {
                 let data = await response.json().catch(() => ({ detail: "An unknown error occurred." })); // Fallback error message
 
-                if (response.status === 403) {
+                if (response.status === 400) {
                     toast.error("Access denied: You need a Spotify Premium account to use this feature.");
                 } else {
                     toast.error(data.detail || "An error occurred. Please try again.");
@@ -82,8 +82,7 @@ export default class MusicPlayer extends Component{
             toast.error("Network error. Please check your connection.");
         }
     }
-
-
+    
     render(){
         const songProgress = (this.props.time / this.props.duration) * 100;
         return (
@@ -107,7 +106,7 @@ export default class MusicPlayer extends Component{
                               }}>
                                 {this.props.is_playing ? <PauseIcon /> : <PlayArrowIcon />}
                             </IconButton>
-                            <IconButton onClick={ () => this.skipSong()}>
+                            <IconButton onClick={() => this.skipSong()}>
                                 <SkipNextIcon/>
                             </IconButton>
                         </div>

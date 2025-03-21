@@ -10,6 +10,7 @@ import re
 from api.models import SpotifyToken
 class AuthURL(APIView):
     def get(self, request, format=True):
+
         scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
         url = Request('GET', 'https://accounts.spotify.com/authorize', params={
             'scope': scopes,
@@ -45,7 +46,7 @@ def spotify_callback(request, format=None):
         request.session.session_key, access_token, token_type, expires_in, refresh_token
     )
 
-    return redirect('http://localhost:3000/musicPlayer')
+    return redirect("http://localhost:3000/")
     
 class IsAuthenticated(APIView):
     def get(self, request, format=None):
@@ -133,54 +134,35 @@ class CurrentSong(APIView):
 
         return Response(song, status=status.HTTP_200_OK)
     
-class PlaySong(APIView):
-    def put(self, request, format=None):
-        session_id = request.session.session_key
-        print(f"Session ID: {session_id}")
-        spotify_api = Spotify_API()
-        print("Attempting to play song...")
-
-        if not session_id:
-            return Response({"detail": "User session not found."}, status=status.HTTP_403_FORBIDDEN)
-
-        result = spotify_api.play_song(session_id)
-        print(f"Spotify API Response: {result}")  # Debugging output
-
-        if "Error" in result:
-            return Response({"detail": result["Error"]}, status=status.HTTP_403_FORBIDDEN)
-
-        return Response({"detail": "Success"}, status=status.HTTP_204_NO_CONTENT)
-
 class PauseSong(APIView):
-    def put(self, request, format=None):
-        session_id = request.session.session_key
-        print(f"Session ID: {session_id}")
+    def put(self, response, format=None):
         spotify_api = Spotify_API()
-        print("Attempting to pause song...")
-
-        if not session_id:
-            return Response({"detail": "User session not found."}, status=status.HTTP_403_FORBIDDEN)
-
-        result = spotify_api.pause_song(session_id)
-        print(f"Spotify API Response: {result}")  # Debugging output
-
-        if "Error" in result:
-            return Response({"detail": result["Error"]}, status=status.HTTP_403_FORBIDDEN)
-
-        return Response({"detail": "Success"}, status=status.HTTP_204_NO_CONTENT)
+        session_id = self.request.session.session_key
+        if self.request.session.session_key:
+            spotify_api.pause_song(session_id)
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        
+        return Response({}, status=status.HTTP_403_FORBIDDEN)
+    
+class PlaySong(APIView):
+    def put(self, response, format=None):
+        spotify_api = Spotify_API()
+        session_id = self.request.session.session_key
+        if self.request.session.session_key:
+            spotify_api.play_song(session_id)
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        
+        return Response({}, status=status.HTTP_403_FORBIDDEN)
     
 class SkipSong(APIView):
     def post(self, request, format=None):
-        session_id = request.session.session_key
+        print("Request method:", request.method)  # Debug logging
+        print("Session ID:", request.session.session_key)  # Debug logging
+
         spotify_api = Spotify_API()
-        result = spotify_api.skip_song(session_id)
-        if not session_id:
-            return Response({"detail": "User session not found."}, status=status.HTTP_403_FORBIDDEN)
+        session_id = request.session.session_key
+        if session_id:
+            spotify_api.skip_song(session_id)
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
         else:
-            if "Error" in result:
-                return Response({"detail": result["Error"]}, status=status.HTTP_403_FORBIDDEN)
-        return Response({"detail": "Success"}, status=status.HTTP_204_NO_CONTENT)
-            
-
-
-
+            return Response({'detail': 'Session not found'}, status=status.HTTP_403_FORBIDDEN)

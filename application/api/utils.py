@@ -7,7 +7,7 @@ from django.utils import timezone
 from api.credentials import CLIENT_ID, CLIENT_SECRET
 from requests import post, get, put
 
-BASE_URL = "http://api.spotify.com/v1/me/"
+BASE_URL = "https://api.spotify.com/v1/me/"
 
 class Calendar(HTMLCalendar):
 	def __init__(self, year=None, month=None):
@@ -132,6 +132,7 @@ class Spotify_API():
 			put(BASE_URL + endpoint, headers=headers)
 			
 		response = get(BASE_URL + endpoint, {}, headers=headers)
+
 		try:
 			return response.json()
 		except:
@@ -144,7 +145,7 @@ class Spotify_API():
 		return self.execute_spotify_api_request(session_id, "player/pause", put_=True)
 	
 	def skip_song(self, session_id):
-		return self.execute_spotify_api_request(session_id, "player/next", put_=True)
+		return self.execute_spotify_api_request(session_id, "player/next", post_=True)
 
 
 

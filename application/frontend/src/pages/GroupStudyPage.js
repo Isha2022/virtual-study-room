@@ -23,8 +23,9 @@ import {
   deleteObject,
 } from "firebase/storage";
 import SharedMaterials from "./SharedMaterials.js";
-import { Dialog, DialogTitle, DialogContent } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
 import SpotifyButton from '../components/SpotifyButton';
+import MusicButton from "../components/MusicButton.js";
 
 function GroupStudyPage() {
   const [participants, setParticipants] = useState([]); // State to store participants
@@ -77,6 +78,13 @@ function GroupStudyPage() {
     toast.dismiss(); 
     setOpen(false);
   };
+
+  const [openMusicButton, setOpenMusicButton] = useState(false);
+  const handleOpenMusicButton = () => {
+      setOpenMusicButton(true);
+      handleClose(true);
+  };
+  const handleCloseMusicButton = () => setOpenMusicButton(false);
 
   // Updates the websocket saved everytime it changes
   useEffect(() => {
@@ -441,10 +449,19 @@ function GroupStudyPage() {
             </button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>
-                  <div style={{ textAlign: 'center' }}>Music Player</div>
+                  <div style={{ textAlign: 'center' }}>Spotify Player</div>
                 </DialogTitle>
                 <DialogContent>
                     <SpotifyButton />
+                    <Button onClick={handleOpenMusicButton}>Switch to Free Tracks</Button>
+                </DialogContent>
+            </Dialog>
+            <Dialog open={openMusicButton} onClose={handleCloseMusicButton}>
+                <DialogTitle>
+                  <div style={{ textAlign: 'center' }}>Free Tracks:</div>
+                </DialogTitle>
+                <DialogContent>
+                    <MusicButton />
                 </DialogContent>
             </Dialog>
             <button

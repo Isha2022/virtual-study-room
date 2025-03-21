@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import MusicPlayer from "./MusicPlayer";
 
 export default class SpotifyButton extends Component {
