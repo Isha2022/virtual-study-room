@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import "../styles/GroupStudyPage.css";
 import MotivationalMessage from "./Motivation";
 import musicLogo from "../assets/music_logo.png";
@@ -33,6 +33,14 @@ function GroupStudyPage() {
 
   // Track the logged-in user
   const [loggedInUser, setLoggedInUser] = useState(null);
+  const chatMessagesRef = useRef(null); // Ref for the chat messages container
+
+  // Function to scroll to the bottom of the chat messages container
+  const scrollToBottom = () => {
+    if (chatMessagesRef.current) {
+      chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
+    }
+  };
 
   const { roomCode, roomName, roomList } = location.state || {
     roomCode: "",
@@ -71,7 +79,8 @@ function GroupStudyPage() {
     if (socket) {
       console.log("Socket state updated:", socket);
     }
-  }, [socket]); // This effect runs whenever `socket` changes
+    scrollToBottom();
+  }, [socket, messages]); // This effect runs whenever `socket` changes
 
   useEffect(() => {
     // Ensure room code is given
@@ -519,9 +528,9 @@ function GroupStudyPage() {
           />
           {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
           {/* Chat Box */}
-          <div className="chatBox-container" data-testid="chatBox-container">
+          <div className="chatBox-container">
             {/* Chat Messages */}
-            <div className="chat-messages">
+            <div className="chat-messages" ref={chatMessagesRef}>
               {messages.map((msg, index) => (
                 <div
                   key={index}
@@ -540,16 +549,18 @@ function GroupStudyPage() {
               )}
             </div>
             {/* Chat Input */}
-            <input
-              value={chatInput}
-              onChange={(e) => {
-                setChatInput(e.target.value);
-                handleTyping();
-              }}
-              onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
-              placeholder="Type a message..."
-            />
-            <button onClick={sendMessage}>Send</button>
+            <div className="input-container">
+              <input
+                  value={chatInput}
+                  onChange={(e) => {
+                    setChatInput(e.target.value);
+                    handleTyping();
+                  }}
+                  onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
+                  placeholder="Type a message..."
+                />
+              <button onClick={sendMessage}>Send</button>
+            </div>
           </div>
         </div>
       </div>
