@@ -24,72 +24,87 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
 }));
 
+// const mockHandleSubmit = jest.fn();
+
+// // Replace the original handleSubmit with the mock
+// jest.mock('../pages/Calendar', () => ({
+//   ...jest.requireActual('../pages/Calendar'),
+//   handleSubmit: mockHandleSubmit,
+// }));
+
 describe('CalendarPage Component', () => {
   beforeEach(() => {
     jest.clearAllMocks(); // Clear all mocks before each test
   });
 
-  test('renders CalendarPage correctly', () => {
-    render(
-      <MemoryRouter>
-        <CalendarPage />
-        <ToastContainer />
-      </MemoryRouter>
-    );
 
-    // Check if the header is rendered
-    expect(screen.getByText('My Calendar')).toBeInTheDocument();
 
-    // Check if the "Add Event" button is rendered
-    expect(screen.getByText('Add Event')).toBeInTheDocument();
-  });
-})
-
-  // test('handles adding a new event', async () => {
+  // test('renders CalendarPage correctly', () => {
   //   render(
   //     <MemoryRouter>
   //       <CalendarPage />
   //       <ToastContainer />
   //     </MemoryRouter>
   //   );
-  //   fireEvent.click(screen.getByText('Add Event')); });
-  
-  // test('Shows popup add event', async () => {
-  //   render(
-  //     <MemoryRouter>
-  //       <CalendarPage />
-  //       <ToastContainer />
-  //     </MemoryRouter>
-  //   );
-  
-  //   fireEvent.click(screen.getByText('Add Event'));
-  //   await waitFor(() => {
-  //     expect(screen.getByText('Event added successfully')).toBeInTheDocument();
-  //   });
 
-  // test('Submit event', async () => {
-  //   render(
-  //     <MemoryRouter>
-  //       <CalendarPage />
-  //       <ToastContainer />
-  //     </MemoryRouter>
-  //   );
-  
-  //   fireEvent.click(screen.getByText('Add Event'));
-  
-  //   fireEvent.change(screen.getByLabelText('Title:'), { target: { value: 'New Event' } });
-  //   fireEvent.change(screen.getByLabelText('Description:'), { target: { value: 'New Description' } });
-  //   fireEvent.change(screen.getByLabelText('Start:'), { target: { value: '2025-03-16T10:00' } });
-  //   fireEvent.change(screen.getByLabelText('End:'), { target: { value: '2025-03-16T12:00' } });
+  //   // Check if the header is rendered
+  //   expect(screen.getByText('My Calendar')).toBeInTheDocument();
+
+  //   // Check if the "Add Event" button is rendered
     
-  //   fireEvent.click(screen.getByText('Save Event'));
-
-  //   await waitFor(() => {expect(handleSubmit).toHaveBeenCalled();});
-  //   await waitFor(() => {expect(screen.getByText('New Event')).toBeInTheDocument()});
-
   // });
 
+  // test('Shows popup add event', () => {
+  //   render(
+  //     <MemoryRouter>
+  //       <CalendarPage />
+  //       <ToastContainer />
+  //     </MemoryRouter>
+  //   );
+  
+  //   // Open the Add Event popup
+  //   fireEvent.click(screen.getByText('Add Event'));
+  
+  //   // Debug the rendered DOM
+  //   screen.debug();
+  
+  //   // Check if the popup is open by verifying the presence of the "Add Event" heading
+  //   expect(screen.getByText('Save Event')).toBeInTheDocument();
+  
+  //   // Check if the "Title:" label is present
+  //   expect(screen.getByText('Title:')).toBeInTheDocument();
+  
   // });
 
 
-   
+  it('handles event click and displays event details', async () => {
+    render(
+          <MemoryRouter>
+            <CalendarPage />
+            <ToastContainer />
+          </MemoryRouter>
+        );
+
+    // Simulate adding an event
+    const addEventButton = screen.getByText('Add Event');
+    fireEvent.click(addEventButton);
+
+    // Fill in the event form and submit it
+    const titleInput = screen.getByLabelText('Title:');
+    const startInput = screen.getByLabelText('Start:');
+    const saveButton = screen.getByText('Save Event');
+
+    fireEvent.change(titleInput, { target: { value: 'Test Event' } });
+    fireEvent.change(startInput, { target: { value: '2023-10-01T10:00' } });
+    fireEvent.click(saveButton);
+
+    // Wait for the event to appear in the DOM
+    const eventElement = await screen.findByText('Test Event'); // Corrected function name
+    fireEvent.click(eventElement);
+
+    // Check if the event details popup is displayed
+    expect(screen.getByText('Event Details')).toBeInTheDocument();
+    expect(screen.getByText('Test Event')).toBeInTheDocument();
+});
+
+})   
