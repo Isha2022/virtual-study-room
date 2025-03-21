@@ -75,15 +75,15 @@ const CalendarPage = () => {
       );
 
       if (response) {
-        toast.success("Event added successfully");
-        closeAddEventPopup();
-        fetchEvents(); // Fetch events again to reload the calendar
+        toast.success("Event added successfully"); 
+        closeAddEventPopup(); 
+        fetchEvents(); // Fetch events again to reload the calendar 
       } else {
         toast.error("Error saving event.");
       }
     } catch (error) {
-      console.error("Error saving event:", error);
-      toast.error("Error connecting to backend.");
+      console.error("Error saving event:", error); 
+      toast.error("Error connecting to backend."); 
     }
   };
 
@@ -94,15 +94,15 @@ const CalendarPage = () => {
   };
 
   const closeAddEventPopup = () => {
-    setShowPopup(false);
+    setShowPopup(false); 
   };
 
   const handleEventClick = (info) => {
-    setSelectedEvent(info.event);
+    setSelectedEvent(info.event); //----------------------------------------
   };
 
   const closePopup = () => {
-    setSelectedEvent(null);
+    setSelectedEvent(null); //-------------------------------------
   };
 
   const today = new Date();
@@ -114,9 +114,9 @@ const CalendarPage = () => {
 
     let backgroundColor = "#BAD7F2";
     if (eventDate < today) {
-      backgroundColor = "#F2BAC9";
+      backgroundColor = "#F2BAC9"; //----------------------------------------------
     } else if (eventDate.getTime() === today.getTime()) {
-      backgroundColor = "#B0F2B4";
+      backgroundColor = "#B0F2B4";  //-----------------------------------------------
     }
 
     return {
