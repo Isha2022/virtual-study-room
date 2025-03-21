@@ -4,6 +4,8 @@
     margin: 20px auto;
     background: white;
     border-radius: 40px;
+    display: flex;
+    flex-direction: column;
 }
 
 .chat-messages {
@@ -17,28 +19,45 @@
     border-radius: 15px;
     border-width: 1px;
     border-color: #BAD7F1;
+    justify-content: flex-end; 
+    /* scroll-behavior: smooth; YES RO NO  */ 
+}
+
+.input-container {
+    display: flex;
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
 }
 
 .chatBox-container input {
-    width: 75%;
-    padding: 8px;
+    width: calc(100% - 80px);
+    padding: 8px 15px;
     border: 1px solid #ccc;
-    background : white;
-    border-radius: 3px;
-    margin-right: 5px;
+    background: white;
     border-radius: 40px;
+    box-sizing: border-box;
 }
 
 .chatBox-container button {
-    width: 20%;
-    padding: 8px;
+    width: 80px;
+    padding: 8px 0;
     background: #BAD7F1;
     color: white;
     border: none;
-    border-radius: 3px;
+    border-radius: 40px;
     cursor: pointer;
     transition: 0.3s;
-    border-radius: 40px;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 900 !important;
+    font-size: 14px !important;
+    text-transform: uppercase !important;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    text-align: center;
 }
 
 .chatBox-container button:hover {
@@ -51,15 +70,16 @@
 }
 .chat-message:last-child {
     border-bottom: none;
+    margin-bottom: 20px;
 }
 
 .current-user {
-    color: #FFC107;
+    /* color: #FFC107; */
     text-align: right;
 }
 
 .other-user {
-    color: gray;
+    /* color: gray; */
     text-align: left;
 }
 
@@ -70,9 +90,14 @@
     padding: 5px 10px;
     margin-top: 5px;
 
-    position: absolute;  /* Fix position */
-    bottom: 0;       /* Position it at the bottom */
-    left: 40%;         /* Align it to the left (adjust as needed) */
-    width: 100%;        /* Ensure it spans across the width */
-    text-align: left;   /* Align text properly */
+    /* Remove position: absolute */
+    /* position: absolute; */
+    /* bottom: 0; */
+    /* left: 40%; */
+    /* width: 100%; */
+    /* text-align: left; */
+
+    /* Add flexbox to keep it at the bottom */
+    align-self: flex-start; /* Align to the left */
+    width: 100%; /* Ensure it spans the width */
 }

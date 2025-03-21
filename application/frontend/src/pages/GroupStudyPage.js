@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import "../styles/GroupStudyPage.css";
 import MotivationalMessage from "./Motivation";
 import musicLogo from "../assets/music_logo.png";
 import customLogo from "../assets/customisation_logo.png";
 import copyLogo from "../assets/copy_logo.png";
 import exitLogo from "../assets/exit_logo.png";
-import ToDoList from "../components/ToDoListComponents/ToDoList";
+import ToDoList from "../components/ToDoListComponents/newToDoList";
 import StudyTimer from "../components/StudyTimer.js";
 import StudyParticipants from "../components/StudyParticipants.js";
 import { getAuthenticatedRequest } from "../utils/authService";
@@ -33,6 +33,14 @@ function GroupStudyPage() {
 
   // Track the logged-in user
   const [loggedInUser, setLoggedInUser] = useState(null);
+  const chatMessagesRef = useRef(null); // Ref for the chat messages container
+
+  // Function to scroll to the bottom of the chat messages container
+  const scrollToBottom = () => {
+    if (chatMessagesRef.current) {
+      chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
+    }
+  };
 
   const { roomCode, roomName, roomList } = location.state || {
     roomCode: "",
@@ -57,21 +65,35 @@ function GroupStudyPage() {
   const [messages, setMessages] = useState([]);
 
   const [customInput, setCustomInput] = useState(""); // For the customisation box
-  const [chatInput, setChatInput] = useState(""); //For chat box
+  const [chatInput, setChatInput] = useState(""); //Fot chat box
 
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState("ANON_USER"); // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
 
   const [isTyping, setIsTyping] = useState(false);
   const [typingUser, setTypingUser] = useState("");
 
   const [shouldReconnect, setShouldReconnect] = useState(true); // Determines whether or not to auto-reconnect user to websocket server
 
+  const stringToColor = (str) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    let color = "#";
+    for (let i = 0; i < 3; i++) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += ("00" + value.toString(16)).slice(-2);
+    }
+    return color;
+  };
+
   // Updates the websocket saved everytime it changes
   useEffect(() => {
     if (socket) {
       console.log("Socket state updated:", socket);
     }
-  }, [socket]); // This effect runs whenever `socket` changes
+    scrollToBottom();
+  }, [socket, messages]); // This effect runs whenever `socket` changes
 
   useEffect(() => {
     // Ensure room code is given
@@ -115,7 +137,8 @@ function GroupStudyPage() {
       return; // Reuse the existing connection
     }
 
-    const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
+    const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`); 
+    // const socket = new WebSocket("wss://studyspot.pythonanywhere.com/ws/room/room_code/");  // Production (deployed backend)
 
     //Logs when connection is established
     ws.onopen = () => {
@@ -227,6 +250,7 @@ function GroupStudyPage() {
       );
 
       setParticipants(participantsWithImages); // Update participants state with image URLs
+      console.log("num Participants", participants);
     } catch (error) {
       console.error("Error fetching participants:", error);
     }
@@ -286,8 +310,6 @@ function GroupStudyPage() {
 
   // Method to leave room
   const leaveRoom = useCallback(async () => {
-    // User is leaving so they should not reconnect to the room automatically
-    setShouldReconnect(false);
 
     try {
       // Close the WebSocket connection if it exists
@@ -299,16 +321,23 @@ function GroupStudyPage() {
         console.log("Connection to websocket already terminated.");
       }
 
-      // This stuff gets sent to the backend!
-      const response = await getAuthenticatedRequest("/leave-room/", "POST", {
-        roomCode: finalRoomCode, // Sends the room name to the backend
-      });
-
-      if (participants.length == 0) {
+      const roomCode = finalRoomCode;
+      const response1 = await getAuthenticatedRequest(
+        `/get-participants/?roomCode=${roomCode}`,
+        "GET"
+      );
+      console.log("Participants", response1.participantsList.length);
+      console.log("num participants: ", participants.length);
+      if (response1.participantsList.length == 1) {
         await deleteFirebaseFiles(finalRoomCode);
         console.log("all firebase files deleted successfully");
       }
       // delete all files associated with this room from firebase
+
+      // This stuff gets sent to the backend!
+      const response = await getAuthenticatedRequest("/leave-room/", "POST", {
+        roomCode: finalRoomCode, // Sends the room name to the backend
+      });
 
       console.log("leaving .. . .");
 
@@ -316,8 +345,10 @@ function GroupStudyPage() {
 
       if (response.status === 200) setIsActiveExit(true);
       // Redirect to the Dashboard
-      navigate("/dashboard/", {});
-      console.log("User has left the room");
+      navigate(`/dashboard/${response.username}`, {
+        state: { userName: response.username },
+      });
+      console.log("User has left the room", response.username);
     } catch (error) {
       console.error("Error leaving room:", error);
     }
@@ -363,7 +394,7 @@ function GroupStudyPage() {
         .then(() => {
           toast.success("Code copied to clipboard!", {
             position: "top-center",
-            autoClose: 100,
+            autoClose: 1000,
             closeOnClick: true,
             pauseOnHover: true,
           });
@@ -401,41 +432,12 @@ function GroupStudyPage() {
   //Third Column: Timer, customisation, chatbox
 
   return (
-    <div
-      className="groupStudyRoom-container"
-      data-testid="groupStudyRoom-container"
-    >
-      {/*1st Column */}
-      <div className="column" role="column" data-testid="column-1">
-        <div className="todo-list-container" data-testid="todo-list-container">
-          <h2 className="todo-heading">
-            To Do:
-            <div className="checkbox-wrapper-5">
-              <div className="check">
-                <input id="check-5" type="checkbox"></input>
-                <label htmlFor="check-5"></label>
-              </div>
-            </div>
-          </h2>
-          <div style={{ flex: 1, width: "100%" }}>
-            {" "}
-            {/* This div takes all available space */}
-            <ToDoList isShared={true} listId={roomList} />
-          </div>
-        </div>
-        <div
-          className="sharedMaterials-container"
-          data-testid="sharedMaterials-container"
-        >
-          <SharedMaterials socket={socket} />
-        </div>
-      </div>
-      {/*2nd Column */}
-      <div className="column" role="column" data-testid="column-2">
-        <div className="user-list-container" data-testid="user-list-container">
-          <h2 className="heading"> Study Room: {roomName} </h2>
-          <h3 className="gs-heading2"> Code: {finalRoomCode}</h3>
-          <div className="utility-bar" data-testid="utility-bar">
+    <>
+      {/* Restructured header */}
+      <div className="study-room-header">
+        <h2 className="heading">Study Room: {roomName}</h2>
+        <div className="header-right-section">
+          <div className="utility-bar">
             <button
               type="button"
               className={`music-button ${isActiveMusic ? "active" : ""}`}
@@ -456,8 +458,6 @@ function GroupStudyPage() {
             >
               <img src={customLogo} alt="Customisation" />
             </button>
-          </div>
-          <div className="utility-bar-2" data-testid="utility-bar-2">
             <button
               type="button"
               className={`copy-button ${isActiveCopy ? "active" : ""}`}
@@ -468,7 +468,6 @@ function GroupStudyPage() {
             >
               <img src={copyLogo} alt="Copy" />
             </button>
-            <ToastContainer />
             <button
               type="button"
               className={`exit-button ${isActiveExit ? "active" : ""}`}
@@ -480,69 +479,115 @@ function GroupStudyPage() {
               <img src={exitLogo} alt="Exit" />
             </button>
           </div>
-          <div className="users">
-            {/* Dynamically render participants */}
-            {participants.map((participant, index) => (
-              <div key={index} className="user-circle">
-                <div className="user-image">
-                  <img
-                    src={participant.imageUrl}
-                    alt="profile"
-                    className="user-image"
-                  />
-                </div>
-                <div className="user-name">{participant.username}</div>
-              </div>
-            ))}
-          </div>
+          <h3 className="gs-heading2">Code: {finalRoomCode}</h3>
         </div>
-        <MotivationalMessage data-testid="motivationalMessage-container" />
       </div>
-      {/*3rd Column */}
-      <div className="column" role="column" data-testid="column-3">
-        {/* StudyTimer replaces the timer-container div */}
-        <StudyTimer
-          roomId={finalRoomCode}
-          isHost={true}
-          onClose={() => console.log("Timer closed")}
-          data-testid="studyTimer-container"
-        />
-        {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
-        {/* Chat Box */}
-        <div className="chatBox-container" data-testid="chatBox-container">
-          {/* Chat Messages */}
-          <div className="chat-messages">
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`chat-message ${
-                  msg.sender === username ? "current-user" : "other-user"
-                }`}
-              >
-                <strong>{msg.sender}:</strong> {msg.text}
-              </div>
-            ))}
-            {typingUser && (
-              <p className="typing-indicator">
-                {" "}
-                <strong>{typingUser}</strong> is typing...
-              </p>
-            )}
-          </div>
-          {/* Chat Input */}
-          <input
-            value={chatInput}
-            onChange={(e) => {
-              setChatInput(e.target.value);
-              handleTyping();
-            }}
-            onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
-            placeholder="Type a message..."
+
+      {/*End of header */}
+      <div
+        className="groupStudyRoom-container"
+        data-testid="groupStudyRoom-container"
+      >
+        {/*1st Column */}
+        <div className="column" role="column" data-testid="column-1">
+          <ToDoList
+            isShared={true}
+            listId={roomList}
+            socket={socket}
+            roomCode={roomCode}
           />
-          <button onClick={sendMessage}>Send</button>
+
+          <div
+            className="sharedMaterials-container"
+            data-testid="sharedMaterials-container"
+          >
+            <SharedMaterials socket={socket} />
+          </div>
+        </div>
+        {/*2nd Column */}
+        <div className="column" role="column" data-testid="column-2">
+          <div
+            className="user-list-container"
+            data-testid="user-list-container"
+          >
+            <div className="users">
+              {/* Dynamically render participants */}
+              {participants.map((participant, index) => (
+                <div key={index} className="user-circle">
+                  <div className="user-image">
+                    <img
+                      src={participant.imageUrl}
+                      alt="profile"
+                      className="user-image"
+                    />
+                  </div>
+
+                  <div className="user-name">{participant.username}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <MotivationalMessage data-testid="motivationalMessage-container" />
+        </div>
+        {/*3rd Column */}
+        <div className="column" role="column" data-testid="column-3">
+          {/* StudyTimer replaces the timer-container div */}
+          <StudyTimer
+            roomId={finalRoomCode}
+            isHost={true}
+            onClose={() => console.log("Timer closed")}
+            data-testid="studyTimer-container"
+          />
+          {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
+          {/* Chat Box */}
+          <div className="chatBox-container">
+            {/* Chat Messages */}
+            <div className="chat-messages" ref={chatMessagesRef}>
+              {messages.map((msg, index) => {
+                const userColor = stringToColor(msg.sender); // Generate color for the sender
+                const isSameUserAsPrevious =
+                  index > 0 && messages[index - 1].sender === msg.sender;
+
+                return  (
+                  <div
+                    key={index}
+                    className={`chat-message ${
+                      msg.sender === username ? "current-user" : "other-user"
+                    }`}
+                    style={{ 
+                      color: userColor,
+                      borderBottom: isSameUserAsPrevious ? "none" : "1px dotted #eee", // Conditionally apply border
+                    }}
+                  >
+                    <strong>{msg.sender}:</strong> {msg.text}
+                  </div>
+                );
+              })}
+              {typingUser && typingUser !== username && (
+                <p className="typing-indicator">
+                  {" "}
+                  <strong>{typingUser}</strong> is typing...
+                </p>
+              )}
+            </div>
+            {/* Chat Input */}
+            <div className="input-container">
+              <input
+                  value={chatInput}
+                  onChange={(e) => {
+                    setChatInput(e.target.value);
+                    handleTyping();
+                  }}
+                  onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
+                  placeholder="Type a message..."
+                />
+              <button onClick={sendMessage}>Send</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+      <ToastContainer />
+    </>
   );
 }
 

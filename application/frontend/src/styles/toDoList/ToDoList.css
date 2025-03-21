@@ -6,16 +6,16 @@
     overflow: hidden;
     align-items: center;
     justify-content: center;
-    height: 50vh;
+    height: 80vh;
     width: 22vw;
     margin: 1%;
     background-color: #fff;
     border-radius: 30px;
     box-sizing: border-box;
     overflow: hidden;
-    overflow-x: scroll;
-    scrollbar-width: thin;
-    scrollbar-color: #888 #f1f1f1;
+    overflow-x: hidden;
+    scrollbar-width: thick;
+    scrollbar-color: #BAD7F2;
     padding: 20px;
     padding-top: 40px;
 }
@@ -63,17 +63,14 @@
     display: flex;
     flex-direction: row;
     /* Arrange lists in a horizontal row */
-    gap: 5px;
+    gap: 10px;
     /* Space between lists */
-    max-width: 100%;
-    min-width: 100%;
-
-    min-height: 100%;
-    max-height: 100%;
-    /* Leaves space for header */
-    overflow-x: unset;
-    padding: auto;
-    ;
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
+    padding: 20px 0;
+    /* Adjust padding for spacing */
+    width: 100%;
+    /* Ensure it takes full available width */
 }
 
 .todo-list h4 {
@@ -89,13 +86,14 @@
     min-height: 80%;
     max-height: 80%;
     /* Set a fixed width for each list */
-    min-width: 85%;
-    max-width: 85%;
+    min-width: 250px;
+    /* Adjust this to control the size of each list */
+    max-width: 250px;
+    /* Adjust this to control the size of each list */
     margin: 2%;
-    ;
-    /* Prevents lists from shrinking */
     display: flex;
     flex-direction: column;
+    /* Prevents lists from shrinking */
 }
 
 /* Header for Each To-Do List */
@@ -119,7 +117,28 @@
     overflow-y: auto;
     padding: 0;
     margin: 0;
-    /* Keep tasks in a vertical column */
+}
+
+.todo-list::-webkit-scrollbar {
+    height: 8px;
+    /* Scrollbar height */
+}
+
+.todo-list::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 5px;
+}
+
+.todo-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Adjust the spacing between lists for mobile */
+@media (max-width: 768px) {
+    .todo-list {
+        flex-direction: column;
+        gap: 15px;
+    }
 }
 
 .task {

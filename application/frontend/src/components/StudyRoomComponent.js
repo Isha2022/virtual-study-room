@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import GroupStudyRoom from "../pages/GroupStudyPage";
+import GroupStudyRoom from '../pages/GroupStudyPage';
 import { getAuthenticatedRequest } from "../utils/authService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import "../styles/StudyRoomComponent.css";
+import "../styles/Dashboard.css";
+import generate from "../assets/generate.PNG";
 
 const StudyRoomComponent = () => {
   // Web socket handling
@@ -35,16 +37,13 @@ const StudyRoomComponent = () => {
       console.log("Joining .. . .");
 
       navigate(`/group-study/${response.roomCode}`, {
-        state: {
-          roomCode: response.roomCode,
-          roomName: roomName,
-          roomList: response.roomList,
-        },
+        state: { roomCode: response.roomCode, roomName: roomName, roomList: response.roomList },
       });
     } catch (error) {
       console.error("Error creating room: ", error);
     }
   };
+
 
   // Methods to join room
   const joinRoom = async () => {
@@ -66,11 +65,7 @@ const StudyRoomComponent = () => {
       if (response.status === 200) setJoined(true);
       // Redirect to the Group Study Room page with the roomCode
       navigate(`/group-study/${roomCode}`, {
-        state: {
-          roomCode: roomCode,
-          roomName: response1.sessionName,
-          roomList: response1.roomList,
-        },
+        state: { roomCode: roomCode, roomName: response1.sessionName, roomList: response1.roomList },
       });
       console.log("User has joined the room");
     } catch (error) {
@@ -80,34 +75,41 @@ const StudyRoomComponent = () => {
 
   return (
     <div className="dashboard-panel">
+      <h2>  Study Room </h2>
       <div>
         {!joined ? (
           <>
-            {/* To create a study room, text field to enter a room name ( NOT CODE, code is auto generated ) */}
-            <div className="input-group">
-              <input
-                type="text"
-                placeholder="I want to study..."
-                value={roomName}
-                onChange={(e) => setRoomName(e.target.value)}
-              />
-              <button className="gsr" onClick={createRoom}>
-                Create Room
-              </button>
-            </div>
+          <div className="generate-panel">
+              <img src={generate} alt="generate" className="generate-image" />
 
-            {/* For joining the room, there is also a text input for the room code"*/}
-            <div className="input-group">
-              <input
-                type="text"
-                placeholder="Room Code... "
-                value={roomCode}
-                onChange={(e) => setRoomCode(e.target.value)}
-              />
-              <button className="gsr" onClick={joinRoom}>
-                Join Room
-              </button>
-            </div>
+              <div className="input-panel">
+                {/* To create a study room, text field to enter a room name ( NOT CODE, code is auto generated ) */}
+                <div className="input-group">
+                  <input
+                    type="text"
+                    placeholder="I want to study..."
+                    value={roomName}
+                    onChange={(e) => setRoomName(e.target.value)}
+                  />
+                  <button className="gsr" onClick={createRoom}>
+                    Create Room
+                  </button>
+                </div>
+
+                {/* For joining the room, there is also a text input for the room code"*/}
+                <div className="input-group">
+                  <input
+                    type="text"
+                    placeholder="Room Code... "
+                    value={roomCode}
+                    onChange={(e) => setRoomCode(e.target.value)}
+                  />
+                  <button className="gsr" onClick={joinRoom}>
+                    Join Room
+                  </button>
+                </div>
+              </div>
+          </div>
           </>
         ) : (
           <GroupStudyRoom roomCode={roomCode} />
