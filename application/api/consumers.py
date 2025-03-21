@@ -4,7 +4,7 @@ import json
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import StudySession
+from .models import StudySession, User
 from asgiref.sync import sync_to_async
 
 from asgiref.sync import async_to_sync
@@ -40,7 +40,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         # Fetch and broadcast the updated participants list
-        await self.broadcast_participants()
+        await self.update_participants()
 
 
     async def disconnect(self, close_code):
@@ -48,15 +48,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
         # Fetch and broadcast the updated participants list
-        await self.broadcast_participants()
-
-        # disconnect from websocket
-        await self.close()
-    # def disconnect(self, close_code):
-    #     print(f"User {self.scope['user']} disconnected from {self.room_name}")
-    #     async_to_sync(self.channel_layer.group_discard)(
-    #         self.room_group_name, self.channel_name
-    #     )
+        await self.update_participants()
 
 
     # Methods for updating the users in the study room for all participants
@@ -88,16 +80,6 @@ class RoomConsumer(AsyncWebsocketConsumer):
             print(f"StudySession with room code {self.room_code} does not exist.")
             return []  # Return an empty list if the StudySession does not exist
 
-
-    async def broadcast_participants(self):
-        participants = await self.get_participants()
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                "type": "participants_update",
-                "participants": participants,
-            }
-        )
 
    # Method to send to-do list updates to all group participants
     async def broadcast_todo_list(self, text_data):

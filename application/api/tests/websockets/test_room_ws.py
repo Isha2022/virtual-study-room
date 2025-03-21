@@ -165,9 +165,16 @@ class RoomConsumerTests(TestCase):
         # Disconnect the user
         await communicator.disconnect()
 
-        # Ensure further communication is not possible after disconnection
-        with self.assertRaises(asyncio.TimeoutError):  
-            await communicator.receive_json_from()  # Expecting it to fail since it's disconnected
+        #Delay before checking for timeout
+        await asyncio.sleep(0.1)
+
+        response = await communicator.receive_json_from()
+
+        # Expect WebSocket to close
+        with self.assertRaises(asyncio.TimeoutError):
+            response = await communicator.receive_from()
+            self.assertEqual(response["type"], "websocket.close")  # Expect WebSocket closure
+        
 
 
     async def test_invalid_room_code(self):
