@@ -144,9 +144,17 @@ const CalendarPage = () => {
         initialView="timeGridWeek"
         events={processedEvents}
         headerToolbar={{
-          left: "prev,today,next",
-          center: "title",
-          right: "addEventButton,timeGridWeek,dayGridMonth,dayGridYear",
+          left: `
+            <button aria-label="prev" id="prev-button">Prev</button>
+            <button aria-label="today" id="today-button">Today</button>
+            <button aria-label="next" id="next-button">Next</button>
+          `,
+          center: 'title',
+          right: `
+            <button aria-label="add-event">Add Event</button>
+            <button aria-label="week-view">Week View</button>
+            <button aria-label="month-view">Month View</button>
+          `
         }}
         customButtons={{
           addEventButton: {
@@ -167,8 +175,9 @@ const CalendarPage = () => {
             <h2>Add Event</h2>
             <form onSubmit={handleSubmit}>
               <div>
-                <label>Title:</label>
+                <label htmlFor="eventTitle">Title:</label>
                 <input
+                  id="eventTitle"
                   type="text"
                   value={eventTitle}
                   onChange={(e) => setEventTitle(e.target.value)}
@@ -176,15 +185,17 @@ const CalendarPage = () => {
                 />
               </div>
               <div>
-                <label>Description:</label>
+                <label htmlFor="eventDescription">Description:</label>
                 <textarea
+                  id="eventDescription"
                   value={eventDescription}
                   onChange={(e) => setEventDescription(e.target.value)}
                 />
               </div>
               <div>
-                <label>Start:</label>
+                <label htmlFor="eventStart">Start:</label>
                 <input
+                  id="eventStart"
                   type="datetime-local"
                   value={eventStart}
                   onChange={(e) => setEventStart(e.target.value)}
@@ -192,8 +203,9 @@ const CalendarPage = () => {
                 />
               </div>
               <div>
-                <label>End:</label>
+                <label htmlFor="eventEnd">End:</label>
                 <input
+                  id="eventEnd"
                   type="datetime-local"
                   value={eventEnd}
                   onChange={(e) => setEventEnd(e.target.value)}
