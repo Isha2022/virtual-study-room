@@ -532,7 +532,7 @@ function GroupStudyPage() {
                   <strong>{msg.sender}:</strong> {msg.text}
                 </div>
               ))}
-              {typingUser && (
+              {typingUser && typingUser !== username && (
                 <p className="typing-indicator">
                   {" "}
                   <strong>{typingUser}</strong> is typing...
