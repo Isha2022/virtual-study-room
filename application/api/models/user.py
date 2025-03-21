@@ -34,15 +34,16 @@ class UserManager(BaseUserManager):
             if not password:
                 raise ValueError("Password must be set")
             
-            email = self.normalize_email(email) #Normalises email by lowercasing the domain part
+            ''' Normalises email by lowercasing the domain part '''
+            email = self.normalize_email(email) 
             user = self.model(email=email, username=username, firstname=firstname, lastname=lastname, description=description, **extra_fields)
-            user.set_password(password)         #Automatically hashes password before saving
+            ''' Automatically hashes password before saving '''
+            user.set_password(password)         
             user.save(using=self._db)
             return user
     
 
 class User(AbstractBaseUser, PermissionsMixin):
-    #user_id = models.AutoField(primary_key=True)
     firstname = models.CharField(max_length=50, blank=False)
     lastname = models.CharField(max_length=50, blank=False)
     email = models.EmailField(max_length=100, unique=True, blank=False)
@@ -56,7 +57,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     hours_studied = models.IntegerField(default=0)
     streaks = models.IntegerField(default=0)
     share_analytics = models.BooleanField(default=False)
-    description = models.TextField(blank=True, default="")  #Text field that can be blank
+    ''' description can be left blank '''
+    description = models.TextField(blank=True, default="") 
     total_sessions = models.IntegerField(default=0)
     #profile_id = models.CharField(max_length=255, blank=True, null=True)  #For Firebase storage reference for image - if still needed
 
@@ -65,9 +67,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)   # Required for admin access
     is_superuser = models.BooleanField(default=False)  # Required for superuser privileges
     
+    ''' Uses UserManager as custom manager '''
     objects = UserManager()     #Uses UserManager as custom manager
 
-    USERNAME_FIELD = 'email'    #Uses email instead of username for authentication i.e. for login
+    ''' Uses email instead of username for authentication i.e. for login '''
+    USERNAME_FIELD = 'email'    
     REQUIRED_FIELDS = ['firstname', 'lastname', 'username']
 
     def __str__(self):
@@ -75,7 +79,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def full_name(self):
         """Return a string containing the user's full name."""
-
         return f'{self.firstname} {self.lastname}'
 
     @staticmethod

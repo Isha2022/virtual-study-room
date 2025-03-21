@@ -5,14 +5,17 @@ from .user import User
 from .study_session import StudySession
 from django.db import connection
 
-class SessionUser(models.Model):
-    """
+"""
     Represents a user's participation in a study session, tracking a range of session-specific information.
-    """
-    # Foreign keys
+"""
+
+class SessionUser(models.Model):
+    ''' Foreign keys from other models to store which user is in which session '''
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='session_users')
     session = models.ForeignKey(StudySession, on_delete=models.CASCADE, related_name='session_users')
-    # Track which join this is (first join = 1, second = 2, etc.)
+
+    ''' COME BACK TO THIS!!!!! - AGRIMA '''
+     # Track which join this is (first join = 1, second = 2, etc.)
     join_sequence = models.PositiveIntegerField(default=1)
     # Current status in the session - determines availability and focus state
     status = models.CharField(
@@ -25,7 +28,8 @@ class SessionUser(models.Model):
     )
     # What specific thing the user is currently working on
     focus_target = models.CharField(max_length=255, null=True, blank=True)
-    # When the user joined and left the session
+   
+    ''' Tracking when the user joined and left the session '''
     joined_at = models.DateTimeField(default=now)
     left_at = models.DateTimeField(null=True, blank=True)
 
