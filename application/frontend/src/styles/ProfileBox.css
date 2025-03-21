@@ -63,6 +63,14 @@
   align-items: center;
 }
 
+.profile-popup-container {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  align-items: center;
+  gap: 15px; /* Space between buttons and avatar selector */
+  width: 100%;
+}
+
 .upload-button {
   border-radius: 20px;
   border: none;
@@ -93,6 +101,14 @@
   min-width: 120px;
 }
 
+.avatar-selector {
+  width: 100%; /* Take full width of the container */
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
 .upload-button,
 .default-select-button,
 .save-desc-button,
@@ -109,6 +125,7 @@
   text-align: center;
   resize: none;
   width: 90%;
+  min-height: 120px;
   color: black;
   font-weight: 600;
   font-family: "Inter", sans-serif;
@@ -153,7 +170,7 @@
   font-size: 15px;
 }
 
-.modal,
+.modal-profile,
 .inventory-content {
   display: flex;
   justify-content: center;
@@ -168,11 +185,12 @@
   z-index: 2000; /*ensures it is on top of dashboard heading*/
 }
 
-.modal-content {
+.modal-content-profile {
   margin: auto;
   padding: 20px;
   border: 5px solid #f2bac9;
-  width: 80%;
+  background-color: white;
+  width: 50%;
   border-radius: 20px;
   display: flex;
   justify-content: center;
@@ -243,7 +261,7 @@
 .inventory-align {
   display: flex;
   justify-content: center;
-  gap: 50px;
+  gap: 20px;
   width: 100%;
 }
 
