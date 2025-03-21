@@ -20,6 +20,7 @@
     border-width: 1px;
     border-color: #BAD7F1;
     justify-content: flex-end; 
+    /* scroll-behavior: smooth; YES RO NO  */ 
 }
 
 .input-container {
@@ -73,12 +74,12 @@
 }
 
 .current-user {
-    color: #FFC107;
+    /* color: #FFC107; */
     text-align: right;
 }
 
 .other-user {
-    color: gray;
+    /* color: gray; */
     text-align: left;
 }
 

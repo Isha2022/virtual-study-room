@@ -74,6 +74,19 @@ function GroupStudyPage() {
 
   const [shouldReconnect, setShouldReconnect] = useState(true); // Determines whether or not to auto-reconnect user to websocket server
 
+  const stringToColor = (str) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    let color = "#";
+    for (let i = 0; i < 3; i++) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += ("00" + value.toString(16)).slice(-2);
+    }
+    return color;
+  };
+
   // Updates the websocket saved everytime it changes
   useEffect(() => {
     if (socket) {
@@ -530,16 +543,26 @@ function GroupStudyPage() {
           <div className="chatBox-container">
             {/* Chat Messages */}
             <div className="chat-messages" ref={chatMessagesRef}>
-              {messages.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`chat-message ${
-                    msg.sender === username ? "current-user" : "other-user"
-                  }`}
-                >
-                  <strong>{msg.sender}:</strong> {msg.text}
-                </div>
-              ))}
+              {messages.map((msg, index) => {
+                const userColor = stringToColor(msg.sender); // Generate color for the sender
+                const isSameUserAsPrevious =
+                  index > 0 && messages[index - 1].sender === msg.sender;
+
+                return  (
+                  <div
+                    key={index}
+                    className={`chat-message ${
+                      msg.sender === username ? "current-user" : "other-user"
+                    }`}
+                    style={{ 
+                      color: userColor,
+                      borderBottom: isSameUserAsPrevious ? "none" : "1px dotted #eee", // Conditionally apply border
+                    }}
+                  >
+                    <strong>{msg.sender}:</strong> {msg.text}
+                  </div>
+                );
+              })}
               {typingUser && typingUser !== username && (
                 <p className="typing-indicator">
                   {" "}
