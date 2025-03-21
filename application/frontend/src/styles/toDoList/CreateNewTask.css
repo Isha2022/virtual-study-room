@@ -1,11 +1,12 @@
-/* Modal Overlay Styles */
+/* Modal Overlay Styles - Dreamy translucent effect */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(180, 180, 220, 0.4);
+    backdrop-filter: blur(5px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,31 +14,87 @@
 }
 
 .modal-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(233, 233, 255, 0.9));
+    backdrop-filter: blur(8px);
+    padding: 30px;
+    border-radius: 20px;
     width: 100%;
     max-width: 500px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 
+        0 10px 25px rgba(158, 171, 251, 0.3),
+        0 0 30px rgba(207, 200, 255, 0.2),
+        inset 0 0 20px rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Decorative elements */
+.modal-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(174, 171, 252, 0.2) 0%, transparent 25%),
+        radial-gradient(circle at 80% 60%, rgba(207, 200, 255, 0.2) 0%, transparent 30%);
+    z-index: -1;
+}
+
+/* Sparkle effects */
+.modal-content::after {
+    content: "✧ ✦ ✧";
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    font-size: 12px;
+    color: rgba(142, 153, 227, 0.6);
+    letter-spacing: 3px;
 }
 
 .modal-content h4 {
-    margin-bottom: 20px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    color: #9e8fef;
+    margin-bottom: 25px;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+    position: relative;
+    padding-bottom: 12px;
 }
 
-/* Input and Checkbox */
+.modal-content h4::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, rgba(174, 171, 252, 0.6), transparent);
+}
+
+/* Input and Textarea */
 .newTask input[type="text"],
-.newTask input[type="checkbox"] {
+.newTask textarea {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(207, 200, 255, 0.6);
+    border-radius: 12px;
     font-size: 14px;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: inset 0 1px 4px rgba(174, 171, 252, 0.2);
+    transition: all 0.3s ease;
 }
 
-.newTask input[type="text"]:focus {
-    border-color: #4CAF50;
+.newTask input[type="text"]:focus,
+.newTask textarea:focus {
+    border-color: #aeabfc;
+    box-shadow: 0 0 10px rgba(174, 171, 252, 0.3);
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 /* Checkbox Styling */
@@ -45,36 +102,160 @@
     width: 20px;
     height: 20px;
     margin-right: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    accent-color: #aeabfc;
 }
 
 task-span {
     font-size: 14px;
     margin-left: 10px;
+    color: #7a7a9a;
 }
 
 /* Buttons */
 .btn {
-    padding: 8px 12px;
-    border-radius: 5px;
+    padding: 10px 18px;
+    border-radius: 15px;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
+    border: none;
+    margin: 0 5px;
+    background-color: #f0f0f7;
+    box-shadow: 
+        0 3px 8px rgba(142, 153, 227, 0.3),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.05);
 }
 
 .btn-primary {
-    background-color: #4CAF50;
+    background: linear-gradient(135deg, #aeabfc 0%, #cfc8ff 100%);
     color: #fff;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary:hover {
-    background-color: #45a049;
+    background: linear-gradient(135deg, #cfc8ff 0%, #aeabfc 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 5px 12px rgba(142, 153, 227, 0.4),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.05);
 }
 
 .btn-secondary {
-    background-color: #ddd;
-    color: #333;
+    background: linear-gradient(135deg, #f0f0f7 0%, #e6e6f0 100%);
+    color: #8e8ea9;
 }
 
 .btn-secondary:hover {
-    background-color: #ccc;
+    background: linear-gradient(135deg, #e6e6f0 0%, #f0f0f7 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 5px 12px rgba(142, 153, 227, 0.2),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.05);
+}
+
+.btn:active {
+    transform: translateY(1px);
+    box-shadow: 
+        0 2px 5px rgba(142, 153, 227, 0.2),
+        inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom Bin/Delete Button - Glass Effect */
+button[aria-label="Delete Task"],
+button[aria-label="Delete List"],
+.delete-button {
+    height: 35px !important;
+    width: 35px !important;
+    min-width: 35px !important;
+    max-width: 35px !important;
+    min-height: 35px !important;
+    max-height: 35px !important;
+    border-radius: 50% !important;
+    background-color: rgba(255, 107, 129, 0.85) !important;
+    background-image: 
+        radial-gradient(circle at center, rgba(255, 137, 159, 0.9) 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, rgba(255, 167, 189, 0.8) 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(255, 127, 149, 0.8) 15%, transparent 50%) !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: 
+        inset 2px 2px 5px rgba(255, 255, 255, 0.8),
+        inset -2px -2px 5px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(255, 167, 189, 0.6),
+        0 0 15px rgba(255, 107, 129, 0.4) !important;
+    position: relative !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Remove any Bootstrap icon */
+button[aria-label="Delete Task"] i,
+button[aria-label="Delete List"] i,
+.delete-button i {
+    display: none !important;
+}
+
+/* Add the bin/trash symbol */
+button[aria-label="Delete Task"]::before,
+button[aria-label="Delete List"]::before,
+.delete-button::before {
+    content: '🗑️' !important;
+    font-size: 16px !important;
+    color: white !important;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5) !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+/* Hover effect */
+button[aria-label="Delete Task"]:hover,
+button[aria-label="Delete List"]:hover,
+.delete-button:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 20px rgba(255, 107, 129, 0.6) !important;
+}
+
+/* Click effect */
+button[aria-label="Delete Task"]:active,
+button[aria-label="Delete List"]:active,
+.delete-button:active {
+    transform: scale(0.95) !important;
+    box-shadow: 
+        inset 1px 1px 3px rgba(255, 255, 255, 0.5),
+        inset -1px -1px 3px rgba(0, 0, 0, 0.2),
+        0 2px 6px rgba(255, 167, 189, 0.5) !important;
+}
+
+/* Glass shine effect */
+button[aria-label="Delete Task"]::after,
+button[aria-label="Delete List"]::after,
+.delete-button::after {
+    content: '' !important;
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    background: linear-gradient(135deg, 
+        transparent 0%, 
+        transparent 40%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        transparent 60%, 
+        transparent 100%) !important;
+    border-radius: 50% !important;
+    transition: all 0.5s ease !important;
+}
+
+/* Shine animation on hover */
+button[aria-label="Delete Task"]:hover::after,
+button[aria-label="Delete List"]:hover::after,
+.delete-button:hover::after {
+    transform: translateX(100%) translateY(-100%) rotate(30deg) !important;
 }

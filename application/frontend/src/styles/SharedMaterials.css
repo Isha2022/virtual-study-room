@@ -1,5 +1,7 @@
 /* First, make sure VT323 font is imported */
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+/* Add Inter font import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 .shared-materials-container {
     overflow: hidden;
@@ -24,10 +26,11 @@
 
 .sm-title {
     color: #8e99e3; /* Match the purple color of timer button hover */
-    font-family: 'Press Start 2P', cursive !important;
-    font-size: 15px;
+    font-family: sans-serif !important;
+    font-size: 22px;
     margin-bottom: 5px;
-    font-weight: normal;
+    font-weight: bold;
+    text-transform: uppercase;
     text-shadow: 
         0 0 2px rgba(142, 153, 227, 0.3),  /* Inner glow */
         0 0 4px rgba(142, 153, 227, 0.2),  /* Middle glow */
@@ -125,9 +128,9 @@
     justify-self: left;
     color: white;
     cursor: pointer;
-    font-family: 'VT323', monospace;
-    font-size: 22px;
-    font-weight: 400;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
     margin-right: 5px;
     padding: 5px 15px;
     text-align: center;
@@ -306,9 +309,9 @@
 
 .file-modal-title {
     color: #8e99e3; /* Match the purple color of shared materials title */
-    font-family: 'VT323', monospace;
-    font-size: 32px;
-    font-weight: 400;
+    font-family: 'Inter', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
     margin-bottom: 10px;
     letter-spacing: 0.5px;
     text-shadow: 1px 1px 2px #b2b2b2; /* Simple gray shadow as requested */

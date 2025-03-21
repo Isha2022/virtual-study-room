@@ -1,114 +1,230 @@
-/* Import Press Start 2P font */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+/* Import Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* Dreamy To-Do List Title - Fixed to match SharedMaterials style */
-.todo-header h3,
-.todo-container .todo-header h3 {
-    font-family: 'Press Start 2P', cursive !important;
-    font-size: 15px !important;
-    color: #5c63e8 !important;
-    margin-bottom: 5px !important;
-    font-weight: normal !important;
-    text-shadow: 
-        0 0 2px rgba(92, 99, 232, 0.3),  /* Inner glow */
-        0 0 4px rgba(123, 126, 219, 0.2),  /* Middle glow */
-        0 0 6px rgba(178, 142, 231, 0.1),  /* Outer glow */
-        0 0 8px rgba(255, 255, 255, 0.3),  /* White halo */
-        1px 1px 0px rgba(255, 192, 203, 0.2) !important; 
-    letter-spacing: 1px !important;
-    position: relative !important;
-    padding: 5px 10px !important;
-    text-align: center !important;
-    width: 100% !important;
-    display: inline-block !important;
-}
-
-/* Main To-Do Container - Rounded corners */
+/* Main To-Do Container - Soft, airy styling */
 .todo-container {
     background: white;
-    border-radius: 30px; /* Increased border radius */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(186, 215, 245, 0.2);
     padding: 15px;
-    width: 22vw; /* Match timer width */
-    height: 50vh; /* Match timer height */
+    width: 22vw;
+    height: 50vh;
     margin: 1%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    position: relative;
+    border: 1px solid rgba(186, 215, 245, 0.5);
 }
 
-/* Header Container */
+/* Clean To-Do List Title with darker blue text */
+.todo-header h3,
+.todo-container .todo-header h3 {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 22px !important;
+    color: #8e99e3 !important;
+    margin-bottom: 8px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    text-shadow: 
+        0 0 2px rgba(142, 153, 227, 0.3),
+        0 0 4px rgba(142, 153, 227, 0.2),
+        0 0 6px rgba(142, 153, 227, 0.1),
+        0 0 8px rgba(255, 255, 255, 0.5),
+        1px 1px 0px rgba(186, 215, 245, 0.5) !important;
+    letter-spacing: 1px !important;
+    position: relative !important;
+    padding: 8px 10px !important;
+    text-align: center !important;
+    width: 100% !important;
+    display: inline-block !important;
+    background: rgba(211, 225, 248, 0.3) !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(186, 215, 245, 0.3) !important;
+}
+
+/* Stars next to header with matching color */
+.todo-header h3::before,
+.todo-header h3::after {
+    content: '✦';
+    display: inline-block;
+    margin: 0 5px;
+    color: #8e99e3;
+    text-shadow: 0 0 3px rgba(186, 215, 245, 0.6);
+}
+
+/* Header Container with clean border */
 .todo-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 90%;
     margin: 0 auto;
-    margin-bottom: 2px;
-
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(186, 215, 245, 0.4);
 }
 
-/* Header Styling */
-.todo-header h3 {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0;
-    margin-bottom: 5px;
-}
-
-/* Add List Button */
+/* Add List Button - Softer styling */
 .header-buttons {
     display: flex;
     gap: 10px;
     border-radius: 30px;
 }
 
-.todo-header button {
-    padding: 8px 12px;
-    margin: 2%;
-    font-size: 14px;
-    cursor: pointer;
-    background-color: #28a745;
-    color: white;
-    /*border: 15px;
-    border-color: #000000;*/
-    border-radius: 30px;
+/* Custom Plus Button - Styled like the chatbox send button */
+.todo-header button,
+.todo-card-header button,
+button[aria-label="Add List"],
+button[aria-label="Add Task"] {
+    height: 32px !important;
+    width: 32px !important;
+    min-width: 32px !important;
+    max-width: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+    border-radius: 50% !important;
+    background-color: #aeabfc !important;
+    background-image: 
+        radial-gradient(circle at center, #bdbbfc 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, #cecbfd 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, #b5b2fd 15%, transparent 50%) !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: 
+        inset 0px 2px 4px rgba(255, 255, 255, 0.7),
+        inset 0px -2px 4px rgba(174, 171, 252, 0.2),
+        0 2px 8px rgba(174, 171, 252, 0.4) !important;
+    position: relative !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Remove any Bootstrap icon */
+.todo-header button i,
+.todo-card-header button i,
+button[aria-label="Add List"] i,
+button[aria-label="Add Task"] i {
+    display: none !important;
+}
+
+/* Add the plus symbol with same text shadow */
+.todo-header button::before,
+.todo-card-header button::before,
+button[aria-label="Add List"]::before,
+button[aria-label="Add Task"]::before {
+    content: '+' !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    color: white !important;
+    text-shadow: 1px 1px 2px #b2b2b2 !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+/* Button hover effect to match chatbox button */
+.todo-header button:hover,
+.todo-card-header button:hover,
+button[aria-label="Add List"]:hover,
+button[aria-label="Add Task"]:hover {
+    transform: scale(1.05) !important;
+    background-image: 
+        radial-gradient(circle at center, #c7c5fd 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, #d6d4fe 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, #c0bdfd 15%, transparent 50%) !important;
+    box-shadow: 
+        inset 0px 2px 4px rgba(255, 255, 255, 0.9),
+        inset 0px -2px 4px rgba(174, 171, 252, 0.3),
+        0 4px 12px rgba(174, 171, 252, 0.6) !important;
+}
+
+/* Button active effect to match chatbox button */
+.todo-header button:active,
+.todo-card-header button:active,
+button[aria-label="Add List"]:active,
+button[aria-label="Add Task"]:active {
+    transform: scale(0.95) !important;
+    box-shadow: 
+        inset 1px 1px 3px rgba(255, 255, 255, 0.5),
+        inset -1px -1px 3px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Glass shine effect */
+.todo-header button::after,
+.todo-card-header button::after,
+button[aria-label="Add List"]::after,
+button[aria-label="Add Task"]::after {
+    content: '' !important;
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    background: linear-gradient(135deg, 
+        transparent 0%, 
+        transparent 40%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        transparent 60%, 
+        transparent 100%) !important;
+    border-radius: 50% !important;
+    transition: all 0.5s ease !important;
+}
+
+/* Shine animation on hover */
+.todo-header button:hover::after,
+.todo-card-header button:hover::after,
+button[aria-label="Add List"]:hover::after,
+button[aria-label="Add Task"]:hover::after {
+    transform: translateX(100%) translateY(-100%) rotate(30deg) !important;
 }
 
 /* To-Do Lists Wrapper */
 .todo-list {
     display: grid;
-    grid-template-columns: 1fr; /* Single column */
+    grid-template-columns: 1fr;
     gap: 12px;
     padding: 8px;
+    background: white;
+    border-radius: 8px;
+    position: relative;
+    overflow-y: auto;
+    border: 1px solid rgba(186, 215, 245, 0.2);
 }
 
-/* Individual To-Do Card - Rounded corners */
+/* Individual To-Do Card - Soft styling with light borders */
 .todo-card {
     background: white;
-    border-radius: 20px; /* Increased border radius */
-    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    border: 1px solid rgba(186, 215, 245, 0.4);
     padding: 8px;
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     font-size: 0.8rem;
-    width: 100%; /* Full width */
+    width: 100%;
     margin: 0 auto;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(186, 215, 245, 0.1);
 }
 
-/* Card Header */
+/* Card Header - Soft, light blue */
 .todo-card-header {
-    font-weight: 500;
-    padding: 4px 8px;
+    font-weight: 600;
+    padding: 6px 8px;
     margin: -8px -8px 8px -8px;
-    background: #f8f8f8;
+    background: rgba(211, 225, 248, 0.3);
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.3px;
     text-align: center;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid rgba(186, 215, 245, 0.3);
+    color: rgba(122, 122, 154, 0.8);
 }
 
 /* Task Container */
@@ -124,97 +240,71 @@
     scrollbar-width: thin;
 }
 
-/* Task Item Styling - Rounded corners */
+/* Task Item Styling - Light, airy look */
 .task-item {
     display: flex;
     align-items: center;
     padding: 6px 10px;
-    background: #fafafa;
-    border-radius: 15px; /* Increased border radius */
-    border: 1px solid #f0f0f0;
-    margin-bottom: 2px;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid rgba(186, 215, 245, 0.3);
+    margin-bottom: 5px;
     transition: all 0.2s ease-in-out;
     font-size: 0.75rem;
     min-height: 24px;
 }
 
-/* Task Content */
+/* Task hover effect */
+.task-item:hover {
+    border: 1px solid rgba(186, 215, 245, 0.5);
+    background-color: rgba(211, 225, 248, 0.1);
+}
+
+/* Task Content with darker text */
 .task-item span {
     flex-grow: 1;
     padding-left: 6px;
-    color: #333;
+    color: #8e99e3;
     font-size: 0.75rem;
     line-height: 1.2;
 }
 
-/* Task Actions Container */
-.task-item-buttons {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-/* Dropdown Task Details - Rounded corners */
-.task-details {
-    background: #fafafa;
-    border-radius: 12px; /* Increased border radius */
-    padding: 6px 10px;
-    margin-top: 3px;
-    font-size: 0.7rem;
-    color: #666;
-    line-height: 1.2;
-    border-left: 1px solid #e0e0e0;
-}
-
-/* Custom Checkbox */
+/* Custom Checkbox - Soft style */
 .custom-checkbox {
-    width: 12px;
-    height: 12px;
-    border: 1px solid #ddd;
+    width: 14px;
+    height: 14px;
+    border: 1px solid rgba(186, 215, 245, 0.5);
     border-radius: 3px;
+    background: white;
 }
 
 .custom-checkbox:checked::before {
     font-size: 8px;
-}
-
-/* Task Buttons */
-.task-item button {
-    padding: 2px 4px;
-    font-size: 0.7rem;
-    color: #666;
-    border-radius: 3px;
+    color: rgba(142, 153, 227, 0.8);
 }
 
 /* Scrollbar Styling */
-.todo-card ul::-webkit-scrollbar {
+.todo-card ul::-webkit-scrollbar,
+.todo-list::-webkit-scrollbar {
     width: 4px;
 }
 
-.todo-card ul::-webkit-scrollbar-track {
-    background: transparent;
+.todo-card ul::-webkit-scrollbar-track,
+.todo-list::-webkit-scrollbar-track {
+    background: white;
+    border-radius: 10px;
 }
 
-.todo-card ul::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 2px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .todo-container {
-        padding: 10px;
-    }
-    
-    .todo-card {
-        padding: 6px;
-    }
+.todo-card ul::-webkit-scrollbar-thumb,
+.todo-list::-webkit-scrollbar-thumb {
+    background-color: rgba(186, 215, 245, 0.4);
+    border-radius: 10px;
 }
 
 /* Completed Task Styling */
 .task-item .completed {
     text-decoration: line-through;
-    color: gray;
+    color: rgba(184, 184, 192, 0.7);
 }
 
 /* Full-Screen Mode for To-Do List */
@@ -223,18 +313,16 @@
     top: 0;
     left: 0;
     width: 98%;
-    /* Full width */
     height: 89%;
-    /* Full height */
     background-color: white;
     z-index: 9999;
     overflow: hidden;
-    /* Hide outer scrollbar */
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 5%;
-    /* Prevents content from being hidden behind header */
+    box-shadow: 0 5px 25px rgba(186, 215, 245, 0.3);
+    border: 1px solid rgba(186, 215, 245, 0.4);
 }
 
 /* Fixed Header in Full-Screen */
@@ -244,66 +332,70 @@
     left: 0;
     width: 97.5%;
     height: 70px;
-    /* Fixed height */
     background-color: white;
     z-index: 10000;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    border-bottom: 2px solid #ddd;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(186, 215, 245, 0.4);
+    box-shadow: 0px 4px 10px rgba(186, 215, 245, 0.1);
 }
 
-/* To-Do List Layout (3 lists per row) */
-.todo-container.full-screen .todo-list {
-    top: 0;
-    left: 0;
-    max-width: 99%;
-
-    background-color: rgb(230, 186, 186);
-    overflow-x: unset;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    /* Ensures space between items */
-    align-items: flex-start;
-    gap: 0.5%;
-    padding: 1%;
-    overflow-y: auto;
-    /* Only this section should be scrollable */
-    max-height: calc(100vh - 2%);
-    /* Ensure it doesn't overflow */
+/* Additional decorative elements - Star pattern at bottom */
+.todo-container::after {
+    content: '✧ ✦ ✧';
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    color: rgba(186, 215, 245, 0.5);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.9;
+    text-shadow: 0 0 3px rgba(211, 225, 248, 0.4);
 }
 
-/* Individual To-Do List */
-.todo-container.full-screen .todo-card {
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 1%;
-    width: calc(33.33% - 1%);
-    /* 3 lists per row */
-    min-width: 25%;
-    max-width: 25%;
-    flex-shrink: 0;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+/* Custom Bin/Delete Button - Soft, light styling */
+button[aria-label="Delete Task"],
+button[aria-label="Delete List"],
+.delete-button {
+    height: 35px !important;
+    width: 35px !important;
+    min-width: 35px !important;
+    max-width: 35px !important;
+    min-height: 35px !important;
+    max-height: 35px !important;
+    border-radius: 50% !important;
+    background-color: rgba(211, 225, 248, 0.7) !important;
+    background-image: 
+        radial-gradient(circle at center, rgba(221, 235, 258, 0.9) 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, rgba(211, 225, 248, 0.8) 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(211, 225, 248, 0.8) 15%, transparent 50%) !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: 
+        inset 2px 2px 5px rgba(255, 255, 255, 0.8),
+        inset -2px -2px 5px rgba(0, 0, 0, 0.05),
+        0 2px 8px rgba(211, 225, 248, 0.4),
+        0 0 15px rgba(211, 225, 248, 0.2) !important;
+    position: relative !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
 }
 
-/* Hide outer scrollbar */
-.todo-container.full-screen::-webkit-scrollbar {
-    display: none;
-}
-
-/* Custom scrollbar inside lists */
-.todo-container.full-screen .todo-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.todo-container.full-screen .todo-list::-webkit-scrollbar-thumb {
-    background: #aaa;
-    border-radius: 5px;
-}
-
-.todo-container.full-screen .todo-list::-webkit-scrollbar-track {
-    background: #f1f1f1;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .todo-container {
+        padding: 10px;
+        width: 80vw;
+    }
+    
+    .todo-card {
+        padding: 6px;
+    }
 }

@@ -2,80 +2,96 @@
 
 /* Scoped Modal Overlay for Add List */
 .add-list-modal .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    /* Transparent black overlay */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @apply fixed inset-0 bg-indigo-100/40 backdrop-blur-sm flex justify-center items-center z-50;
 }
 
 /* Scoped Modal Content for Add List */
 .add-list-modal .modal-content {
-    background-color: white;
-    padding: 30px;
-    border-radius: 8px;
-    width: 400px;
-    max-width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    position: relative;
+    @apply bg-gradient-to-br from-white/85 to-indigo-50/90 backdrop-blur-md p-7 rounded-2xl w-96 max-w-full shadow-xl relative border border-white/60 overflow-hidden;
+    box-shadow: 
+        0 10px 25px rgba(158, 171, 251, 0.3),
+        0 0 30px rgba(207, 200, 255, 0.2),
+        inset 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* Gradient blobs decoration */
+.add-list-modal .modal-content::before {
+    content: "";
+    @apply absolute inset-0 -z-10;
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(174, 171, 252, 0.2) 0%, transparent 25%),
+        radial-gradient(circle at 80% 60%, rgba(207, 200, 255, 0.2) 0%, transparent 30%);
+}
+
+/* Star decoration */
+.add-list-modal .modal-content::after {
+    content: "★ ✧ ★";
+    @apply absolute bottom-2.5 right-4 text-xs text-indigo-400/60 tracking-wider;
 }
 
 .add-list-modal button.close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: transparent;
-    border: none;
-    color: #888;
-    font-size: 20px;
-    cursor: pointer;
+    @apply absolute top-4 right-4 bg-transparent border-none text-indigo-300 text-xl cursor-pointer w-7 h-7 flex items-center justify-center rounded-full transition-all duration-300;
 }
 
 .add-list-modal button.close:hover {
-    color: #333;
+    @apply bg-indigo-300/10 rotate-90;
 }
 
 /* Modal form fields */
 .add-list-modal input,
 .add-list-modal select,
 .add-list-modal textarea {
-    width: 100%;
-    padding: 8px 12px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+    @apply w-full p-3 my-3 border border-purple-200/60 rounded-xl text-sm bg-white/70 transition-all duration-300;
+    box-shadow: inset 0 1px 4px rgba(174, 171, 252, 0.2);
 }
 
 .add-list-modal input:focus,
 .add-list-modal select:focus,
 .add-list-modal textarea:focus {
-    border-color: #28a745;
-    outline: none;
+    @apply border-indigo-300 bg-white/90 outline-none;
+    box-shadow: 0 0 10px rgba(174, 171, 252, 0.3);
 }
 
-/* Button Styling for Modal */
-.add-list-modal button.btn {
-    background-color: transparent;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+/* Button Styling for Modal - replace Bootstrap classes */
+.add-list-modal button.button {
+    @apply bg-transparent border-none py-2.5 px-4.5 cursor-pointer transition-all duration-300 rounded-2xl text-sm mt-2.5;
 }
 
-.add-list-modal button.btn-success {
-    background-color: #28a745;
-    color: white;
-    font-size: 16px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+.add-list-modal button.button-success {
+    @apply bg-gradient-to-br from-indigo-300 to-purple-200 text-white;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 
+        0 3px 8px rgba(142, 153, 227, 0.3),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.05);
 }
 
-.add-list-modal button.btn-success:hover {
-    background-color: #218838;
+.add-list-modal button.button-success:hover {
+    @apply bg-gradient-to-br from-purple-200 to-indigo-300 -translate-y-0.5;
+    box-shadow: 
+        0 5px 12px rgba(142, 153, 227, 0.4),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.05);
+}
+
+.add-list-modal button.button-success:active {
+    @apply translate-y-0.5;
+    box-shadow: 
+        0 2px 5px rgba(142, 153, 227, 0.2),
+        inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Form title styling */
+.add-list-modal h2 {
+    @apply font-['Press_Start_2P'] text-base text-purple-400 mb-6 text-center relative pb-3;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+}
+
+.add-list-modal h2::after {
+    content: "";
+    @apply absolute bottom-0 left-1/4 w-1/2 h-0.5;
+    background: linear-gradient(to right, transparent, rgba(174, 171, 252, 0.6), transparent);
+}
+
+/* Label styling */
+.add-list-modal label {
+    @apply text-indigo-800/60 text-sm block mt-2.5 mb-1.5;
 }
