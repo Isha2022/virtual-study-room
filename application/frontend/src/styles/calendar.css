@@ -1,142 +1,194 @@
 .Header {
-    border: 3px solid  #F2BAC9; 
-    font-family: 'Inter', sans-serif; 
-    padding: 15px;
-    text-align: center;
-    color: white; 
-    background-color: #F2BAC9; 
-    font-size: 48px;
-    font-weight: 700;
-    box-sizing: border-box; 
-    z-index: 1000;
+  border: 3px solid #f2bac9;
+  font-family: "Inter", sans-serif;
+  padding: 15px;
+  text-align: center;
+  color: white;
+  background-color: #f2bac9;
+  font-size: 48px;
+  font-weight: 700;
+  box-sizing: border-box;
+  z-index: 1000;
 }
 
 .Page {
-    display: fixed;
-    overflow: hidden;
-    justify-content: center;
-    margin: 0;
-    /*height: 100vh; /* Ensures it fits within the viewport */
-    /*width: 100vw; /* Ensures it takes up the full width */
-    box-sizing: border-box; /* Ensure padding/border don't increase its size */
-    background-color: #F6F0F0;
+  display: fixed;
+  overflow: hidden;
+  justify-content: center;
+  margin: 0;
+  box-sizing: border-box; /* Ensure padding/border don't increase its size */
+  background-color: #f6f0f0;
 }
 
 button.addEventButton {
-   
-    color: black !important;
-    font-family: 'Inter', sans-serif !important;
-    background-color:#FFE7AC  !important;  /* Set background color */
-    border-radius: 30% !important;  /* Rounded corners */
-    font-weight: bold !important;  /* Make button text bold */
-    text-align: center;
-    border-color:#FFE7AC  ;
-    font-family: 'Inter', sans-serif; 
-    padding: 10px 20px;
-    font-weight: 700;
-    transition: background-color 0.3s ease;
-   
+  color: black !important;
+  font-family: "Inter", sans-serif !important;
+  background-color: #ffe7ac !important; /* Set background color */
+  border-radius: 30% !important; /* Rounded corners */
+  font-weight: bold !important; /* Make button text bold */
+  text-align: center;
+  border-color: #ffe7ac;
+  font-family: "Inter", sans-serif;
+  padding: 10px 20px;
+  font-weight: 700;
+  transition: background-color 0.3s ease;
 }
 
 .rounded-event {
-    width: 70% !important; /* Adjust width, lower values make it thinner */
-    margin: 0 auto !important; /* Center the event */
-    border-color: black;
-    border-radius: 20px !important; /* Make edges more rounded */
-    text-align: center !important; /* Center text horizontally */
-    display: flex !important; /* Use flexbox */
-    align-items: center !important; /* Center text vertically */
-    justify-content: center !important; /* Ensure perfect centering */
-    font-weight: bold !important; /* Make text bold */
-    color: black !important; /* Set text color to black */
+  width: 70% !important; /* Adjust width, lower values make it thinner */
+  margin: 0 auto !important; /* Center the event */
+  border-color: black;
+  border-radius: 20px !important; /* Make edges more rounded */
+  text-align: center !important; /* Center text horizontally */
+  display: flex !important; /* Use flexbox */
+  align-items: center !important; /* Center text vertically */
+  justify-content: center !important; /* Ensure perfect centering */
+  font-weight: bold !important; /* Make text bold */
+  color: black !important; /* Set text color to black */
 }
 
 .rounded-event * {
-    color: black !important; /* Force black text inside the event */
-    align-items: center !important; /* Center text vertically */
-    justify-content: center !important;
+  color: black !important; /* Force black text inside the event */
+  align-items: center !important; /* Center text vertically */
+  justify-content: center !important;
 }
 
 .event-popup {
-    font-family: 'Inter', sans-serif; 
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    background-color: white;
-    border: 5px solid #f2bac9;
-    border-radius: 20px;
-    justify-content: center;
-    align-items: center;
-    z-index: 2005; /*ensures it is on top of dashboard heading*/
+  font-family: "Inter", sans-serif;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: white;
+  border: 5px solid #f2bac9;
+  border-radius: 20px;
+  justify-content: center;
+  width: 400px; /* Set a fixed width for the popup */
+  max-width: 90%; /* Ensure it doesn't overflow on small screens */
+  z-index: 2005; /*ensures it is on top of dashboard heading*/
+}
+
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center items horizontally */
+  gap: 15px; /* Add space between elements */
 }
 
 .popup-content h2 {
-    font-family: 'Inter', sans-serif; 
-    color: black;
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    z-index: 2002;
+  font-family: "Inter", sans-serif;
+  color: black;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  z-index: 2002;
+}
+
+.popup-content form {
+  width: 100%; /* Make the form take full width of the popup */
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Add space between form elements */
+}
+
+.popup-content form div {
+  width: 100%; /* Make form inputs take full width */
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Add space between label and input */
+}
+
+.popup-content form label {
+  font-weight: 600;
+  color: #333;
+}
+
+.popup-content form input,
+.popup-content form textarea {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 4px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: #333;
+  width: 100%; /* Make inputs take full width */
+}
+
+.popup-content form textarea {
+  resize: vertical; /* Allow vertical resizing */
+  min-height: 80px; /* Set a minimum height */
 }
 
 .popup-content button {
-    font-family: 'Inter', sans-serif; 
-    background-color: #F2E2BA; /* Red background for button */
-    color: black;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 10px;
+  font-family: "Inter", sans-serif;
+  background-color: #f2e2ba; /* Light yellow background */
+  color: black;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  width: 100%; /* Make buttons take full width */
 }
 
 .popup-content button:hover {
-    background-color: #BAD7F2; /* Darker red for button hover */
+  background-color: #bad7f2; /* Darker red for button hover */
+}
+
+.popup-content button[type="button"] {
+  background-color: #f2bac9; /* Light pink for cancel button */
+}
+
+.popup-content button[type="button"]:hover {
+  background-color: #d89aa9; /* Darker pink on hover */
 }
 
 /* Calendar toolbar button styles */
 .fc-toolbar .fc-button {
-    background-color: #BAD7F2 !important;  /* Set background color */
-     /* Text color */
-    border-radius: 15% !important;  /* Rounded corners */
-    font-weight: bold !important;  /* Make button text bold */
-    text-align: center;
-    color: black; 
-    border-color: #BAD7F2;
-    font-family: 'Inter', sans-serif; 
-    font-weight: 700;
+  background-color: #bad7f2 !important; /* Set background color */
+  /* Text color */
+  border-radius: 15% !important; /* Rounded corners */
+  font-weight: bold !important; /* Make button text bold */
+  text-align: center;
+  color: black;
+  border-color: #bad7f2;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
 }
 
 /* Specific styling for individual toolbar sections if needed */
-.fc-left, .fc-center, .fc-right {
-    background-color: #f0f0f0 !important;  /* Toolbar background */
-    padding: 10px !important;
+.fc-left,
+.fc-center,
+.fc-right {
+  background-color: #f0f0f0 !important; /* Toolbar background */
+  padding: 10px !important;
 }
 
 /* Additional styling for previous, next, and today buttons */
 .fc-prev-button,
 .fc-next-button,
 .fc-today-button {
-    background-color: #BAD7F2 !important;  /* Set background color */
-    border-color: #BAD7F2;
-    border-radius: 15% !important;  /* Rounded corners */
-    font-weight: bold !important;  /* Make button text bold */
-    font-family: 'Inter', sans-serif; 
-    text-align: center;
-    color: black; 
-    font-weight: 700;
+  background-color: #bad7f2 !important; /* Set background color */
+  border-color: #bad7f2;
+  border-radius: 15% !important; /* Rounded corners */
+  font-weight: bold !important; /* Make button text bold */
+  font-family: "Inter", sans-serif;
+  text-align: center;
+  color: black;
+  font-weight: 700;
 }
 
 .event-popup input[type="text"],
 .event-popup input[type="datetime-local"],
 .event-popup textarea {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 8px;
-    border-radius: 4px;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    color: #333;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 4px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: #333;
 }

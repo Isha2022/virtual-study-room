@@ -4,8 +4,10 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from ..models import SessionUser, User
+from ..models import SessionUser, User, toDoList
 from ..models.study_session import StudySession
+
+from .to_do_list import ViewToDoList
 
 # for websockets
 from channels.layers import get_channel_layer
@@ -159,11 +161,11 @@ def get_room_details(request):
 
     print("Retrieving name for the study room", room_code)
 
-    # get the room and get the name of the room
-    study_session = StudySession.objects.get(roomCode=room_code)
-    session_name = study_session.sessionName
-    print("Retrieved the room name", session_name)
     try:
+        # get the room and get the name of the room
+        study_session = StudySession.objects.get(roomCode=room_code)
+        session_name = study_session.sessionName
+        print("Retrieved the room name", session_name)
         return Response({"sessionName" : session_name,
                          "roomList": study_session.toDoList.id
         })
@@ -196,19 +198,30 @@ def leave_room(request):
         # Fetch the study session using the room code
         study_session = StudySession.objects.get(roomCode=room_code)
 
-        # Add the user to the participants field
+        # Remove the user from the participants field
         study_session.participants.remove(user)
         study_session.save()
+
+        # Fetch the updated participants list
+        participants = study_session.participants.all()
+
+        # Notify all clients in the room
+        notify_participants(room_code, participants)
+
+        print(f"Notifying participants in room {room_code}: {participants}")
 
         try:
             session_user = SessionUser.objects.get(user=user, session=study_session)
             session_user.leave_session()
-            return Response({"message": "Left successfully!"})
+
+            if (study_session.participants.count() == 0):
+                destroy_room(request, study_session)
+
+            user1 = session_user.user
+            return Response({"message": "Left successfully!", "username": user.username})
         except SessionUser.DoesNotExist:
             return Response({"error": "User is not in the session"}, status=404)
-
-        return Response({"message": "Left successfully!"})
-    return Response({"error": "Room not found"}, status=404)
+        return Response({"error": "Room not found"}, status=404)
 
 # update the participants in real time as someone joins the room, and leaves the room
 def notify_participants(room_code, participants):
@@ -216,8 +229,25 @@ def notify_participants(room_code, participants):
     async_to_sync(channel_layer.group_send)(
         f"room_{room_code}",
         {
-            'type' : 'send_participants',
-            'participants' : participants,
+            'type': 'participants_update',
+            'participants': [participant.username for participant in participants],
         }
     )
+
+# destroy the room if there are no participants in it
+def destroy_room(request, study_session):
+
+    toDo = ViewToDoList()
+
+    # delete the to do list in the room
+    toDoList = study_session.toDoList.pk
+    if toDoList:
+        toDo.delete_list(request = request, list_id = toDoList)
+    print("to do list deleted")
+    print("session name: ", study_session.sessionName)
+    study_session.delete()
+    print("session deleted")
+
+
+
 

@@ -45,10 +45,7 @@ class Command(BaseCommand):
             call_command('loaddata', 'api/tests/fixtures/default_lists.json')
             call_command('loaddata', 'api/tests/fixtures/default_permissions.json')
             call_command('loaddata', 'api/tests/fixtures/default_list_task.json')
-            
-            # call_command('loaddata', 'api/tests/fixtures/default_study_session.json')
-            # call_command('loaddata', 'api/tests/fixtures/default_session_users.json')
-
+        
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error while seeding database: {e}'))
       

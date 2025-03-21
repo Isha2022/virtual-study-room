@@ -9,19 +9,79 @@
   width: 100vw; /* Ensures it spans the full width */
   flex-direction: column;
 }
+
 .message-card {
-  border: 5px solid #ffe7ac;
+  /* Base properties */
   width: 700px;
   height: 100px;
-  border-radius: 40px;
-  background-color: #ffe7ac;
-  justify-content: center; /* center horizontally */
+  justify-content: center;
   align-items: center;
   display: flex;
   position: relative;
-  font-family: "Times New Roman", Times, serif;
-  font-size: large;
   text-align: center;
   margin-top: 10px;
   margin-bottom: 70px;
+  border-radius: 12px;
+  overflow: hidden; /* Ensures gradient stays within borders */
+  
+  /* Outline shadow effect like the course cards in the image */
+  border: 1px solid rgba(190, 183, 237, 0.7); /* More visible border */
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.25), /* Bottom shadow */
+    0 0 0 1px rgba(190, 183, 237, 0.8), /* Precise outline */
+    0 0 8px rgba(190, 183, 237, 0.4); /* Soft glow around outline */
+    
+  /* Complex gradient background maintained */
+  background: #beb7ed; /* Primary color as fallback */
+  
+  /* Multiple layered backgrounds to create the flowing effect */
+  background: 
+    /* Layer 1: Main gradient */
+    linear-gradient(
+      135deg, 
+      #beb7ed 0%, 
+      #e8e2f0 65%, 
+      #beb7ed 100%
+    ),
+    
+    /* Layer 2: Soft curved shape */
+    radial-gradient(
+      circle at 70% 30%, 
+      #e8e2f0 0%, 
+      transparent 50%
+    ),
+    
+    /* Layer 3: Another soft curved shape */
+    radial-gradient(
+      circle at 20% 70%, 
+      rgba(190, 183, 237, 0.8) 0%, 
+      transparent 60%
+    );
+    
+  /* Subtle animation to mimic the flowing effect */
+  animation: subtleFlow 15s infinite alternate;
+}
+
+@keyframes subtleFlow {
+  0% {
+    background-position: 0% 0%, 0% 0%, 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%, 100% 100%, 100% 100%;
+  }
+}
+
+/* Keep text styling the same but change color to white with gray shadow */
+.message-card h4 {
+  font-family: 'Press Start 2P', monospace;
+  font-weight: 400;
+  font-size: 12px;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px #b2b2b2;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+  padding: 0 15px;
+  position: relative; /* Ensure text stays above the gradient */
+  z-index: 1;
 }
