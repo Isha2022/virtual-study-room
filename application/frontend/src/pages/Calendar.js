@@ -10,7 +10,6 @@ import "../styles/calendar.css";
 import { useNavigate } from "react-router-dom";
 import returnHomeLogo from "../assets/return_home.png";
 
-
 console.log(require.resolve("@fullcalendar/react"));
 
 const backendURL = "/events/";
@@ -131,14 +130,14 @@ const CalendarPage = () => {
 
   return (
     <div className="Page">
-        <h1 className="Header">My Calendar
+      <h1 className="Header">
+        My Calendar
         <div className="top-bar">
           <button onClick={goToDashboard} className="dashboard-button">
-            
             <img src={returnHomeLogo} alt="return" />
           </button>
         </div>
-        </h1>
+      </h1>
       <ToastContainer position="top-center" />
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin]}
