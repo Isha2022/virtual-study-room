@@ -124,7 +124,8 @@ function GroupStudyPage() {
       return; // Reuse the existing connection
     }
 
-    const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
+    const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`); 
+    // const socket = new WebSocket("wss://studyspot.pythonanywhere.com/ws/room/room_code/");  // Production (deployed backend)
 
     //Logs when connection is established
     ws.onopen = () => {
@@ -296,8 +297,6 @@ function GroupStudyPage() {
 
   // Method to leave room
   const leaveRoom = useCallback(async () => {
-    // User is leaving so they should not reconnect to the room automatically
-    setShouldReconnect(false);
 
     try {
       // Close the WebSocket connection if it exists
