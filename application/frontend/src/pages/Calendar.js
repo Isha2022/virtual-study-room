@@ -7,6 +7,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLocation } from "react-router-dom";
 import "../styles/calendar.css";
+import { useNavigate } from "react-router-dom";
+import returnHomeLogo from "../assets/return_home.png";
+
 
 console.log(require.resolve("@fullcalendar/react"));
 
@@ -20,9 +23,14 @@ const CalendarPage = () => {
   const [eventEnd, setEventEnd] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const navigate = useNavigate();
 
   const location = useLocation();
   const userId = location.state?.userId;
+
+  const goToDashboard = () => {
+    navigate("/dashboard");
+  };
 
   if (!userId) {
     console.error("User ID is undefined. Redirecting or handling error...");
@@ -123,7 +131,14 @@ const CalendarPage = () => {
 
   return (
     <div className="Page">
-      <h1 className="Header">My Calendar</h1>
+        <h1 className="Header">My Calendar
+        <div className="top-bar">
+          <button onClick={goToDashboard} className="dashboard-button">
+            
+            <img src={returnHomeLogo} alt="return" />
+          </button>
+        </div>
+        </h1>
       <ToastContainer position="top-center" />
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin]}

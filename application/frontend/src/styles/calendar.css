@@ -194,7 +194,7 @@ button.addEventButton {
   text-transform: capitalize !important;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: background-color 0.3s ease;
-  margin: 10px;
+  margin: 10px; 
 }
 
 .fc-button:hover {
@@ -270,6 +270,55 @@ button.addEventButton {
   font-family: "Inter", sans-serif;
   font-size: 14px;
   color: #333;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.dashboard-button img{
+  position: static !important;
+  width: 40px;
+  height: 40px;
+  background-color: transparent !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0;
+  margin: 0 !important;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.dashboard-button::after {
+  content: "Return to Dashboard";  /* The tooltip text */
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+
+    /* Positioning */
+    position: absolute;
+    left: 50%;
+    top: 150%;
+    transform: translateX(-50%);
+
+    /* Hidden by default */
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.dashboard-button:hover img {
+  filter: brightness(0) invert(1) drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
 }
 
 @media (max-width: 768px) {
