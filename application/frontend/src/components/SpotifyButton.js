@@ -115,8 +115,7 @@ export default class SpotifyButton extends Component {
 
     render() {
         return (
-            <div style={{ maxWidth: '360px', margin: 'auto', padding: '20px' }}>
-                <h2>Currently Playing:</h2>
+            <div style={{ maxWidth: '300px', margin: 'auto', padding: '10px' }}>
                 <MusicPlayer {...this.state.song}/>
             </div>
         );

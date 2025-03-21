@@ -50,8 +50,6 @@ class Calendar(HTMLCalendar):
 class Spotify_API():
 	def get_user_tokens(self, session_id):
 		user_tokens = SpotifyToken.objects.filter(user=session_id)
-		print(f"Querying for tokens with session_id={session_id}: {user_tokens}")
-		print(user_tokens)
 		if user_tokens.exists():
 			print("Token found:", user_tokens[0])
 			return user_tokens[0]

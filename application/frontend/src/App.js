@@ -13,7 +13,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MotivationalMessage from "./pages/Motivation";
 import ProfileBox from "./pages/ProfileBox";
 import SharedMaterials from "./pages/SharedMaterials";
-import ChatBox from "./pages/ChatBox";
 import SpotifyButton from "./components/SpotifyButton";
 //import ToDoList from './pages/ToDoList';
 
@@ -34,7 +33,6 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<ProfileBox />} />
         <Route path="/shared-materials" element={<SharedMaterials />} />
-        <Route path="/chatbox" element={<ChatBox />} />
         <Route path="/musicPlayer" element={<SpotifyButton />} />
       </Routes>
     </Router>

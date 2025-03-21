@@ -23,9 +23,12 @@ import {
   deleteObject,
 } from "firebase/storage";
 import SharedMaterials from "./SharedMaterials.js";
+import { Dialog, DialogTitle, DialogContent } from '@mui/material';
+import SpotifyButton from '../components/SpotifyButton';
 
 function GroupStudyPage() {
   const [participants, setParticipants] = useState([]); // State to store participants
+  const [open, setOpen] = useState(false); //open and close states for pop-up window for music button
 
   // Location object used for state
   const location = useLocation();
@@ -65,6 +68,15 @@ function GroupStudyPage() {
   const [typingUser, setTypingUser] = useState("");
 
   const [shouldReconnect, setShouldReconnect] = useState(true); // Determines whether or not to auto-reconnect user to websocket server
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    toast.dismiss(); 
+    setOpen(false);
+  };
 
   // Updates the websocket saved everytime it changes
   useEffect(() => {
@@ -423,9 +435,18 @@ function GroupStudyPage() {
               onMouseDown={() => handleMouseDown("music")}
               onMouseUp={() => handleMouseUp("music")}
               onMouseLeave={() => handleMouseUp("music")}
+              onClick={handleClickOpen}
             >
               <img src={musicLogo} alt="Music" />
             </button>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>
+                  <div style={{ textAlign: 'center' }}>Music Player</div>
+                </DialogTitle>
+                <DialogContent>
+                    <SpotifyButton />
+                </DialogContent>
+            </Dialog>
             <button
               type="button"
               className={`customisation-button ${

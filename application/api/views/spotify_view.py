@@ -101,7 +101,6 @@ class CurrentSong(APIView):
         spotify_api = Spotify_API()
         session_id = request.session.session_key
         response = spotify_api.execute_spotify_api_request(session_id, endpoint)
-        print(response)
         
         if 'error' in response or 'item' not in response:
             return Response({}, status=status.HTTP_200_OK)
