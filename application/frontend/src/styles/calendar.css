@@ -34,11 +34,12 @@
 
 .Page {
   display: fixed;
-  overflow: hidden;
+  overflow: auto;
   justify-content: center;
   margin: 0;
   box-sizing: border-box; /* Ensure padding/border don't increase its size */
   background-color: #f6f0f0;
+  position: relative;
 }
 
 button.addEventButton {
@@ -172,6 +173,7 @@ button.addEventButton {
   font-size: 18px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.95);
+  /* color: #5D576B; */
   background: linear-gradient(135deg, #bac6f1 0%, #d1cbed 100%);
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   padding: 15px 50px;
@@ -192,6 +194,7 @@ button.addEventButton {
   text-transform: capitalize !important;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: background-color 0.3s ease;
+  margin: 10px;
 }
 
 .fc-button:hover {
