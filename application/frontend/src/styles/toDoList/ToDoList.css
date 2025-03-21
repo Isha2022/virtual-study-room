@@ -1,26 +1,127 @@
-/* Import Inter font */
+/* Import fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/* Main To-Do Container - Soft, airy styling */
+/* Main To-Do Container - Default size for Dashboard */
 .todo-container {
     background: white;
-    border-radius: 10px;
+    background-image: linear-gradient(90deg, rgba(211, 225, 248, 0.3) 50%, rgba(255, 255, 255, 0.8) 50%);
+    background-size: 20px 20px;
+    border-radius: 40px;
     box-shadow: 0 2px 6px rgba(186, 215, 245, 0.2);
-    padding: 15px;
-    width: 22vw;
-    height: 50vh;
-    margin: 1%;
+    padding: 25px; /* Increased padding */
+    width: 450px; /* Increased from 400px */
+    height: 700px; /* Increased from 600px */
+    min-width: 400px; /* Increased minimum width */
+    min-height: 600px; /* Increased minimum height */
+    margin: 1.5%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     position: relative;
-    border: 1px solid rgba(186, 215, 245, 0.5);
+    border: 2px solid rgba(186, 215, 245, 0.6);
+    box-shadow: 
+        0 4px 12px rgba(186, 215, 245, 0.3),
+        0 0 20px rgba(186, 215, 245, 0.2);
 }
 
-/* Clean To-Do List Title with darker blue text */
+/* Special positioning for group study page to-do lists - made smaller */
+.groupStudyRoom-container .todo-container {
+    width: 380px; 
+    height: 480px; /* Reduced from 550px */
+    min-width: 350px;
+    min-height: 400px; /* Reduced from 450px */
+    padding: 20px;
+    margin-top: -15px; /* Shift upward to align with timer */
+    position: relative;
+    top: -15px; /* Additional upward shift */
+    margin-bottom: 2px; /* Reduced from 15px to match timer-chatbox spacing */
+}
+
+/* Make group study to-do cards more compact */
+.groupStudyRoom-container .todo-card {
+    min-height: 160px; /* Reduced from 180px */
+    padding: 12px; /* Reduced from 14px */
+}
+
+/* Make task container for group study smaller */
+.groupStudyRoom-container .todo-card ul {
+    height: 130px; /* Reduced from 150px */
+    gap: 8px; /* Reduced from 10px */
+}
+
+/* Adjust shared materials positioning to match the spacing between timer and chatbox */
+.groupStudyRoom-container .sharedMaterials-container {
+    margin-top: 0;
+    height: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-bottom: 20px;
+    min-height: 250px;
+}
+
+/* Ensure consistent spacing in the first column */
+.groupStudyRoom-container .column:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Explicitly set the gap between children to match timer-chatbox */
+}
+
+/* Ensure the third column (with timer and chatbox) has the same gap */
+.groupStudyRoom-container .column:nth-child(3) {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Set the same gap as in the first column */
+}
+
+/* Force the todo container and shared materials to take up exactly the right amount of space */
+.groupStudyRoom-container .column:first-child {
+    display: flex;
+    flex-direction: column;
+}
+
+.groupStudyRoom-container .todo-container {
+    flex-shrink: 0;
+}
+
+.groupStudyRoom-container .sharedMaterials-container {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Add more precise responsive adjustments */
+@media (max-height: 900px) {
+    .groupStudyRoom-container .todo-container {
+        height: 450px; /* Slightly smaller on shorter screens */
+    }
+}
+
+@media (max-height: 800px) {
+    .groupStudyRoom-container .todo-container {
+        height: 400px; /* Even smaller on very short screens */
+    }
+}
+
+/* Y2K-style header banner */
+.todo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 95%;
+    margin: 0 auto 10px auto;
+    padding: 5px;
+    border: 2px solid #8e99e3;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(211, 225, 248, 0.6) 100%);
+    box-shadow: 0 0 5px rgba(142, 153, 227, 0.3);
+    border-radius: 25px;
+}
+
+/* Clean To-Do List Title with sans-serif font */
 .todo-header h3,
 .todo-container .todo-header h3 {
-    font-family: 'Inter', sans-serif !important;
+    font-family: sans-serif !important;
     font-size: 22px !important;
     color: #8e99e3 !important;
     margin-bottom: 8px !important;
@@ -38,38 +139,23 @@
     text-align: center !important;
     width: 100% !important;
     display: inline-block !important;
-    background: rgba(211, 225, 248, 0.3) !important;
-    border-radius: 6px !important;
-    border: 1px solid rgba(186, 215, 245, 0.3) !important;
+    background: transparent !important;
+    border: none !important;
 }
 
 /* Stars next to header with matching color */
 .todo-header h3::before,
 .todo-header h3::after {
-    content: '✦';
+    content: '★';
     display: inline-block;
     margin: 0 5px;
     color: #8e99e3;
-    text-shadow: 0 0 3px rgba(186, 215, 245, 0.6);
 }
 
-/* Header Container with clean border */
-.todo-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 90%;
-    margin: 0 auto;
-    margin-bottom: 10px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid rgba(186, 215, 245, 0.4);
-}
-
-/* Add List Button - Softer styling */
+/* Add List Button - Y2K styling */
 .header-buttons {
     display: flex;
     gap: 10px;
-    border-radius: 30px;
 }
 
 /* Custom Plus Button - Styled like the chatbox send button */
@@ -111,12 +197,13 @@ button[aria-label="Add Task"] i {
     display: none !important;
 }
 
-/* Add the plus symbol with same text shadow */
+/* Add the plus symbol with Inter font */
 .todo-header button::before,
 .todo-card-header button::before,
 button[aria-label="Add List"]::before,
 button[aria-label="Add Task"]::before {
     content: '+' !important;
+    font-family: 'Inter', sans-serif !important;
     font-size: 24px !important;
     font-weight: bold !important;
     color: white !important;
@@ -187,124 +274,199 @@ button[aria-label="Add Task"]:hover::after {
 .todo-list {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 8px;
+    gap: 15px; /* Increased gap */
+    padding: 12px;
     background: white;
-    border-radius: 8px;
+    border-radius: 25px;
     position: relative;
     overflow-y: auto;
-    border: 1px solid rgba(186, 215, 245, 0.2);
+    border: 2px solid #8e99e3;
+    background-color: rgba(255, 255, 255, 0.8);
+    flex-grow: 1; /* Allow it to grow and fill available space */
+    max-height: calc(100% - 80px); /* Account for header and padding */
 }
 
-/* Individual To-Do Card - Soft styling with light borders */
+/* Individual To-Do Card - Y2K styling */
 .todo-card {
     background: white;
-    border-radius: 8px;
-    border: 1px solid rgba(186, 215, 245, 0.4);
-    padding: 8px;
+    border-radius: 20px;
+    border: 2px solid #8e99e3;
+    padding: 18px; /* Increased padding */
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    font-size: 0.8rem;
+    font-size: 1rem; /* Larger font */
     width: 100%;
-    margin: 0 auto;
-    margin-bottom: 10px;
-    box-shadow: 0 1px 3px rgba(186, 215, 245, 0.1);
+    margin: 0 auto 18px auto;
+    box-shadow: 3px 3px 0px rgba(142, 153, 227, 0.3);
+    min-height: 250px; /* Significantly increased minimum height */
+}
+
+.groupStudyRoom-container .todo-card {
+    min-height: 160px; /* More compact for group study page */
+    padding: 12px; /* Slightly reduced padding */
+    font-size: 0.9rem; /* Slightly smaller font */
 }
 
 /* Card Header - Soft, light blue */
 .todo-card-header {
     font-weight: 600;
-    padding: 6px 8px;
-    margin: -8px -8px 8px -8px;
-    background: rgba(211, 225, 248, 0.3);
-    font-size: 0.75rem;
+    padding: 8px 10px;
+    margin: -10px -10px 10px -10px;
+    background: rgba(186, 215, 245, 0.3);
+    font-size: 0.85rem; /* Larger font */
     text-transform: uppercase;
     letter-spacing: 0.3px;
     text-align: center;
     border-bottom: 1px solid rgba(186, 215, 245, 0.3);
     color: rgba(122, 122, 154, 0.8);
+    border-radius: 20px 20px 0 0;
 }
 
 /* Task Container */
 .todo-card ul {
     list-style: none;
-    padding: 0 4px;
+    padding: 0 8px;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    height: 100px;
+    gap: 12px; /* Increased gap for better separation */
+    height: 220px; /* Significantly increased from 180px */
     overflow-y: auto;
     scrollbar-width: thin;
+    background-image: 
+        url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 3h1v1H1V3zm2-2h1v1H3V1z' fill='rgba(142, 153, 227, 0.1)' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
-/* Task Item Styling - Light, airy look */
+.groupStudyRoom-container .todo-card ul {
+    height: 130px; /* More compact for group study page */
+    gap: 8px; /* Slightly reduced gap */
+}
+
+/* Task Item Styling - Different sizes based on context */
 .task-item {
     display: flex;
     align-items: center;
-    padding: 6px 10px;
+    padding: 12px 15px; /* Significantly increased padding */
     background: white;
-    border-radius: 4px;
-    border: 1px solid rgba(186, 215, 245, 0.3);
-    margin-bottom: 5px;
+    border-radius: 15px;
+    border: 1px solid #8e99e3;
+    margin-bottom: 10px; /* More space between tasks */
     transition: all 0.2s ease-in-out;
-    font-size: 0.75rem;
-    min-height: 24px;
+    font-size: 0.95rem; /* Larger text */
+    min-height: 45px; /* Significantly increased minimum height */
+    width: 100%; /* Ensure full width */
+    box-sizing: border-box;
+}
+
+.groupStudyRoom-container .task-item {
+    padding: 10px; /* Smaller padding */
+    font-size: 0.85rem; /* Smaller text */
+    min-height: 36px; /* Smaller height */
+    margin-bottom: 8px; /* Less space between tasks */
 }
 
 /* Task hover effect */
 .task-item:hover {
-    border: 1px solid rgba(186, 215, 245, 0.5);
-    background-color: rgba(211, 225, 248, 0.1);
+    background-color: rgba(211, 225, 248, 0.3);
+    border: 1px dashed #8e99e3;
+    transform: translateY(-2px); /* Slight lift effect on hover */
+    box-shadow: 0 2px 5px rgba(142, 153, 227, 0.2);
 }
 
-/* Task Content with darker text */
+/* Task Content styling - Make text more visible */
 .task-item span {
     flex-grow: 1;
-    padding-left: 6px;
-    color: #8e99e3;
-    font-size: 0.75rem;
-    line-height: 1.2;
+    padding-left: 10px; /* More space after checkbox */
+    color: #6a75c2;
+    font-size: 0.95rem; /* Increased font size */
+    line-height: 1.4; /* Better line height for readability */
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    word-break: break-word;
 }
 
-/* Custom Checkbox - Soft style */
+/* Custom Checkbox - Different sizes based on context */
 .custom-checkbox {
-    width: 14px;
-    height: 14px;
-    border: 1px solid rgba(186, 215, 245, 0.5);
-    border-radius: 3px;
+    width: 22px; /* Larger checkbox */
+    height: 22px; /* Larger checkbox */
+    border: 2px solid #8e99e3;
+    border-radius: 11px;
     background: white;
+    flex-shrink: 0;
+}
+
+.groupStudyRoom-container .custom-checkbox {
+    width: 18px; /* Smaller for group study */
+    height: 18px; /* Smaller for group study */
+    border-radius: 9px;
 }
 
 .custom-checkbox:checked::before {
     font-size: 8px;
-    color: rgba(142, 153, 227, 0.8);
+    color: #8e99e3;
 }
 
-/* Scrollbar Styling */
-.todo-card ul::-webkit-scrollbar,
-.todo-list::-webkit-scrollbar {
-    width: 4px;
-}
-
-.todo-card ul::-webkit-scrollbar-track,
-.todo-list::-webkit-scrollbar-track {
-    background: white;
-    border-radius: 10px;
-}
-
-.todo-card ul::-webkit-scrollbar-thumb,
-.todo-list::-webkit-scrollbar-thumb {
-    background-color: rgba(186, 215, 245, 0.4);
-    border-radius: 10px;
+/* Container for task controls */
+.task-item-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* More space between buttons */
+    margin-left: auto;
+    flex-shrink: 0;
 }
 
 /* Completed Task Styling */
 .task-item .completed {
     text-decoration: line-through;
-    color: rgba(184, 184, 192, 0.7);
+    color: rgba(142, 153, 227, 0.5);
+    font-style: italic;
+}
+
+/* Task Details section - Adjust based on context */
+.task-details {
+    padding: 15px;
+    background-color: rgba(211, 225, 248, 0.2);
+    border-radius: 12px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 0.9rem; /* Larger details text */
+    color: #5d5d8a;
+    border: 1px dashed rgba(142, 153, 227, 0.4);
+    line-height: 1.5; /* Better line spacing */
+}
+
+.groupStudyRoom-container .task-details {
+    padding: 10px;
+    font-size: 0.8rem;
+    margin-top: 8px;
+    margin-bottom: 10px;
+}
+
+/* Task description formatting */
+.task-details p {
+    margin: 5px 0;
+}
+
+.task-details strong {
+    color: #8e99e3;
+    font-weight: 600;
+}
+
+/* Scrollbar Styling */
+.todo-card ul::-webkit-scrollbar,
+.todo-list::-webkit-scrollbar {
+    width: 10px;
+    background-color: white;
+    border: 1px solid #8e99e3;
+}
+
+.todo-card ul::-webkit-scrollbar-thumb,
+.todo-list::-webkit-scrollbar-thumb {
+    background-color: #aeabfc;
+    border: 1px solid white;
+    border-radius: 10px;
 }
 
 /* Full-Screen Mode for To-Do List */
@@ -314,15 +476,14 @@ button[aria-label="Add Task"]:hover::after {
     left: 0;
     width: 98%;
     height: 89%;
-    background-color: white;
     z-index: 9999;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 5%;
-    box-shadow: 0 5px 25px rgba(186, 215, 245, 0.3);
-    border: 1px solid rgba(186, 215, 245, 0.4);
+    box-shadow: 5px 5px 0px rgba(142, 153, 227, 0.5);
+    border-radius: 40px;
 }
 
 /* Fixed Header in Full-Screen */
@@ -338,26 +499,37 @@ button[aria-label="Add Task"]:hover::after {
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    border-bottom: 1px solid rgba(186, 215, 245, 0.4);
-    box-shadow: 0px 4px 10px rgba(186, 215, 245, 0.1);
+    border-bottom: 2px solid #8e99e3;
 }
 
-/* Additional decorative elements - Star pattern at bottom */
+/* Decorative elements - Y2K style */
 .todo-container::after {
-    content: '✧ ✦ ✧';
+    content: '★ ★ ★';
     position: absolute;
     bottom: 15px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 24px;
-    color: rgba(186, 215, 245, 0.5);
+    font-size: 18px;
+    color: #8e99e3;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.9;
-    text-shadow: 0 0 3px rgba(211, 225, 248, 0.4);
+    letter-spacing: 10px;
 }
 
-/* Custom Bin/Delete Button - Soft, light styling */
+/* Add a decorative border to the container */
+.todo-container::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 1px dashed rgba(142, 153, 227, 0.5);
+    pointer-events: none;
+    border-radius: 35px;
+}
+
+/* Custom Bin/Delete Button - Glass Effect */
 button[aria-label="Delete Task"],
 button[aria-label="Delete List"],
 .delete-button {
@@ -368,18 +540,18 @@ button[aria-label="Delete List"],
     min-height: 35px !important;
     max-height: 35px !important;
     border-radius: 50% !important;
-    background-color: rgba(211, 225, 248, 0.7) !important;
+    background-color: rgba(255, 107, 129, 0.85) !important;
     background-image: 
-        radial-gradient(circle at center, rgba(221, 235, 258, 0.9) 20%, transparent 70%),
-        radial-gradient(circle at 30% 30%, rgba(211, 225, 248, 0.8) 15%, transparent 50%),
-        radial-gradient(circle at 70% 70%, rgba(211, 225, 248, 0.8) 15%, transparent 50%) !important;
+        radial-gradient(circle at center, rgba(255, 137, 159, 0.9) 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, rgba(255, 167, 189, 0.8) 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(255, 127, 149, 0.8) 15%, transparent 50%) !important;
     padding: 0 !important;
     border: none !important;
     box-shadow: 
         inset 2px 2px 5px rgba(255, 255, 255, 0.8),
-        inset -2px -2px 5px rgba(0, 0, 0, 0.05),
-        0 2px 8px rgba(211, 225, 248, 0.4),
-        0 0 15px rgba(211, 225, 248, 0.2) !important;
+        inset -2px -2px 5px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(255, 167, 189, 0.6),
+        0 0 15px rgba(255, 107, 129, 0.4) !important;
     position: relative !important;
     display: flex !important;
     justify-content: center !important;
@@ -388,14 +560,146 @@ button[aria-label="Delete List"],
     transition: all 0.3s ease !important;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .todo-container {
-        padding: 10px;
-        width: 80vw;
+/* Add the bin/trash symbol */
+button[aria-label="Delete Task"]::before,
+button[aria-label="Delete List"]::before,
+.delete-button::before {
+    content: '🗑️' !important;
+    font-size: 16px !important;
+    color: white !important;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5) !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+/* Hover effect */
+button[aria-label="Delete Task"]:hover,
+button[aria-label="Delete List"]:hover,
+.delete-button:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 20px rgba(255, 107, 129, 0.6) !important;
+}
+
+/* Click effect */
+button[aria-label="Delete Task"]:active,
+button[aria-label="Delete List"]:active,
+.delete-button:active {
+    transform: scale(0.95) !important;
+    box-shadow: 
+        inset 1px 1px 3px rgba(255, 255, 255, 0.5),
+        inset -1px -1px 3px rgba(0, 0, 0, 0.2),
+        0 2px 6px rgba(255, 167, 189, 0.5) !important;
+}
+
+/* Glass shine effect */
+button[aria-label="Delete Task"]::after,
+button[aria-label="Delete List"]::after,
+.delete-button::after {
+    content: '' !important;
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    background: linear-gradient(135deg, 
+        transparent 0%, 
+        transparent 40%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        transparent 60%, 
+        transparent 100%) !important;
+    border-radius: 50% !important;
+    transition: all 0.5s ease !important;
+}
+
+/* Shine animation on hover */
+button[aria-label="Delete Task"]:hover::after,
+button[aria-label="Delete List"]:hover::after,
+.delete-button:hover::after {
+    transform: translateX(100%) translateY(-100%) rotate(30deg) !important;
+}
+
+/* Add some Y2K decorative elements */
+.todo-container .decorative-hearts {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 20px;
+    color: #aeabfc;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Add some angel wings element at the top */
+.todo-header::before {
+    content: '•·.·´¯`·.·• ✿ •·.·´¯`·.·•';
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #8e99e3;
+    letter-spacing: 2px;
+    width: 100%;
+    text-align: center;
+    opacity: 0.8;
+}
+
+/* Expand/collapse button styling - Larger */
+button[aria-label="Task Details"] {
+    height: 28px !important;
+    min-width: 28px !important;
+    padding: 2px 8px !important;
+    font-size: 0.8rem !important;
+    background-color: rgba(174, 171, 252, 0.2) !important;
+    color: #8e99e3 !important;
+    border: 1px solid rgba(174, 171, 252, 0.3) !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+}
+
+button[aria-label="Task Details"]:hover {
+    background-color: rgba(174, 171, 252, 0.4) !important;
+    transform: scale(1.05) !important;
+}
+
+/* Responsive adjustments for group study */
+@media (max-width: 1400px) {
+    .groupStudyRoom-container .todo-container {
+        width: 360px;
+        height: 520px;
+        top: -15px;
     }
-    
-    .todo-card {
-        padding: 6px;
+}
+
+@media (max-width: 1200px) {
+    .groupStudyRoom-container .todo-container {
+        width: 330px;
+        height: 480px; /* Further reduced for smaller screens */
+        top: -15px;
     }
+}
+
+/* Directly target the list name h4 element */
+.todo-card h4 {
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+/* Style specifically for TaskTrack: Study Edition */
+.todo-card h4:not(.styled-task-track) {
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+/* This is the key selector that will target the TaskTrack text */
+.todo-card h4 {
+    color: #b2b2b2;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }

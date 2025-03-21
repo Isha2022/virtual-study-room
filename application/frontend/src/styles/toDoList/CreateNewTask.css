@@ -5,7 +5,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(180, 180, 220, 0.4);
+    background-color: rgba(186, 215, 245, 0.4);
     backdrop-filter: blur(5px);
     display: flex;
     justify-content: center;
@@ -21,8 +21,8 @@
     width: 100%;
     max-width: 500px;
     box-shadow: 
-        0 10px 25px rgba(158, 171, 251, 0.3),
-        0 0 30px rgba(207, 200, 255, 0.2),
+        0 10px 25px rgba(186, 215, 245, 0.3),
+        0 0 30px rgba(186, 215, 245, 0.2),
         inset 0 0 20px rgba(255, 255, 255, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.6);
     position: relative;
@@ -38,8 +38,8 @@
     right: 0;
     bottom: 0;
     background-image: 
-        radial-gradient(circle at 20% 30%, rgba(174, 171, 252, 0.2) 0%, transparent 25%),
-        radial-gradient(circle at 80% 60%, rgba(207, 200, 255, 0.2) 0%, transparent 30%);
+        radial-gradient(circle at 20% 30%, rgba(186, 215, 245, 0.2) 0%, transparent 25%),
+        radial-gradient(circle at 80% 60%, rgba(186, 215, 245, 0.2) 0%, transparent 30%);
     z-index: -1;
 }
 
@@ -50,14 +50,14 @@
     bottom: 10px;
     right: 15px;
     font-size: 12px;
-    color: rgba(142, 153, 227, 0.6);
+    color: rgba(186, 215, 245, 0.6);
     letter-spacing: 3px;
 }
 
 .modal-content h4 {
     font-family: 'Press Start 2P', cursive;
     font-size: 16px;
-    color: #9e8fef;
+    color: #f2bac9;
     margin-bottom: 25px;
     text-align: center;
     text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
@@ -72,7 +72,7 @@
     left: 25%;
     width: 50%;
     height: 2px;
-    background: linear-gradient(to right, transparent, rgba(174, 171, 252, 0.6), transparent);
+    background: linear-gradient(to right, transparent, rgba(242, 186, 201, 0.6), transparent);
 }
 
 /* Input and Textarea */
@@ -81,18 +81,18 @@
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;
-    border: 1px solid rgba(207, 200, 255, 0.6);
+    border: 1px solid rgba(186, 215, 245, 0.6);
     border-radius: 12px;
     font-size: 14px;
     background-color: rgba(255, 255, 255, 0.7);
-    box-shadow: inset 0 1px 4px rgba(174, 171, 252, 0.2);
+    box-shadow: inset 0 1px 4px rgba(186, 215, 245, 0.2);
     transition: all 0.3s ease;
 }
 
 .newTask input[type="text"]:focus,
 .newTask textarea:focus {
-    border-color: #aeabfc;
-    box-shadow: 0 0 10px rgba(174, 171, 252, 0.3);
+    border-color: #bad7f5;
+    box-shadow: 0 0 10px rgba(186, 215, 245, 0.3);
     outline: none;
     background-color: rgba(255, 255, 255, 0.9);
 }
@@ -104,7 +104,7 @@
     margin-right: 10px;
     border-radius: 6px;
     cursor: pointer;
-    accent-color: #aeabfc;
+    accent-color: #bad7f5;
 }
 
 task-span {
@@ -124,21 +124,21 @@ task-span {
     margin: 0 5px;
     background-color: #f0f0f7;
     box-shadow: 
-        0 3px 8px rgba(142, 153, 227, 0.3),
+        0 3px 8px rgba(186, 215, 245, 0.3),
         inset 0 -2px 3px rgba(0, 0, 0, 0.05);
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #aeabfc 0%, #cfc8ff 100%);
+    background: linear-gradient(135deg, #bad7f5 0%, #cfe4fa 100%);
     color: #fff;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #cfc8ff 0%, #aeabfc 100%);
+    background: linear-gradient(135deg, #cfe4fa 0%, #bad7f5 100%);
     transform: translateY(-2px);
     box-shadow: 
-        0 5px 12px rgba(142, 153, 227, 0.4),
+        0 5px 12px rgba(186, 215, 245, 0.4),
         inset 0 -2px 3px rgba(0, 0, 0, 0.05);
 }
 
@@ -151,14 +151,14 @@ task-span {
     background: linear-gradient(135deg, #e6e6f0 0%, #f0f0f7 100%);
     transform: translateY(-2px);
     box-shadow: 
-        0 5px 12px rgba(142, 153, 227, 0.2),
+        0 5px 12px rgba(186, 215, 245, 0.2),
         inset 0 -2px 3px rgba(0, 0, 0, 0.05);
 }
 
 .btn:active {
     transform: translateY(1px);
     box-shadow: 
-        0 2px 5px rgba(142, 153, 227, 0.2),
+        0 2px 5px rgba(186, 215, 245, 0.2),
         inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
@@ -173,18 +173,18 @@ button[aria-label="Delete List"],
     min-height: 35px !important;
     max-height: 35px !important;
     border-radius: 50% !important;
-    background-color: rgba(255, 107, 129, 0.85) !important;
+    background-color: rgba(186, 215, 245, 0.85) !important;
     background-image: 
-        radial-gradient(circle at center, rgba(255, 137, 159, 0.9) 20%, transparent 70%),
-        radial-gradient(circle at 30% 30%, rgba(255, 167, 189, 0.8) 15%, transparent 50%),
-        radial-gradient(circle at 70% 70%, rgba(255, 127, 149, 0.8) 15%, transparent 50%) !important;
+        radial-gradient(circle at center, rgba(186, 215, 245, 0.9) 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, rgba(186, 215, 245, 0.8) 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(186, 215, 245, 0.8) 15%, transparent 50%) !important;
     padding: 0 !important;
     border: none !important;
     box-shadow: 
         inset 2px 2px 5px rgba(255, 255, 255, 0.8),
         inset -2px -2px 5px rgba(0, 0, 0, 0.1),
-        0 2px 8px rgba(255, 167, 189, 0.6),
-        0 0 15px rgba(255, 107, 129, 0.4) !important;
+        0 2px 8px rgba(186, 215, 245, 0.6),
+        0 0 15px rgba(186, 215, 245, 0.4) !important;
     position: relative !important;
     display: flex !important;
     justify-content: center !important;
@@ -200,18 +200,43 @@ button[aria-label="Delete List"] i,
     display: none !important;
 }
 
-/* Add the bin/trash symbol */
+/* Replace with minimalistic trash icon */
 button[aria-label="Delete Task"]::before,
 button[aria-label="Delete List"]::before,
 .delete-button::before {
-    content: '🗑️' !important;
-    font-size: 16px !important;
-    color: white !important;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5) !important;
+    content: '' !important;
     position: absolute !important;
     top: 50% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
+    width: 12px !important;
+    height: 14px !important;
+    border: 2px solid white !important;
+    border-top: none !important;
+    border-radius: 0 0 2px 2px !important;
+    box-sizing: border-box !important;
+}
+
+/* Add the trash lid */
+button[aria-label="Delete Task"]::after,
+button[aria-label="Delete List"]::after,
+.delete-button::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 32% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 16px !important;
+    height: 2px !important;
+    background-color: white !important;
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Add the trash lines */
+button[aria-label="Delete Task"] .delete-icon-line,
+button[aria-label="Delete List"] .delete-icon-line,
+.delete-button .delete-icon-line {
+    display: none !important;
 }
 
 /* Hover effect */
@@ -219,7 +244,7 @@ button[aria-label="Delete Task"]:hover,
 button[aria-label="Delete List"]:hover,
 .delete-button:hover {
     transform: scale(1.05) !important;
-    box-shadow: 0 0 20px rgba(255, 107, 129, 0.6) !important;
+    box-shadow: 0 0 20px rgba(186, 215, 245, 0.6) !important;
 }
 
 /* Click effect */
@@ -230,32 +255,5 @@ button[aria-label="Delete List"]:active,
     box-shadow: 
         inset 1px 1px 3px rgba(255, 255, 255, 0.5),
         inset -1px -1px 3px rgba(0, 0, 0, 0.2),
-        0 2px 6px rgba(255, 167, 189, 0.5) !important;
-}
-
-/* Glass shine effect */
-button[aria-label="Delete Task"]::after,
-button[aria-label="Delete List"]::after,
-.delete-button::after {
-    content: '' !important;
-    position: absolute !important;
-    width: 100% !important;
-    height: 100% !important;
-    top: 0 !important;
-    left: 0 !important;
-    background: linear-gradient(135deg, 
-        transparent 0%, 
-        transparent 40%, 
-        rgba(255, 255, 255, 0.3) 50%, 
-        transparent 60%, 
-        transparent 100%) !important;
-    border-radius: 50% !important;
-    transition: all 0.5s ease !important;
-}
-
-/* Shine animation on hover */
-button[aria-label="Delete Task"]:hover::after,
-button[aria-label="Delete List"]:hover::after,
-.delete-button:hover::after {
-    transform: translateX(100%) translateY(-100%) rotate(30deg) !important;
+        0 2px 6px rgba(186, 215, 245, 0.5) !important;
 }

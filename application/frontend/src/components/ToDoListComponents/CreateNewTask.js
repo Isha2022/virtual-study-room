@@ -65,7 +65,7 @@ const AddTaskModal = ({ addTaskWindow, setAddTaskWindow, listId, setLists, isSha
     if (!addTaskWindow) return null;
     
     return (
-        <div role="dialog" className="modal-overlay">
+        <div role="dialog" className="modal-overlay add-task-modal">
             <div className="modal-content">
                 <h4>Add Task</h4>
                 <form onSubmit={handleSubmit} className="newTask">

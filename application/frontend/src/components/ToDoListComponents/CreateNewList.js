@@ -56,7 +56,7 @@ const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
 
         if (!addListWindow) return null;
         return (
-            <div role="dialog" className="modal-overlay">
+            <div role="dialog" className="modal-overlay add-list-modal">
                 <div className="modal-content">
                     <h4>Add List</h4>
                     <form onSubmit={handleSubmit}>
