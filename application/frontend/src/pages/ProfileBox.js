@@ -33,7 +33,7 @@ function ProfileBox() {
     navigate(`/calendar/`, {
         state: { userId : user_id }
     });
-    }
+  }
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -163,7 +163,7 @@ function ProfileBox() {
         <h1 className="profile-title">Profile</h1>
         <div className="picture-container">
           <div className="container1">
-            <img src={userData.image} alt="logo" className="profile-pic" />
+            <img src={userData.image} alt="logo" className="profile-pic" data-testid="image-profile-src" />
             <h1 className="profile-username">{userData.username}</h1>
             <button
               className="inventory-button"
@@ -193,6 +193,7 @@ function ProfileBox() {
             </button>
             <button
                 className="CalendarButton"
+                data-testid="calendar-button-profile"
                 onClick={gotoCalendar}
                 style={{
                     width: '45px',
