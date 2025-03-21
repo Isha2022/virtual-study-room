@@ -157,7 +157,7 @@ describe('ProfileBox', () => {
         </Router>
       );
 
-      const logoffButton = screen.getByText('LOG OFF');
+      const logoffButton = screen.getByText('Logout');
       fireEvent.click(logoffButton);
 
       await waitFor(() => expect(localStorage.removeItem).toHaveBeenCalledWith('access_token'));
