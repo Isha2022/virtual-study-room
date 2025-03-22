@@ -2,40 +2,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/* Main To-Do Container - Default size for Dashboard */
+/* Main To-Do Container - Softer borders to match study timer */
 .todo-container {
     background: white;
     background-image: linear-gradient(90deg, rgba(211, 225, 248, 0.3) 50%, rgba(255, 255, 255, 0.8) 50%);
     background-size: 20px 20px;
     border-radius: 40px;
-    box-shadow: 0 2px 6px rgba(186, 215, 245, 0.2);
-    padding: 25px; /* Increased padding */
-    width: 450px; /* Increased from 400px */
-    height: 700px; /* Increased from 600px */
-    min-width: 400px; /* Increased minimum width */
-    min-height: 600px; /* Increased minimum height */
+    padding: 25px;
+    width: 450px;
+    height: 700px;
+    min-width: 400px;
+    min-height: 600px;
     margin: 1.5%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     position: relative;
-    border: 2px solid rgba(186, 215, 245, 0.6);
+    border: 1px solid rgba(186, 198, 241, 0.4); /* Softer border like study timer */
     box-shadow: 
-        0 4px 12px rgba(186, 215, 245, 0.3),
-        0 0 20px rgba(186, 215, 245, 0.2);
+        0 4px 8px rgba(186, 198, 241, 0.2),
+        0 0 20px rgba(209, 203, 237, 0.15); /* Softer shadow with timer colors */
 }
 
-/* Special positioning for group study page to-do lists - made smaller */
+/* Special positioning for group study page to-do lists - matching timer styling */
 .groupStudyRoom-container .todo-container {
     width: 380px; 
-    height: 480px; /* Reduced from 550px */
+    height: 480px;
     min-width: 350px;
-    min-height: 400px; /* Reduced from 450px */
+    min-height: 400px;
     padding: 20px;
-    margin-top: -15px; /* Shift upward to align with timer */
+    margin-top: -15px;
     position: relative;
-    top: -15px; /* Additional upward shift */
-    margin-bottom: 2px; /* Reduced from 15px to match timer-chatbox spacing */
+    top: -15px;
+    margin-bottom: 5px;
+    border: 1px solid rgba(186, 198, 241, 0.4); /* Match the timer border */
+    background: white;
+    background-image: linear-gradient(90deg, rgba(211, 225, 248, 0.2) 50%, rgba(255, 255, 255, 0.9) 50%);
+    border-radius: 40px;
+    box-shadow: 0 2px 6px rgba(209, 203, 237, 0.25); /* More subtle shadow */
 }
 
 /* Make group study to-do cards more compact */
@@ -104,7 +108,7 @@
     }
 }
 
-/* Y2K-style header banner */
+/* Softer header banner to match timer aesthetic */
 .todo-header {
     display: flex;
     justify-content: space-between;
@@ -112,35 +116,26 @@
     width: 95%;
     margin: 0 auto 10px auto;
     padding: 5px;
-    border: 2px solid #8e99e3;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(211, 225, 248, 0.6) 100%);
-    box-shadow: 0 0 5px rgba(142, 153, 227, 0.3);
+    border: 1px solid rgba(186, 198, 241, 0.5); /* Softer border */
+    background: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(209, 203, 237, 0.3) 100%); /* Match timer gradient */
+    box-shadow: 0 0 5px rgba(186, 198, 241, 0.2);
     border-radius: 25px;
 }
 
-/* Clean To-Do List Title with sans-serif font */
+/* Update header text to be bold, capitalized, and larger */
 .todo-header h3,
 .todo-container .todo-header h3 {
-    font-family: sans-serif !important;
-    font-size: 22px !important;
-    color: #8e99e3 !important;
-    margin-bottom: 8px !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
+    color: #bac6f1 !important; 
     text-shadow: 
-        0 0 2px rgba(142, 153, 227, 0.3),
-        0 0 4px rgba(142, 153, 227, 0.2),
-        0 0 6px rgba(142, 153, 227, 0.1),
+        0 0 2px rgba(186, 198, 241, 0.3),
+        0 0 4px rgba(186, 198, 241, 0.2),
+        0 0 6px rgba(186, 198, 241, 0.1),
         0 0 8px rgba(255, 255, 255, 0.5),
-        1px 1px 0px rgba(186, 215, 245, 0.5) !important;
+        1px 1px 0px rgba(209, 203, 237, 0.5) !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
     letter-spacing: 1px !important;
-    position: relative !important;
-    padding: 8px 10px !important;
-    text-align: center !important;
-    width: 100% !important;
-    display: inline-block !important;
-    background: transparent !important;
-    border: none !important;
+    font-size: 1.2em !important; /* Increased font size */
 }
 
 /* Stars next to header with matching color */
@@ -149,7 +144,7 @@
     content: '★';
     display: inline-block;
     margin: 0 5px;
-    color: #8e99e3;
+    color: #bac6f1; /* Match timer color */
 }
 
 /* Add List Button - Y2K styling */
@@ -270,37 +265,37 @@ button[aria-label="Add Task"]:hover::after {
     transform: translateX(100%) translateY(-100%) rotate(30deg) !important;
 }
 
-/* To-Do Lists Wrapper */
+/* To-Do Lists Wrapper - Softer inner container */
 .todo-list {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 15px; /* Increased gap */
+    gap: 15px;
     padding: 12px;
     background: white;
     border-radius: 25px;
     position: relative;
     overflow-y: auto;
-    border: 2px solid #8e99e3;
+    border: 1px solid rgba(186, 198, 241, 0.4); /* Softer border */
     background-color: rgba(255, 255, 255, 0.8);
-    flex-grow: 1; /* Allow it to grow and fill available space */
-    max-height: calc(100% - 80px); /* Account for header and padding */
+    flex-grow: 1;
+    max-height: calc(100% - 80px);
 }
 
-/* Individual To-Do Card - Y2K styling */
+/* Individual To-Do Card - Softer styling to match timer aesthetic */
 .todo-card {
     background: white;
     border-radius: 20px;
-    border: 2px solid #8e99e3;
-    padding: 18px; /* Increased padding */
+    border: 1px solid rgba(186, 198, 241, 0.5); /* Softer border */
+    padding: 18px;
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    font-size: 1rem; /* Larger font */
+    font-size: 1rem;
     width: 100%;
     margin: 0 auto 18px auto;
-    box-shadow: 3px 3px 0px rgba(142, 153, 227, 0.3);
-    min-height: 250px; /* Significantly increased minimum height */
+    box-shadow: 2px 2px 5px rgba(209, 203, 237, 0.2); /* Softer shadow */
+    min-height: 250px;
 }
 
 .groupStudyRoom-container .todo-card {
@@ -309,7 +304,7 @@ button[aria-label="Add Task"]:hover::after {
     font-size: 0.9rem; /* Slightly smaller font */
 }
 
-/* Card Header - Soft, light blue */
+/* Card Header - Soft, light blue - updated to use flexbox for horizontal button layout */
 .todo-card-header {
     font-weight: 600;
     padding: 8px 10px;
@@ -322,6 +317,18 @@ button[aria-label="Add Task"]:hover::after {
     border-bottom: 1px solid rgba(186, 215, 245, 0.3);
     color: rgba(122, 122, 154, 0.8);
     border-radius: 20px 20px 0 0;
+    
+    /* Added flex layout properties */
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-end !important; /* Push buttons to the right side */
+    align-items: center !important;
+    gap: 10px !important; /* Space between buttons */
+}
+
+/* Add some left spacing for the title if needed */
+.todo-card-header h4 {
+    margin-right: auto !important; /* This pushes the buttons to the right */
 }
 
 /* Task Container */
@@ -469,37 +476,71 @@ button[aria-label="Add Task"]:hover::after {
     border-radius: 10px;
 }
 
-/* Full-Screen Mode for To-Do List */
+/* Full-screen mode - when zoomed in */
 .todo-container.full-screen {
     position: fixed;
     top: 0;
     left: 0;
-    width: 98%;
-    height: 89%;
-    z-index: 9999;
-    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    z-index: 10000;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-top: 5%;
-    box-shadow: 5px 5px 0px rgba(142, 153, 227, 0.5);
-    border-radius: 40px;
+    padding: 80px 20px 20px;
+    background: linear-gradient(180deg, rgba(238, 241, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    overflow-y: auto;
 }
 
-/* Fixed Header in Full-Screen */
-.todo-container.full-screen .todo-header {
+/* Zoom-out mode - horizontal layout of all lists */
+.todo-container.zoomed-out {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10000;
+    padding: 80px 20px 20px;
+    background: linear-gradient(180deg, rgba(238, 241, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+/* Adjust card sizes in zoomed-out mode */
+.todo-container.zoomed-out .todo-card {
+    width: 320px;
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+/* Fixed header in both full-screen and zoomed-out modes */
+.todo-container.full-screen .todo-header,
+.todo-container.zoomed-out .todo-header {
     position: fixed;
     top: 0;
     left: 0;
     width: 97.5%;
     height: 70px;
     background-color: white;
-    z-index: 10000;
+    z-index: 10001;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
     border-bottom: 2px solid #8e99e3;
+}
+
+/* Change fullscreen button text based on mode */
+.todo-container.full-screen .full-screen-btn::before {
+    content: '⤡' !important; /* Minimize icon */
+}
+
+.todo-container.zoomed-out .full-screen-btn::before {
+    content: '⤢' !important; /* Maximize icon */
 }
 
 /* Decorative elements - Y2K style */
@@ -702,4 +743,204 @@ button[aria-label="Task Details"]:hover {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+/* Full-screen button styling - distinct from add button */
+.todo-header .full-screen-btn {
+    height: 32px !important;
+    width: 32px !important;
+    min-width: 32px !important;
+    max-width: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+    border-radius: 50% !important;
+    background-color: #f2bac9 !important; /* Pink color to differentiate */
+    background-image: 
+        radial-gradient(circle at center, #f7cad7 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, #fde2e9 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, #f5c1cf 15%, transparent 50%) !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: 
+        inset 0px 2px 4px rgba(255, 255, 255, 0.7),
+        inset 0px -2px 4px rgba(242, 186, 201, 0.2),
+        0 2px 8px rgba(242, 186, 201, 0.4) !important;
+    position: relative !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    overflow: hidden !important; /* Hide overflowing text */
+    font-size: 0 !important; /* Make button text invisible */
+    color: transparent !important; /* Make button text transparent */
+}
+
+/* Remove any Bootstrap icon */
+.todo-header .full-screen-btn i {
+    display: none !important;
+}
+
+/* Add the fullscreen/minimize icon */
+.todo-header .full-screen-btn::before {
+    content: '⤢' !important; /* Expand icon */
+    font-family: Arial, sans-serif !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: white !important;
+    text-shadow: 1px 1px 2px #b2b2b2 !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+/* Change icon when in fullscreen mode */
+.todo-container.full-screen .full-screen-btn::before {
+    content: '⤡' !important; /* Minimize icon */
+}
+
+/* Button hover effect */
+.todo-header .full-screen-btn:hover {
+    transform: scale(1.05) !important;
+    background-image: 
+        radial-gradient(circle at center, #fde2e9 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, #fff5f8 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, #f7cad7 15%, transparent 50%) !important;
+    box-shadow: 
+        inset 0px 2px 4px rgba(255, 255, 255, 0.9),
+        inset 0px -2px 4px rgba(242, 186, 201, 0.3),
+        0 4px 12px rgba(242, 186, 201, 0.6) !important;
+}
+
+/* Button active effect */
+.todo-header .full-screen-btn:active {
+    transform: scale(0.95) !important;
+    box-shadow: 
+        inset 1px 1px 3px rgba(255, 255, 255, 0.5),
+        inset -1px -1px 3px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Glass shine effect */
+.todo-header .full-screen-btn::after {
+    content: '' !important;
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    background: linear-gradient(135deg, 
+        transparent 0%, 
+        transparent 40%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        transparent 60%, 
+        transparent 100%) !important;
+    border-radius: 50% !important;
+    transition: all 0.5s ease !important;
+}
+
+/* Shine animation on hover */
+.todo-header .full-screen-btn:hover::after {
+    transform: translateX(100%) translateY(-100%) rotate(30deg) !important;
+}
+
+/* Target the delete button in the todo header with a minimalistic trash icon and light yellow color */
+.todo-card-header button:nth-child(2),
+.todo-card-header button[aria-label="Delete List"],
+.todo-card-header button.delete-list-btn {
+    height: 35px !important;
+    width: 35px !important;
+    min-width: 35px !important;
+    max-width: 35px !important;
+    min-height: 35px !important;
+    max-height: 35px !important;
+    border-radius: 50% !important;
+    background-color: #ffeebb !important; /* Light yellow/beige color as requested */
+    background-image: 
+        radial-gradient(circle at center, rgba(255, 247, 205, 0.9) 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, rgba(255, 250, 220, 0.8) 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(255, 238, 187, 0.8) 15%, transparent 50%) !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: 
+        inset 2px 2px 5px rgba(255, 255, 255, 0.8),
+        inset -2px -2px 5px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(255, 238, 187, 0.6),
+        0 0 15px rgba(255, 238, 187, 0.4) !important;
+    position: relative !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    margin-left: 8px !important;
+}
+
+/* Hide any existing icons */
+.todo-card-header button:nth-child(2) i,
+.todo-card-header button[aria-label="Delete List"] i,
+.todo-card-header button.delete-list-btn i {
+    display: none !important;
+}
+
+/* Create a simple minimalistic trash icon - with pink color for Y2K aesthetic */
+.todo-card-header button:nth-child(2)::before,
+.todo-card-header button[aria-label="Delete List"]::before,
+.todo-card-header button.delete-list-btn::before {
+    content: '\1F5D1' !important; /* Unicode trash icon */
+    font-size: 16px !important;
+    color: #f2bac9 !important; /* Changed to pink for better Y2K aesthetic */
+    text-shadow: 0 0 3px rgba(242, 186, 201, 0.5) !important; /* Matching pink shadow */
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 2 !important;
+}
+
+/* Hover effect */
+.todo-card-header button:nth-child(2):hover,
+.todo-card-header button[aria-label="Delete List"]:hover,
+.todo-card-header button.delete-list-btn:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 20px rgba(255, 238, 187, 0.6) !important;
+}
+
+/* Click effect */
+.todo-card-header button:nth-child(2):active,
+.todo-card-header button[aria-label="Delete List"]:active,
+.todo-card-header button.delete-list-btn:active {
+    transform: scale(0.95) !important;
+    box-shadow: 
+        inset 1px 1px 3px rgba(255, 255, 255, 0.5),
+        inset -1px -1px 3px rgba(0, 0, 0, 0.2),
+        0 2px 6px rgba(255, 238, 187, 0.5) !important;
+}
+
+/* Glass shine effect */
+.todo-card-header button:nth-child(2)::after,
+.todo-card-header button[aria-label="Delete List"]::after,
+.todo-card-header button.delete-list-btn::after {
+    content: '' !important;
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    background: linear-gradient(135deg, 
+        transparent 0%, 
+        transparent 40%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        transparent 60%, 
+        transparent 100%) !important;
+    border-radius: 50% !important;
+    transition: all 0.5s ease !important;
+    z-index: 1 !important;
+}
+
+/* Shine animation on hover */
+.todo-card-header button:nth-child(2):hover::after,
+.todo-card-header button[aria-label="Delete List"]:hover::after,
+.todo-card-header button.delete-list-btn:hover::after {
+    transform: translateX(100%) translateY(-100%) rotate(30deg) !important;
 }
