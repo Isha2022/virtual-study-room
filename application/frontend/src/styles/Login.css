@@ -96,7 +96,7 @@
     font-size: 30px;
     font-weight: 700;
     text-transform: uppercase;
-    color: #f4bdd0;  /* Lighter pink */
+    color: #7bcec3;  /* Changed to green to match signup */
     text-shadow: 
         0 0 5px #fef6ae,
         0 0 10px rgba(254, 246, 174, 0.6),
@@ -114,7 +114,7 @@
     font-family: 'Inter', sans-serif;
     font-weight: 700;
     text-transform: uppercase;
-    color: #f4bdd0;  /* Now matches the login heading color */
+    color: #7bcec3;  /* Changed to green to match signup */
 }
 .username-field, .password-field {
     width: 85%;

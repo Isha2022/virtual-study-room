@@ -158,152 +158,170 @@ function Signup() {
         <h1 className="heading1">The Study Spot</h1>
       </Link>
       <form className="signup-form">
-        <div className="field">
-          <h1 className="heading2">Signup</h1>
-          <label htmlFor="firstname" className="label-text">
-            First name:
-          </label>
-          <input
-            id="firstname"
-            type="text"
-            name="firstname"
-            className="input-field"
-            value={formData.firstname}
-            onChange={handleChange}
-          />
-          {errors.firstname && (
-            <p data-testid="error-message-firstname" className="error-message">
-              {errors.firstname}
+        <h1 className="heading2">Signup</h1>
+        
+        <div className="form-row">
+          <div className="field-column">
+            <label htmlFor="firstname" className="label-text">
+              First name:
+            </label>
+            <input
+              id="firstname"
+              type="text"
+              name="firstname"
+              className="input-field"
+              value={formData.firstname}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            {errors.firstname && (
+              <p data-testid="error-message-firstname" className="error-message">
+                {errors.firstname}
+              </p>
+            )}
+          </div>
+
+          <div className="field-column">
+            <label htmlFor="lastname" className="label-text">
+              Last name:
+            </label>
+            <input
+              id="lastname"
+              type="text"
+              name="lastname"
+              className="input-field"
+              value={formData.lastname}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            {errors.lastname && (
+              <p data-testid="error-message-lastname" className="error-message">
+                {errors.lastname}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="field-column">
+            <label htmlFor="username" className="label-text">
+              Username:
+            </label>
+            <input
+              id="username"
+              type="text" 
+              name="username"
+              className="input-field"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            {errors.username && (
+              <p data-testid="error-message-username" className="error-message">
+                {errors.username}
+              </p>
+            )}
+          </div>
+
+          <div className="field-column">
+            <label htmlFor="email" className="label-text">
+              Email:
+            </label>
+            <input
+              id="email"
+              type="text"
+              name="email"
+              className="input-field"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            {errors.email && (
+              <p data-testid="error-message-email" className="error-message">
+                {errors.email}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="field-column full-width">
+            <label htmlFor="details" className="label-text">
+              Your motto in life :):
+            </label>
+            <input
+              id="details"
+              type="text"
+              name="description"
+              className="input-field"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder=" "
+            />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="field-column">
+            <label htmlFor="password" className="label-text">
+              Password:
+            </label>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              className="input-field"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            {errors.password && (
+              <p data-testid="error-message-password" className="error-message">
+                {errors.password}
+              </p>
+            )}
+          </div>
+
+          <div className="field-column">
+            <label htmlFor="passwordConfirmation" className="label-text">
+              Confirm password:
+            </label>
+            <input
+              id="passwordConfirmation"
+              type="password"
+              name="passwordConfirmation"
+              className="input-field"
+              value={formData.passwordConfirmation}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            <p
+              data-testid="error-message-passwordConfirmation"
+              className="error-message"
+            >
+              {errors.passwordConfirmation}
             </p>
-          )}
+          </div>
         </div>
 
-        <div className="field">
-          <label htmlFor="lastname" className="label-text">
-            Last name:
-          </label>
-          <input
-            id="lastname"
-            type="text"
-            name="lastname"
-            className="input-field"
-            value={formData.lastname}
-            onChange={handleChange}
-          />
-          {errors.lastname && (
-            <p data-testid="error-message-lastname" className="error-message">
-              {errors.lastname}
-            </p>
-          )}
+        <div className="terms-and-submit-row">
+          <div className="checkbox-container">
+            <input
+              type="checkbox"
+              name="acceptTerms"
+              id="acceptTerms"
+              checked={formData.acceptTerms}
+              onChange={handleChange}
+            />
+            <label htmlFor="acceptTerms" className="checkbox-label">
+              I accept the <a href="#">terms and conditions</a>
+            </label>
+          </div>
+          
+          <button type="button" className="submit-button" onClick={handleSignup}>
+            SIGNUP
+          </button>
         </div>
-
-        <div className="field">
-          <label htmlFor="username" className="label-text">
-            Username:
-          </label>
-          <input
-            id="username"
-            type="text" 
-            name="username"
-            className="input-field"
-            value={formData.username}
-            onChange={handleChange}
-          />
-          {errors.username && (
-            <p data-testid="error-message-username" className="error-message">
-              {errors.username}
-            </p>
-          )}
-        </div>
-
-        <div className="field">
-          <label htmlFor="email" className="label-text">
-            Email:
-          </label>
-          <input
-            id="email"
-            type="text"
-            name="email"
-            className="input-field"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          {errors.email && (
-            <p data-testid="error-message-email" className="error-message">
-              {errors.email}
-            </p>
-          )}
-        </div>
-
-        <div className="field">
-          <label htmlFor="details" className="label-text">
-            Your motto in life :):
-          </label>
-          <input
-            id="details"
-            type="text"
-            name="description"
-            className="input-field"
-            value={formData.description}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="password" className="label-text">
-            Password:
-          </label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            className="input-field"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          {errors.password && (
-            <p data-testid="error-message-password" className="error-message">
-              {errors.password}
-            </p>
-          )}
-        </div>
-
-        <div className="field">
-          <label htmlFor="passwordConfirmation" className="label-text">
-            Confirm password:
-          </label>
-          <input
-            id="passwordConfirmation"
-            type="password"
-            name="passwordConfirmation"
-            className="input-field"
-            value={formData.passwordConfirmation}
-            onChange={handleChange}
-          />
-          <p
-            data-testid="error-message-passwordConfirmation"
-            className="error-message"
-          >
-            {errors.passwordConfirmation}
-          </p>
-        </div>
-
-        <div className="checkbox-container">
-          <input
-            type="checkbox"
-            name="acceptTerms"
-            id="acceptTerms"
-            checked={formData.acceptTerms}
-            onChange={handleChange}
-          />
-          <label htmlFor="acceptTerms" className="checkbox-label">
-            I accept the <a href="#">terms and conditions</a>
-          </label>
-        </div>
-
-        <button type="button" className="submit-button" onClick={handleSignup}>
-          SIGNUP
-        </button>
       </form>
     </div>
   );
