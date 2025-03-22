@@ -4,17 +4,18 @@ from datetime import datetime, timedelta
 from api.models.events import Appointments
 
 class EventModelTest(TestCase):
+    ''' Tests for the Appointments model '''
 
     fixtures = [
         'api/tests/fixtures/default_user.json'
     ]
 
     def setUp(self):
-        # Create a test user
+        ''' Create a test user '''
 
         self.user = User.objects.get(pk=1)
         
-        # Create a test event
+        ''' Create a test event '''
         self.event = Appointments.objects.create(
             user=self.user,
             name='Test Event',
