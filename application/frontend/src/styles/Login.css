@@ -1,3 +1,8 @@
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Main container for the login page */
 .login-container {
     margin-top: 130px;
     display: flex;
@@ -5,10 +10,12 @@
     align-items: center;
     margin: 0;
     background-color: #F6F0F0;
-    min-height: 100vh; /* Ensures it takes the full viewport height */
-    width: 100vw; /* Ensures it spans the full width */
+    min-height: 100vh; 
+    width: 100vw; 
     flex-direction: column;
 }
+
+/* Header styling for the login page */
 .login-heading1 {
     position: fixed;
     width: 100%;
@@ -39,6 +46,8 @@
         0 0 12px rgba(244, 189, 208, 0.4),
         0 1px 2px rgba(0, 0, 0, 0.3);
 }
+
+/* Main form container with decorative border and styling */
 .login-form {
     border: 5px solid #f4bdd0;
     width: 480px;
@@ -57,7 +66,7 @@
     overflow: hidden;
 }
 
-/* Add cherry blossom decoration to the background */
+/* Decorative background pattern for the form */
 .login-form::before {
     content: "";
     position: absolute;
@@ -74,7 +83,7 @@
     z-index: -1;
 }
 
-/* Add a subtle butterfly and flower glow effect */
+/* Bottom glow effect for the form */
 .login-form::after {
     content: "";
     position: absolute;
@@ -88,6 +97,7 @@
     z-index: -1;
 }
 
+/* Form title styling */
 .login-heading2 {
     margin-top: 30px;
     width: 100%;                  
@@ -96,7 +106,7 @@
     font-size: 30px;
     font-weight: 700;
     text-transform: uppercase;
-    color: #7bcec3;  /* Changed to green to match signup */
+    color: #7bcec3; 
     text-shadow: 
         0 0 5px #fef6ae,
         0 0 10px rgba(254, 246, 174, 0.6),
@@ -105,6 +115,8 @@
         0 4px 0 rgba(247, 156, 172, 0.6),
         0 0 2px rgba(0, 0, 0, 0.3);
 }
+
+/* Label styling for username and password fields */
 .username-text, .password-text {
     width: 100%;
     text-align: left;
@@ -114,8 +126,10 @@
     font-family: 'Inter', sans-serif;
     font-weight: 700;
     text-transform: uppercase;
-    color: #7bcec3;  /* Changed to green to match signup */
+    color: #7bcec3; 
 }
+
+/* Input field styling */
 .username-field, .password-field {
     width: 85%;
     margin-top: 20px;
@@ -133,6 +147,8 @@
     color: #f4bdd0;  /* Text color while typing */
     font-weight: 600;
 }
+
+/* Submit button styling*/
 .login-submit-button {
     padding: 15px 20px;
     width: 30%;
@@ -161,6 +177,7 @@
     position: relative;
 }
 
+/* Decorative highlight on the button */
 .login-submit-button::before {
     content: '';
     position: absolute;
@@ -173,6 +190,7 @@
     pointer-events: none;
 }
 
+/* Button hover effect */
 .login-submit-button:hover {
     transform: scale(1.05);
     background-image: 
@@ -185,6 +203,7 @@
         0 4px 12px rgba(244, 189, 208, 0.6);
 }
 
+/* Button active/click effect */
 .login-submit-button:active {
     transform: scale(0.95);
     box-shadow: 
