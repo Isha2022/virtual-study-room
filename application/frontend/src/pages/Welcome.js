@@ -13,11 +13,21 @@ function Welcome() {
                 <div></div>
             </div>
             
+            <div className="welcome-footer">
+                <div></div>
+                <div></div>
+            </div>
+            
+            <div className="floating-mango"></div>
+            <div className="floating-mango"></div>
+            <div className="floating-mango"></div>
+            <div className="floating-mango"></div>
+            
             <div className="welcome-content">
-                <div className="top-left-mango">🥭</div>
-                <div className="top-right-mango">🥭</div>
-                <div className="bottom-left-mango">🥭</div>
-                <div className="bottom-right-mango">🥭</div>
+                <span className="mango-emoji top-left-mango">🥭</span>
+                <span className="mango-emoji top-right-mango">🥭</span>
+                <span className="mango-emoji bottom-left-mango">🥭</span>
+                <span className="mango-emoji bottom-right-mango">🥭</span>
                 
                 <h1 className="welcome-heading">The Study Spot</h1>
                 <img src={mangoCat} alt="logo" className="welcome-image" />
