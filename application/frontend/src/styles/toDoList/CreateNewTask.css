@@ -1,4 +1,4 @@
-/* Modal Overlay Styles - Dreamy translucent effect */
+/* Semi-transparent backdrop overlay for modal */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -13,6 +13,7 @@
     z-index: 9999;
 }
 
+/* Main modal content box */
 .modal-content {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(233, 233, 255, 0.9));
     backdrop-filter: blur(8px);
@@ -29,7 +30,7 @@
     overflow: hidden;
 }
 
-/* Decorative elements */
+/* Background gradient effect for modal */
 .modal-content::before {
     content: "";
     position: absolute;
@@ -43,7 +44,7 @@
     z-index: -1;
 }
 
-/* Sparkle effects */
+/* Small character decoration in bottom corner */
 .modal-content::after {
     content: "✧ ✦ ✧";
     position: absolute;
@@ -54,6 +55,7 @@
     letter-spacing: 3px;
 }
 
+/* Modal heading style */
 .modal-content h4 {
     font-family: 'Inter', sans-serif;
     font-size: 16px;
@@ -67,6 +69,7 @@
     text-transform: uppercase;
 }
 
+/* Underline for modal heading */
 .modal-content h4::after {
     content: "";
     position: absolute;
@@ -77,7 +80,7 @@
     background: linear-gradient(to right, transparent, rgba(242, 186, 201, 0.6), transparent);
 }
 
-/* Input and Textarea */
+/* Text inputs and textarea fields */
 .newTask input[type="text"],
 .newTask textarea {
     width: 100%;
@@ -91,6 +94,7 @@
     transition: all 0.3s ease;
 }
 
+/* Focus state for text inputs */
 .newTask input[type="text"]:focus,
 .newTask textarea:focus {
     border-color: #bad7f5;
@@ -99,7 +103,7 @@
     background-color: rgba(255, 255, 255, 0.9);
 }
 
-/* Checkbox Styling */
+/* Checkbox styling */
 .newTask input[type="checkbox"] {
     width: 20px;
     height: 20px;
@@ -109,13 +113,14 @@
     accent-color: #bad7f5;
 }
 
+/* Text next to checkboxes */
 task-span {
     font-size: 14px;
     margin-left: 10px;
     color: #7a7a9a;
 }
 
-/* Buttons */
+/* Base button style */
 .btn {
     padding: 10px 18px;
     border-radius: 15px;
@@ -130,12 +135,14 @@ task-span {
         inset 0 -2px 3px rgba(0, 0, 0, 0.05);
 }
 
+/* Primary (blue) button */
 .btn-primary {
     background: linear-gradient(135deg, #bad7f5 0%, #cfe4fa 100%);
     color: #fff;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
+/* Hover state for primary button */
 .btn-primary:hover {
     background: linear-gradient(135deg, #cfe4fa 0%, #bad7f5 100%);
     transform: translateY(-2px);
@@ -144,11 +151,13 @@ task-span {
         inset 0 -2px 3px rgba(0, 0, 0, 0.05);
 }
 
+/* Secondary (gray) button */
 .btn-secondary {
     background: linear-gradient(135deg, #f0f0f7 0%, #e6e6f0 100%);
     color: #8e8ea9;
 }
 
+/* Hover state for secondary button */
 .btn-secondary:hover {
     background: linear-gradient(135deg, #e6e6f0 0%, #f0f0f7 100%);
     transform: translateY(-2px);
@@ -157,6 +166,7 @@ task-span {
         inset 0 -2px 3px rgba(0, 0, 0, 0.05);
 }
 
+/* Active (pressed) state for all buttons */
 .btn:active {
     transform: translateY(1px);
     box-shadow: 
@@ -164,7 +174,7 @@ task-span {
         inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Custom Bin/Delete Button - Glass Effect */
+/* Circular delete buttons */
 button[aria-label="Delete Task"],
 button[aria-label="Delete List"],
 .delete-button {
@@ -195,14 +205,14 @@ button[aria-label="Delete List"],
     transition: all 0.3s ease !important;
 }
 
-/* Remove any Bootstrap icon */
+/* Removes default icons from delete buttons */
 button[aria-label="Delete Task"] i,
 button[aria-label="Delete List"] i,
 .delete-button i {
     display: none !important;
 }
 
-/* Replace with minimalistic trash icon */
+/* Adds trash bin body to delete buttons */
 button[aria-label="Delete Task"]::before,
 button[aria-label="Delete List"]::before,
 .delete-button::before {
@@ -219,7 +229,7 @@ button[aria-label="Delete List"]::before,
     box-sizing: border-box !important;
 }
 
-/* Add the trash lid */
+/* Adds trash bin lid to delete buttons */
 button[aria-label="Delete Task"]::after,
 button[aria-label="Delete List"]::after,
 .delete-button::after {
@@ -234,14 +244,14 @@ button[aria-label="Delete List"]::after,
     box-shadow: 0 0 3px rgba(255, 255, 255, 0.5) !important;
 }
 
-/* Add the trash lines */
+/* Hides any leftover icon elements */
 button[aria-label="Delete Task"] .delete-icon-line,
 button[aria-label="Delete List"] .delete-icon-line,
 .delete-button .delete-icon-line {
     display: none !important;
 }
 
-/* Hover effect */
+/* Hover effect for delete buttons */
 button[aria-label="Delete Task"]:hover,
 button[aria-label="Delete List"]:hover,
 .delete-button:hover {
@@ -249,7 +259,7 @@ button[aria-label="Delete List"]:hover,
     box-shadow: 0 0 20px rgba(186, 215, 245, 0.6) !important;
 }
 
-/* Click effect */
+/* Active state for delete buttons */
 button[aria-label="Delete Task"]:active,
 button[aria-label="Delete List"]:active,
 .delete-button:active {

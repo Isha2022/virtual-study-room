@@ -1,8 +1,8 @@
-/* First, make sure VT323 font is imported */
+/* Import fonts used in the app */
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-/* Add Inter font import */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
+/* Main container with fixed dimensions */
 .shared-materials-container {
     overflow: hidden;
     display: flex;
@@ -15,38 +15,41 @@
     text-align: center; 
 }
 
+/* Inner content wrapper */
 .shared-materials-content {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     overflow: hidden; /*change this to be scroll?*/
-    width: 100%; /* Ensure the container has a width */
+    width: 100%; /* Container width */
 }
 
+/* Section title */
 .sm-title {
-    color: #8e99e3; /* Match the purple color of timer button hover */
+    color: #8e99e3;
     font-family: sans-serif !important;
     font-size: 22px;
     margin-bottom: 5px;
     font-weight: bold;
     text-transform: uppercase;
     text-shadow: 
-        0 0 2px rgba(142, 153, 227, 0.3),  /* Inner glow */
-        0 0 4px rgba(142, 153, 227, 0.2),  /* Middle glow */
-        0 0 6px rgba(142, 153, 227, 0.1),  /* Outer glow */
-        0 0 8px rgba(255, 255, 255, 0.3),  /* White halo */
-        1px 1px 0px rgba(255, 192, 203, 0.2); /* Y2K pink offset shadow */
+        0 0 2px rgba(142, 153, 227, 0.3),
+        0 0 4px rgba(142, 153, 227, 0.2),
+        0 0 6px rgba(142, 153, 227, 0.1),
+        0 0 8px rgba(255, 255, 255, 0.3),
+        1px 1px 0px rgba(255, 192, 203, 0.2);
     letter-spacing: 1px;
     position: relative;
     padding: 5px 10px;
 }
 
+/* Upload button (+) */
 .upload-materials-label {
     height: 40px;
     width: 40px;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #d9cafc, #cdb6fa); /* New purple gradient */
+    background: radial-gradient(circle at 30% 30%, #d9cafc, #cdb6fa);
     color: white;
     font-family: 'Inter', sans-serif;
     font-size: 25px;
@@ -66,7 +69,7 @@
     transition: all 0.2s ease;
 }
 
-/* Add a subtle shine effect */
+/* White dot highlight on upload button */
 .upload-materials-label::after {
     content: '';
     position: absolute;
@@ -79,25 +82,26 @@
     pointer-events: none;
 }
 
-/* Add hover effect */
+/* Upload button hover state */
 .upload-materials-label:hover {
     transform: scale(1.05);
-    background: radial-gradient(circle at 30% 30%, #e2d7fc, #d7c3fc); /* Lighter variant */
+    background: radial-gradient(circle at 30% 30%, #e2d7fc, #d7c3fc);
     box-shadow: 
         inset 2px 2px 5px rgba(255, 255, 255, 0.7),
         inset -2px -2px 5px rgba(0, 0, 0, 0.15),
         0 4px 8px rgba(205, 182, 250, 0.4);
 }
 
-/* Add active/click effect */
+/* Upload button pressed state */
 .upload-materials-label:active {
     transform: scale(0.95);
-    background: radial-gradient(circle at 30% 30%, #c5adee, #b39edc); /* Darker when pressed */
+    background: radial-gradient(circle at 30% 30%, #c5adee, #b39edc);
     box-shadow: 
         inset 1px 1px 3px rgba(255, 255, 255, 0.5),
         inset -1px -1px 3px rgba(0, 0, 0, 0.2);
 }
 
+/* Scrollable file list area */
 .display-files-container {
     display: flex;
     justify-content: flex-start;
@@ -108,6 +112,7 @@
     box-sizing: border-box;
 }
 
+/* Row for each uploaded file */
 .file-item {
     display: flex;
     align-items: center;
@@ -117,10 +122,11 @@
     width: 100%;
 }
 
+/* File name label with multicolor background */
 .file-name-label {
     border-radius: 20px;
     border: none;
-    background-color: #d1cbed; /* Base middle color */
+    background-color: #d1cbed;
     background-image: 
         radial-gradient(circle at center, #dbd7f3 20%, transparent 70%),
         radial-gradient(circle at 30% 30%, #c4cdf3 15%, transparent 50%),
@@ -154,7 +160,7 @@
         0 2px 8px rgba(186, 198, 241, 0.4);
 }
 
-/* Add star shine effects */
+/* Small shine dots on file name label */
 .file-name-label::before,
 .file-name-label::after {
     content: '';
@@ -164,6 +170,7 @@
     pointer-events: none;
 }
 
+/* First shine dot position */
 .file-name-label::before {
     top: 30%;
     left: 10%;
@@ -171,6 +178,7 @@
     height: 7px;
 }
 
+/* Second shine dot position */
 .file-name-label::after {
     bottom: 25%;
     right: 15%;
@@ -178,22 +186,24 @@
     height: 5px;
 }
 
+/* File name hover effect */
 .file-name-label:hover {
-    transform: scale(1.05); /* ONLY scale, NO COLOR CHANGE */
+    transform: scale(1.05);
     box-shadow: 
         inset 0px 2px 4px rgba(255, 255, 255, 0.9),
         inset 0px -2px 4px rgba(142, 153, 227, 0.3),
         0 4px 12px rgba(186, 198, 241, 0.6),
-        0 0 20px rgba(255, 223, 148, 0.3); /* Enhanced golden glow */
+        0 0 20px rgba(255, 223, 148, 0.3);
     text-shadow: 
         0 1px 4px rgba(255, 255, 255, 0.6),
-        0 0 8px rgba(255, 223, 148, 0.6); /* Enhanced golden glow */
+        0 0 8px rgba(255, 223, 148, 0.6);
 }
 
+/* Delete button for each file */
 .file-delete-button {
     border-radius: 50%;
     border: none;
-    background: radial-gradient(circle at 30% 30%, #d9cafc, #cdb6fa); /* New purple gradient */
+    background: radial-gradient(circle at 30% 30%, #d9cafc, #cdb6fa);
     justify-self: right;
     color: white;
     cursor: pointer;
@@ -215,7 +225,7 @@
     transition: all 0.2s ease;
 }
 
-/* Add shine effect to delete button */
+/* White highlight on delete button */
 .file-delete-button::after {
     content: '';
     position: absolute;
@@ -228,25 +238,26 @@
     pointer-events: none;
 }
 
-/* Add hover effect to delete button */
+/* Delete button hover state */
 .file-delete-button:hover {
     transform: scale(1.05);
-    background: radial-gradient(circle at 30% 30%, #e2d7fc, #d7c3fc); /* Lighter variant */
+    background: radial-gradient(circle at 30% 30%, #e2d7fc, #d7c3fc);
     box-shadow: 
         inset 2px 2px 5px rgba(255, 255, 255, 0.7),
         inset -2px -2px 5px rgba(0, 0, 0, 0.15),
         0 4px 8px rgba(205, 182, 250, 0.4);
 }
 
-/* Add active/click effect to delete button */
+/* Delete button pressed state */
 .file-delete-button:active {
     transform: scale(0.95);
-    background: radial-gradient(circle at 30% 30%, #c5adee, #b39edc); /* Darker when pressed */
+    background: radial-gradient(circle at 30% 30%, #c5adee, #b39edc);
     box-shadow: 
         inset 1px 1px 3px rgba(255, 255, 255, 0.5),
         inset -1px -1px 3px rgba(0, 0, 0, 0.2);
 }
 
+/* File preview modal backdrop */
 .file-modal-container {
     display: flex;
     justify-content: center;
@@ -258,11 +269,12 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    z-index: 2000; /* ensures it is on top of heading */
+    z-index: 2000;
     backdrop-filter: blur(8px);
     background-color: rgba(240, 243, 252, 0.4);
 }
 
+/* File preview modal content box */
 .file-modal-content {
     margin: auto;
     padding: 20px;
@@ -272,54 +284,55 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    
-    /* Simple opaque background with thicker matching border */
-    background-color: #f0f3fc; /* Solid, opaque color */
-    border: 3px solid rgba(142, 153, 227, 0.7); /* Match shared materials color with thicker border */
-    
+    background-color: #f0f3fc;
+    border: 3px solid rgba(142, 153, 227, 0.7);
     z-index: 2001;
     box-shadow: 0 8px 32px rgba(142, 153, 227, 0.2);
     position: relative;
     overflow: hidden;
 }
 
-/* Add more star decorations to modal */
-.file-modal-content::before,
-.file-modal-content::after {
+/* First gold star highlight on modal */
+.file-modal-content::before {
     content: '';
     position: absolute;
     background: radial-gradient(circle, rgba(255, 223, 148, 0.9) 0%, rgba(255, 223, 148, 0) 70%);
     border-radius: 50%;
     pointer-events: none;
-}
-
-.file-modal-content::before {
     top: 40px;
     right: 60px;
     width: 12px;
     height: 12px;
 }
 
+/* Second gold star highlight on modal */
 .file-modal-content::after {
+    content: '';
+    position: absolute;
+    background: radial-gradient(circle, rgba(255, 223, 148, 0.9) 0%, rgba(255, 223, 148, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
     bottom: 80px;
     left: 40px;
     width: 10px;
     height: 10px;
 }
 
+/* File preview modal title */
 .file-modal-title {
-    color: #8e99e3; /* Match the purple color of shared materials title */
+    color: #8e99e3;
     font-family: 'Inter', sans-serif;
     font-size: 28px;
     font-weight: 600;
     margin-bottom: 10px;
     letter-spacing: 0.5px;
-    text-shadow: 1px 1px 2px #b2b2b2; /* Simple gray shadow as requested */
+    text-shadow: 1px 1px 2px #b2b2b2;
     position: relative;
     display: inline-block;
     padding-bottom: 5px;
 }
 
+/* Iframe for displaying file content */
 .file-iframe {
     width: 100%;
     height: 70vh;
@@ -329,11 +342,11 @@
     box-shadow: 0 4px 12px rgba(142, 153, 227, 0.1);
 }
 
-/* Close button styling for file modal */
+/* Close button for file preview modal */
 .file-close-button {
     border-radius: 50%;
     border: none;
-    background: radial-gradient(circle at 30% 30%, #d9cafc, #cdb6fa); /* New purple gradient */
+    background: radial-gradient(circle at 30% 30%, #d9cafc, #cdb6fa);
     color: white;
     cursor: pointer;
     font-family: 'Inter', sans-serif;
@@ -355,7 +368,7 @@
     text-shadow: 0 1px 1px rgba(175, 152, 220, 0.5);
 }
 
-/* Add shine effect to close button */
+/* White highlight on close button */
 .file-close-button::after {
     content: '';
     position: absolute;
@@ -368,20 +381,20 @@
     pointer-events: none;
 }
 
-/* Add hover effect to close button */
+/* Close button hover state */
 .file-close-button:hover {
     transform: scale(1.05);
-    background: radial-gradient(circle at 30% 30%, #e2d7fc, #d7c3fc); /* Lighter variant */
+    background: radial-gradient(circle at 30% 30%, #e2d7fc, #d7c3fc);
     box-shadow: 
         inset 2px 2px 5px rgba(255, 255, 255, 0.7),
         inset -2px -2px 5px rgba(0, 0, 0, 0.15),
         0 4px 8px rgba(205, 182, 250, 0.4);
 }
 
-/* Add active/click effect to close button */
+/* Close button pressed state */
 .file-close-button:active {
     transform: scale(0.95);
-    background: radial-gradient(circle at 30% 30%, #c5adee, #b39edc); /* Darker when pressed */
+    background: radial-gradient(circle at 30% 30%, #c5adee, #b39edc);
     box-shadow: 
         inset 1px 1px 3px rgba(255, 255, 255, 0.5),
         inset -1px -1px 3px rgba(0, 0, 0, 0.2);

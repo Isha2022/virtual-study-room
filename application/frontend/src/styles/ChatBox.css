@@ -1,5 +1,7 @@
+/* Import Inter font for consistent typography */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+/* Main chat box wrapper */
 .chatBox-container {
     width: 100%;
     max-width: 325px;
@@ -10,6 +12,7 @@
     flex-direction: column;
 }
 
+/* Messages display area with scrolling */
 .chat-messages {
     position: relative;
     height: 200px;
@@ -24,6 +27,7 @@
     box-shadow: 0 2px 10px rgba(209, 217, 250, 0.3);
 }
 
+/* Container for input field and send button */
 .input-container {
     display: flex;
     width: 100%;
@@ -34,6 +38,7 @@
     gap: 5px;
 }
 
+/* Text input field */
 .chatBox-container input {
     width: calc(100% - 80px);
     padding: 8px 15px;
@@ -43,6 +48,7 @@
     box-sizing: border-box;
 }
 
+/* Send button styling */
 .chatBox-container button {
     width: 80px;
     padding: 8px 0;
@@ -71,6 +77,7 @@
     position: relative;
 }
 
+/* Small highlight dot on button */
 .chatBox-container button::before {
     content: '';
     position: absolute;
@@ -83,6 +90,7 @@
     pointer-events: none;
 }
 
+/* Button hover effect */
 .chatBox-container button:hover {
     transform: scale(1.05);
     background-image: 
@@ -95,6 +103,7 @@
         0 4px 12px rgba(186, 198, 241, 0.6);
 }
 
+/* Button pressed state */
 .chatBox-container button:active {
     transform: scale(0.95);
     box-shadow: 
@@ -102,25 +111,31 @@
         inset -1px -1px 3px rgba(0, 0, 0, 0.2);
 }
 
+/* Individual chat message */
 .chat-message {
     padding: 5px;
     border-bottom: 1px dotted #eee;
 }
+
+/* Remove border from last message */
 .chat-message:last-child {
     border-bottom: none;
     margin-bottom: 20px;
 }
 
+/* Right-aligned messages (user's own messages) */
 .current-user {
     /* color: #FFC107; */
     text-align: right;
 }
 
+/* Left-aligned messages (other user's messages) */
 .other-user {
     /* color: gray; */
     text-align: left;
 }
 
+/* "User is typing" indicator */
 .typing-indicator {
     font-size: 14px;
     font-style: italic;

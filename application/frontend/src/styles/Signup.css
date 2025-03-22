@@ -1,4 +1,4 @@
-/* Import Orbitron font at the BEGINNING of the file */
+/* Import Orbitron font */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
 
 .signup-container {
@@ -13,7 +13,7 @@
       radial-gradient(circle at 10% 60%, rgba(255, 255, 255, 0.7) 0%, transparent 4%),
       radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.7) 0%, transparent 7%),
       radial-gradient(circle at 60% 20%, rgba(255, 255, 255, 0.7) 0%, transparent 5%),
-      /* Subtle color gradients */
+      /* Soft pastel background gradients */
       radial-gradient(circle at 70% 50%, rgba(252, 235, 160, 0.2) 0%, transparent 25%),
       radial-gradient(circle at 30% 40%, rgba(244, 189, 208, 0.15) 0%, transparent 30%),
       radial-gradient(circle at 50% 80%, rgba(190, 220, 255, 0.15) 0%, transparent 35%);
@@ -25,7 +25,7 @@
   padding: 20px;
 }
 
-/* Add twinkling star effect */
+/* Stars in background */
 .signup-container::before {
   content: "";
   position: absolute;
@@ -47,7 +47,7 @@
   pointer-events: none;
 }
 
-/* Add subtle floating floral elements */
+/* Decorative floral SVG patterns */
 .signup-container::after {
   content: "";
   position: absolute;
@@ -63,7 +63,7 @@
   pointer-events: none;
 }
 
-/* Form styling to match login form */
+/* Main form container */
 .signup-form {
   width: 650px !important;
   padding: 20px 50px 10px 50px !important;
@@ -81,17 +81,17 @@
       inset 0 0 80px rgba(255, 255, 255, 0.6);
 }
 
-/* Remove the red border */
+/* Disable default red border */
 .signup-form::before {
-  content: none !important; /* This effectively removes the border */
+  content: none !important;
 }
 
-/* Or completely remove the ::before pseudo-element */
+/* Alternative way to remove border */
 .signup-form::before {
   display: none !important;
 }
 
-/* Add a subtle butterfly and flower glow effect */
+/* Decorative glow effect behind form */
 .signup-form::after {
   content: "" !important;
   position: absolute !important;
@@ -105,7 +105,7 @@
   z-index: -1;
 }
 
-/* Header styling - EXACT MATCH to login header with forced font */
+/* Top navigation header */
 .heading1 {
   position: fixed !important;
   width: 100% !important;
@@ -136,7 +136,7 @@
               0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Create additional rules to force Orbitron on any text inside heading1 */
+/* Force Orbitron font on all header elements */
 .heading1 span, 
 .heading1 div, 
 .heading1 a,
@@ -146,7 +146,7 @@
   font-weight: 700 !important;
 }
 
-/* Signup heading text styling */
+/* Form title styling */
 .signup-form .heading2 {
   margin-top: 0px !important;
   margin-bottom: 20px !important;
@@ -166,7 +166,7 @@
       0 0 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Label text styling */
+/* Form field labels */
 .label-text {
   width: 100%;
   text-align: left;
@@ -179,7 +179,7 @@
   color: #7bcec3;
 }
 
-/* Input field styling */
+/* Input field design */
 .input-field {
   width: 90% !important;
   margin-top: 20px;
@@ -206,7 +206,7 @@
   color: #f79cac;
 }
 
-/* Submit button styling to match login button */
+/* Submit button */
 .submit-button {
   padding: 15px 20px;
   width: 200px !important;
@@ -241,6 +241,7 @@
   line-height: 1 !important;
 }
 
+/* Button highlight effect */
 .submit-button::before {
   content: '';
   position: absolute;
@@ -253,6 +254,7 @@
   pointer-events: none;
 }
 
+/* Button hover state */
 .submit-button:hover {
   transform: scale(1.05);
   background-image: 
@@ -265,6 +267,7 @@
       0 4px 12px rgba(244, 189, 208, 0.6);
 }
 
+/* Button active/pressed state */
 .submit-button:active {
   transform: scale(0.95);
   box-shadow: 
@@ -272,7 +275,7 @@
       inset -1px -1px 3px rgba(0, 0, 0, 0.2);
 }
 
-/* Updated heart checkbox styling */
+/* Heart checkbox container */
 .checkbox-container {
   display: flex;
   align-items: center;
@@ -281,6 +284,7 @@
   font-size: 14px;
 }
 
+/* Custom heart checkbox */
 .checkbox-container input[type="checkbox"] {
   appearance: none !important;
   -webkit-appearance: none !important;
@@ -293,6 +297,7 @@
   outline: none !important;
 }
 
+/* Empty heart state */
 .checkbox-container input[type="checkbox"]::before {
   content: '🤍' !important;
   font-size: 22px !important;
@@ -304,10 +309,12 @@
   justify-content: center !important;
 }
 
+/* Filled heart state */
 .checkbox-container input[type="checkbox"]:checked::before {
   content: '💗' !important; /* Pink heart emoji */
 }
 
+/* Checkbox label text */
 .checkbox-label {
   font-family: "Inter", sans-serif !important;
   font-weight: 700 !important;
@@ -317,6 +324,7 @@
   transition: color 0.2s ease !important;
 }
 
+/* Link styling in checkbox label */
 .checkbox-label a {
   color: #f06eaa !important;
   text-decoration: none !important;
@@ -325,12 +333,14 @@
   transition: all 0.2s ease !important;
 }
 
+/* Link hover state */
 .checkbox-label a:hover {
   text-decoration: none !important;
   color: #f4bdd0 !important;
   text-shadow: 0 0 1px rgba(244, 189, 208, 0.4) !important;
 }
 
+/* Underline animation for links */
 .checkbox-label a::after {
   content: '' !important;
   position: absolute !important;
@@ -342,10 +352,12 @@
   transition: width 0.3s ease !important;
 }
 
+/* Underline animation on hover */
 .checkbox-label a:hover::after {
   width: 100% !important;
 }
 
+/* Form validation error messages */
 .error-message {
   font-size: 12px;
   color: #f06eaa;
@@ -353,6 +365,7 @@
   margin-top: 5px;
 }
 
+/* Form field container */
 .field {
   width: 90%;
   gap: 0;
@@ -360,7 +373,7 @@
   margin-bottom: 15px;
 }
 
-/* Style scrollbar */
+/* Custom scrollbar track */
 .signup-form::-webkit-scrollbar {
   width: 8px !important;
 }
@@ -370,13 +383,14 @@
   border-radius: 10px !important;
 }
 
+/* Custom scrollbar thumb */
 .signup-form::-webkit-scrollbar-thumb {
   background-color: #f4bdd0 !important;
   border-radius: 10px !important;
   border: 2px solid #fef6ae !important;
 }
 
-/* Add these styles for the two-column layout */
+/* Two-column form layout */
 .form-row {
   display: flex !important;
   width: 100% !important;
@@ -392,6 +406,7 @@
   margin-bottom: 10px !important;
 }
 
+/* Column containers */
 .field-column {
   width: 48% !important;
   display: flex !important;
@@ -402,20 +417,20 @@
   width: 100% !important;
 }
 
-/* Adjust label styling for the two-column layout */
+/* Label positioning in columns */
 .field-column .label-text {
   margin-left: 15px !important;
   width: auto !important;
 }
 
-/* Adjust input field for two-column layout */
+/* Input field sizing in columns */
 .field-column .input-field {
   width: 100% !important;
   margin-top: 5px !important;
   margin-bottom: 5px !important;
 }
 
-/* Responsive layout for mobile devices */
+/* Mobile responsive layout */
 @media (max-width: 768px) {
   .signup-form {
     width: 90% !important;
@@ -432,7 +447,7 @@
   }
 }
 
-/* Add styles for the terms and submit button row */
+/* Terms and submit button container */
 .terms-and-submit-row {
   display: flex !important;
   width: 100% !important;
@@ -442,13 +457,13 @@
   padding: 0 15px !important;
 }
 
-/* Adjust checkbox container for horizontal layout */
+/* Checkbox positioning in row */
 .checkbox-container {
   margin: 0 !important;
   flex: 1 !important;
 }
 
-/* Adjust submit button for horizontal layout */
+/* Submit button in row layout */
 .terms-and-submit-row .submit-button {
   display: flex !important;
   justify-content: center !important;
@@ -462,7 +477,7 @@
   text-align: center !important;
 }
 
-/* Responsive layout for mobile devices */
+/* Mobile responsive layout for terms row */
 @media (max-width: 768px) {
   .terms-and-submit-row {
     flex-direction: column !important;
