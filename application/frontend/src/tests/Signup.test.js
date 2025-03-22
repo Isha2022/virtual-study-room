@@ -56,7 +56,7 @@ describe('Signup', () => {
     expect(screen.getByLabelText('Last name:')).toBeInTheDocument();
     expect(screen.getByLabelText('Username:')).toBeInTheDocument();
     expect(screen.getByLabelText('Email:')).toBeInTheDocument();
-    expect(screen.getByLabelText('Your motto in life:')).toBeInTheDocument();
+    expect(screen.getByLabelText('Your motto in life :):')).toBeInTheDocument();
     expect(screen.getByLabelText('Password:')).toBeInTheDocument();
     expect(screen.getByLabelText('Confirm password:')).toBeInTheDocument();
     expect(screen.getByLabelText('I accept the terms and conditions')).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe('Signup', () => {
     const lastNameInput = screen.getByLabelText('Last name:');
     const emailInput = screen.getByLabelText('Email:');
     const usernameInput = screen.getByLabelText('Username:');
-    const descriptionInput = screen.getByLabelText('Your motto in life:');
+    const descriptionInput = screen.getByLabelText('Your motto in life :):');
     const passwordInput = screen.getByLabelText('Password:');
     const passwordConfirmationInput = screen.getByLabelText('Confirm password:');
     const acceptTermsCheckbox = screen.getByLabelText('I accept the terms and conditions');
@@ -141,7 +141,7 @@ describe('Signup', () => {
     fireEvent.change(screen.getByLabelText('Last name:'), { target: { name: 'lastname', value: 'Doe' } });
     fireEvent.change(screen.getByLabelText('Email:'), { target: { name: 'email', value: 'john.doe@example.com' } });
     fireEvent.change(screen.getByLabelText('Username:'), { target: { name: 'username', value: '@johndoe' } });
-    fireEvent.change(screen.getByLabelText('Your motto in life:'), { target: { name: 'description', value: 'A brief description' } });
+    fireEvent.change(screen.getByLabelText('Your motto in life :):'), { target: { name: 'description', value: 'A brief description' } });
     fireEvent.change(screen.getByLabelText('Password:'), { target: { name: 'password', value: 'Password123' } });
     fireEvent.change(screen.getByLabelText('Confirm password:'), { target: { name: 'passwordConfirmation', value: 'Password123' } });
     fireEvent.click(screen.getByLabelText('I accept the terms and conditions'));
@@ -175,7 +175,7 @@ describe('Signup', () => {
     fireEvent.change(screen.getByLabelText('Last name:'), { target: { name: 'lastname', value: 'Doe' } });
     fireEvent.change(screen.getByLabelText('Email:'), { target: { name: 'email', value: 'john.doe@example.com' } });
     fireEvent.change(screen.getByLabelText('Username:'), { target: { name: 'username', value: '@johndoe' } });
-    fireEvent.change(screen.getByLabelText('Your motto in life:'), { target: { name: 'description', value: 'A brief description' } });
+    fireEvent.change(screen.getByLabelText('Your motto in life :):'), { target: { name: 'description', value: 'A brief description' } });
     fireEvent.change(screen.getByLabelText('Password:'), { target: { name: 'password', value: 'Password123' } });
     fireEvent.change(screen.getByLabelText('Confirm password:'), { target: { name: 'passwordConfirmation', value: 'Password123' } });
     fireEvent.click(screen.getByLabelText('I accept the terms and conditions'));
@@ -199,7 +199,7 @@ describe('Signup', () => {
     fireEvent.change(screen.getByLabelText('Last name:'), { target: { name: 'lastname', value: 'Doe' } });
     fireEvent.change(screen.getByLabelText('Email:'), { target: { name: 'email', value: 'john.doe@example.com' } });
     fireEvent.change(screen.getByLabelText('Username:'), { target: { name: 'username', value: '@johndoe' } });
-    fireEvent.change(screen.getByLabelText('Your motto in life:'), { target: { name: 'description', value: 'A brief description' } });
+    fireEvent.change(screen.getByLabelText('Your motto in life :):'), { target: { name: 'description', value: 'A brief description' } });
     fireEvent.change(screen.getByLabelText('Password:'), { target: { name: 'password', value: 'Password123' } });
     fireEvent.change(screen.getByLabelText('Confirm password:'), { target: { name: 'passwordConfirmation', value: 'Password123' } });
 

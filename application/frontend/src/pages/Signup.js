@@ -237,7 +237,7 @@ function Signup() {
 
         <div className="field">
           <label htmlFor="details" className="label-text">
-            Your motto in life:
+            Your motto in life :):
           </label>
           <input
             id="details"
