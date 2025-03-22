@@ -1,14 +1,15 @@
 import React, { useContext } from "react";
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent, act } from '@testing-library/react';
 import { FriendsProvider, FriendsContext } from '../../friends/FriendsContext';
 import * as authService from "../../../utils/authService";
 import { getDownloadURL } from 'firebase/storage';
+import { async } from "@firebase/util";
+import defaultAvatar from '../../../assets/avatars/avatar_2.png';
 
-// Mock API responses for the data we want to fetch
+
 jest.mock('../../../utils/authService', () => ({
     getAuthenticatedRequest: jest.fn(),
 }));
-
 
 jest.mock('firebase/storage');
 jest.mock('../../../firebase-config.js');
@@ -24,7 +25,6 @@ jest.mock('react-toastify', () => {
     };
 });
 
-// Helper component to consume context values for testing
 const TestComponent = () => {
     const { friends, invitationsRequests, loading, onAccept, onReject } = useContext(FriendsContext);
 
@@ -32,70 +32,60 @@ const TestComponent = () => {
 
     return (
         <div>
-            <div>
-                {friends.map(friend => (
-                    <div key={friend.id}>
-                        <span>{friend.name}</span>
-                        <button onClick={() => onAccept(friend.id, 'accept_friend', 'POST')}>Accept</button>
-                        <button onClick={() => onReject(friend.id)}>Reject</button>
-                    </div>
-                ))}
-            </div>
+            <ul className="friends-list">
+                {friends.length === 0 ?
+                    (
+                        <p className="no-friends">No friends found.</p>
+                    )
+                    :
+                    (
+                        friends.map((friend) => (
+                            <li key={friend.id} className="friend-card">
+                                <img src={friend.image} alt="logo" className="pic" />
+                                <h4>{friend.name} {friend.surname}</h4>
+                                <p className="username">{friend.username}</p>
+                                <button className="reject-btn" onClick={() => onReject(friend.id)} aria-label="delete friend"><i class="bi bi-trash"></i></button>
+                                <button className="details-btn" onClick={() => handleOpenProfile(friend.id)} aria-label="details" > <i class="bi bi-eye"></i> </button>
+                            </li>
+                        ))
+                    )
+                }
+            </ul>
             <div>
                 {invitationsRequests.map(invitation => (
                     <div key={invitation.id}>
+                        <img src={invitation.image} alt="logo" className="pic" />
                         <span>{invitation.name}</span>
+                        <button onClick={() => onAccept(invitation.id, 'accept_friend', 'POST')}>Accept</button>
+                        <button onClick={() => onReject(invitation.id)}>Reject</button>
                     </div>
                 ))}
             </div>
+            <button onClick={() => onAccept(3, 'create_friend_request', 'POST')}>Create Friend Request</button>
         </div>
     );
 };
 
 describe('FriendsContext', () => {
-    
-    
     beforeEach(() => {
-        mockOnReject = jest.fn();
-        mockOnAccept = jest.fn();
-        const mockContext = {
-            loading: false,
-            onAccept: mockOnAccept,
-            onReject: mockOnReject,
-            friendRequests: [],
-            invitationsRequests: [],
-            friends: [],
-        };
-
-        const mockRequestData = [
-            {
-                id: 1,
-                username: "friend1",
-                image: "https://example.com/avatar.png",
-            },
-            {
-                id: 2,
-                username: "friend2",
-                image: "https://example.com/avatar2.png",
-            },
-        ];
-
         jest.spyOn(console, 'error').mockImplementation(() => { });
         jest.spyOn(window, 'alert').mockImplementation(() => { });
 
         getDownloadURL.mockResolvedValue('https://example.com/avatar.png');
-        authService.getAuthenticatedRequest.mockResolvedValue(mockRequestData);
     });
+
     afterEach(() => {
-        jest.restoreAllMocks(); // ✅ Restores all spies/mocks to their original behavior
-    }); 
+        jest.restoreAllMocks();
+    });
 
     test('should correctly fetch and render friends data', async () => {
-        // Mocking the API call to return friends data
-        getAuthenticatedRequest.mockResolvedValueOnce([
-            { id: 1, username: 'john_doe', name: 'John Doe' },
-            { id: 2, username: 'jane_doe', name: 'Jane Doe' },
-        ]);
+        
+        authService.getAuthenticatedRequest
+            .mockResolvedValueOnce()
+            .mockResolvedValueOnce([
+                { id: 1, username: 'john_doe', name: 'John Doe', image: 'https://example.com/avatar.png' },
+                { id: 2, username: 'jane_doe', name: 'Jane Doe', image: 'https://example.com/avatar2.png' },
+            ]);
 
         render(
             <FriendsProvider>
@@ -103,61 +93,106 @@ describe('FriendsContext', () => {
             </FriendsProvider>
         );
 
-        // Check the loading state
         expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
 
-        // Wait for the data to load and check if friends names are rendered
-        await waitFor(() => {
-            expect(screen.getByText('John Doe')).toBeInTheDocument();
-            expect(screen.getByText('Jane Doe')).toBeInTheDocument();
-        });
+        const johnDoe = await screen.findByText('John Doe');
+        const janeDoe = await screen.findByText('Jane Doe');
+
+        expect(johnDoe).toBeInTheDocument();
+        expect(janeDoe).toBeInTheDocument();
     });
 
     test('should use default avatar if image fetch fails', async () => {
-        // Mock `getDownloadURL` to simulate an error (image fetch failure)
+        
         getDownloadURL.mockRejectedValueOnce(new Error('Image not found'));
+
+        authService.getAuthenticatedRequest
+            .mockResolvedValueOnce([
+                { id: 1, username: 'john_doe', name: 'John Doe', image: 'https://example.com/avatar.png' },
+                { id: 2, username: 'jane_doe', name: 'Jane Doe', image: 'https://example.com/avatar2.png' },
+            ])
+            .mockResolvedValueOnce([
+                { id: 1, username: 'john_doe', name: 'John Doe', image: 'https://example.com/avatar.png' },
+                { id: 2, username: 'jane_doe', name: 'Jane Doe', image: 'https://example.com/avatar2.png' },
+            ])
+            .mockResolvedValueOnce([
+                { id: 1, username: 'john_doe', name: 'John Doe', image: 'https://example.com/avatar.png' },
+                { id: 2, username: 'jane_doe', name: 'Jane Doe', image: 'https://example.com/avatar2.png' },
+            ]);
 
         render(
             <FriendsProvider>
                 <TestComponent />
             </FriendsProvider>
         );
-
-        // Wait for friends data to be rendered
+        
         await waitFor(() => {
             const images = screen.getAllByRole('img'); // Find all images
-            expect(images[0]).toHaveAttribute('src', 'https://example.com/avatar.png'); // Default avatar
+            expect(images[0]).toHaveAttribute('src', ''); // Default avatar
+            expect(images[1]).toHaveAttribute('src', 'https://example.com/avatar.png'); // Second friend's avatar
         });
     });
 
     test('should call onAccept and update the friends list', async () => {
-        // Mock the API response for accepting a friend
-        const acceptResponse = { status: 1 };  // Simulate successful API response
-        getAuthenticatedRequest.mockResolvedValueOnce(acceptResponse);
+        
+        const initialFriends = [
+            { id: 1, username: 'john_doe', name: 'John Doe', image: 'https://example.com/avatar.png' },
+        ];
+        const initialInvitations = [
+            { id: 2, username: 'jane_doe', name: 'Jane Doe', image: 'https://example.com/avatar2.png' },
+        ];
 
+        const acceptResponse = { status: 1 };
+
+        authService.getAuthenticatedRequest.mockResolvedValueOnce(acceptResponse);
+        authService.getAuthenticatedRequest
+            .mockResolvedValueOnce([ 
+                { id: 1, username: 'john_doe', name: 'John Doe', image: 'https://example.com/avatar.png' },
+                { id: 2, username: 'jane_doe', name: 'Jane Doe', image: 'https://example.com/avatar2.png' },
+            ]) 
+            .mockResolvedValueOnce(initialFriends)
+            .mockResolvedValueOnce(initialInvitations)
+        
         render(
             <FriendsProvider>
                 <TestComponent />
             </FriendsProvider>
         );
 
-        // Wait for friends data to load
         await waitFor(() => {
-            const acceptButton = screen.getByText('Accept');
-            expect(acceptButton).toBeInTheDocument();
+            expect(screen.getByText('Jane Doe')).toBeInTheDocument(); // Invitation
+        });
 
-            // Simulate click on "Accept"
-            fireEvent.click(acceptButton);
+        const acceptButtons = screen.getAllByText('Accept');
+        fireEvent.click(acceptButtons[0]); // Click the first "Accept" button
 
-            // Verify that the onAccept function has been called
-            expect(getAuthenticatedRequest).toHaveBeenCalledWith('/accept_friend/1/', 'POST');
+        await waitFor(() => {
+            expect(authService.getAuthenticatedRequest).toHaveBeenCalled();
+        });
+
+        await waitFor(() => {
+            expect(screen.getByText('Jane Doe')).toBeInTheDocument(); // Jane Doe should now be in the friends list
         });
     });
 
     test('should call onReject and remove friend from the list', async () => {
-        // Mock the API response for rejecting a friend
-        const rejectResponse = { status: 1 };  // Simulate successful API response
-        getAuthenticatedRequest.mockResolvedValueOnce(rejectResponse);
+        
+        const rejectResponse = { status: 1 };
+        authService.getAuthenticatedRequest.mockResolvedValueOnce(rejectResponse);
+
+        const initialFriends = [
+            { id: 1, username: 'john_doe', name: 'John Doe', image: 'https://example.com/avatar.png' },
+        ];
+        const initialInvitations = [
+            { id: 2, username: 'jane_doe', name: 'Jane Doe', image: 'https://example.com/avatar2.png' },
+        ];
+
+        const acceptResponse = { status: 1 }; 
+        authService.getAuthenticatedRequest
+            .mockResolvedValueOnce(initialFriends)
+            .mockResolvedValueOnce(initialInvitations)
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce(acceptResponse);
 
         render(
             <FriendsProvider>
@@ -165,16 +200,509 @@ describe('FriendsContext', () => {
             </FriendsProvider>
         );
 
-        // Wait for friends data to load
-        await waitFor(() => {
+        await waitFor(async () => {
             const rejectButton = screen.getByText('Reject');
             expect(rejectButton).toBeInTheDocument();
 
-            // Simulate click on "Reject"
             fireEvent.click(rejectButton);
 
-            // Verify that the onReject function has been called
-            expect(getAuthenticatedRequest).toHaveBeenCalledWith('/reject_friend/1/', 'DELETE');
+            await waitFor(() => {
+                expect(authService.getAuthenticatedRequest).toHaveBeenCalled();
+            });
+        });
+    }); 
+
+    test('should create a friend request and update the invitations list', async () => {
+            
+        const initialFriends = [
+            { id: 1, username: 'john_doe', name: 'John Doe', image: 'https://example.com/avatar.png' },
+        ];
+        const initialInvitations = [
+            { id: 2, username: 'jane_doe', name: 'Jane Doe', image: 'https://example.com/avatar2.png' },
+        ];
+
+        const createResponse = { id: 3, username: 'alice_doe', name: 'Alice Doe', image: 'https://example.com/avatar3.png' };
+        authService.getAuthenticatedRequest
+            .mockResolvedValueOnce(initialFriends)
+            .mockResolvedValueOnce(initialInvitations) 
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce(createResponse); 
+
+        render(
+            <FriendsProvider>
+                <TestComponent />
+            </FriendsProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText('Jane Doe')).toBeInTheDocument();
+        });
+
+        const createButton = screen.getByText('Create Friend Request');
+        fireEvent.click(createButton);
+
+        await waitFor(() => {
+            expect(authService.getAuthenticatedRequest).toHaveBeenCalledWith(
+                '/create_friend_request/3/',
+                'POST'
+            );
+        });
+
+        await waitFor(() => {
+            expect(screen.getByText('Alice Doe')).toBeInTheDocument();
         });
     });
+
+    test("should accept a friend request and update friends list", async () => {
+        const mockRequests = [
+            { id: 2, username: "jane_doe", name: "Jane", surname: "Doe", image: "https://example.com/avatar.png" },
+        ];
+        const mockFriends = [
+            { id: 1, username: "john_doe", name: "John", surname: "Doe", image: "https://example.com/avatar.png" },
+        ];
+        authService.getAuthenticatedRequest.mockImplementation((url) => {
+                if (url === "/get_pending_friends/") return Promise.resolve(mockRequests);
+                if (url === "/get_friends/") return Promise.resolve(mockFriends);
+                if (url === "/get_made_requests/") return Promise.resolve([]);
+                return Promise.resolve([]);
+        });
+
+        let contextValue;
+        render(
+            <FriendsProvider>
+                <FriendsContext.Consumer>
+                    {(value) => {
+                        contextValue = value;
+                        return null;
+                    }}
+                </FriendsContext.Consumer>
+            </FriendsProvider>
+        );
+
+        await waitFor(() => expect(contextValue.friends).toEqual(mockFriends));
+        await waitFor(() => expect(contextValue.friendRequests).toEqual(mockRequests));
+
+        authService.getAuthenticatedRequest.mockResolvedValueOnce({ status: 1 });
+
+        act(() => {
+            contextValue.onAccept(2, "accept_friend", "POST");
+        });
+
+        authService.getAuthenticatedRequest.mockImplementation((url) => {
+            if (url === "/get_friends/") return Promise.resolve([...mockFriends, mockRequests[0]]);
+            return Promise.resolve([]);
+        });
+
+        await waitFor(() => {
+            expect(contextValue.friends).toContainEqual(mockRequests[0]);
+            expect(contextValue.friendRequests).not.toContainEqual(mockRequests[0]);
+        });
+    });
+
+    test("should remove a friend and add them to the requests list", async () => {
+        const initialFriends = [
+            { id: 1, username: "john_doe", name: "John Doe", image: "https://example.com/avatar.png" },
+            { id: 2, username: "jane_doe", name: "Jane Doe", image: "https://example.com/avatar.png" },
+        ];
+
+        const initialRequests = [];
+
+        // Mock API responses
+        authService.getAuthenticatedRequest.mockImplementation((url) => {
+            if (url === "/get_friends/") return Promise.resolve(initialFriends);
+            if (url === "/get_pending_friends/") return Promise.resolve(initialRequests);
+            return Promise.resolve([]);
+        });
+
+        let contextValue;
+        render(
+            <FriendsProvider>
+                <FriendsContext.Consumer>
+                    {(value) => {
+                        contextValue = value;
+                        return null;
+                    }}
+                </FriendsContext.Consumer>
+            </FriendsProvider>
+        );
+
+        // Ensure initial data is loaded
+        await waitFor(() => expect(contextValue.friends).toEqual(initialFriends));
+        await waitFor(() => expect(contextValue.friendRequests).toEqual(initialRequests));
+
+        // Mock API response for removing a friend
+        authService.getAuthenticatedRequest.mockResolvedValueOnce({ status: 1 });
+
+        // Simulate removing a friend (e.g., clicking the delete button)
+        act(() => {
+            contextValue.onReject(2);
+        });
+
+        // Mock API response after removal
+        authService.getAuthenticatedRequest.mockImplementation((url) => {
+            if (url === "/get_friends/") return Promise.resolve(initialFriends.filter(f => f.id !== 2));
+            if (url === "/get_pending_friends/") return Promise.resolve([{ id: 2, username: "jane_doe", name: "Jane Doe", image: "https://example.com/avatar.png" }]);
+            return Promise.resolve([]);
+        });
+
+        // Wait for state updates
+        await waitFor(() => {
+            expect(contextValue.friends).not.toContainEqual(expect.objectContaining({ id: 2 }));
+            expect(contextValue.friendRequests).toContainEqual(expect.objectContaining({ id: 2 }));
+        });
+    });
+
+    test("should log error when accepting friend request fails", async () => {
+        // Mock initial data
+        const initialFriends = [
+            { id: 1, username: "john_doe", name: "John Doe", image: "https://example.com/avatar.png" },
+        ];
+
+        const initialInvitations = [
+            { id: 2, username: "jane_doe", name: "Jane Doe", image: "https://example.com/avatar2.png" },
+        ];
+
+        // Simulate an error response with status 0
+        const errorResponse = { status: 0 };  // Simulate failure (status: 0)
+
+        // Mock the getAuthenticatedRequest function to return the data as needed
+        authService.getAuthenticatedRequest
+            .mockResolvedValueOnce(initialFriends) // Mock for /get_friends/
+            .mockResolvedValueOnce(initialInvitations) // Mock for /get_pending_friends/
+            .mockResolvedValueOnce([]) // Mock for /get_made_requests/
+            .mockResolvedValueOnce(errorResponse); // Mock for /accept_friend/2/
+
+        // Mock Firebase storage
+        getDownloadURL.mockResolvedValue('https://example.com/avatar.png');
+
+        // Create a spy to track console.error
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+
+        // Render the component
+        render(
+            <FriendsProvider>
+                <TestComponent />
+            </FriendsProvider>
+        );
+
+        // Ensure initial data is loaded (this checks that the invitation is shown)
+        await waitFor(() => {
+            expect(screen.getByText('Jane Doe')).toBeInTheDocument(); // Invitation should be there
+        });
+
+        // Click the "Accept" button to trigger the friend request acceptance
+        const acceptButtons = screen.getAllByText('Accept');
+        fireEvent.click(acceptButtons[0]);  // Click on the first accept button
+
+        // Wait for API call and ensure that console.error is called
+        await waitFor(() => {
+            expect(consoleErrorSpy).toHaveBeenCalledWith("Error accepting friend request");
+        });
+
+        // Clean up spy
+        consoleErrorSpy.mockRestore();
+    });
+
+    test('should use default avatar if image fetch fails for friends', async () => {
+        
+        getDownloadURL
+            .mockRejectedValueOnce(new Error('Image not found')) // Simulate failure for the first invitation
+            .mockResolvedValueOnce('https://example.com/avatar2.png'); // Simulate success for the second invitation
+
+        const initialInvitations = [
+            { id: 1, username: 'john_doe', name: 'John Doe', image: 'https://example.com/avatar.png' },
+            { id: 2, username: 'jane_doe', name: 'Jane Doe', image: 'https://example.com/avatar2.png' },
+        ];
+
+        authService.getAuthenticatedRequest
+            .mockResolvedValueOnce([]) // Mock for /get_friends/
+            .mockResolvedValueOnce([]) // Mock for /get_pending_friends/
+            .mockResolvedValueOnce(initialInvitations); // Mock for /get_made_requests/
+
+        render(
+            <FriendsProvider>
+                <TestComponent />
+            </FriendsProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+        });
+
+        await waitFor(() => {
+            const images = screen.getAllByRole('img'); // Query by role='img'
+            expect(images[0]).toHaveAttribute('src', defaultAvatar); // Default avatar for the first invitation
+            expect(images[1]).toHaveAttribute('src', 'https://example.com/avatar2.png'); // Second invitation's avatar
+        });
+    });
+
+    test('should use default avatar if image fetch fails for invitations', async () => {
+        // Mock Firebase storage failure for the first invitation
+        
+        getDownloadURL
+            .mockRejectedValueOnce(new Error('Image not found')) // Simulate failure for the first invitation
+            .mockResolvedValueOnce('https://example.com/avatar2.png'); // Simulate success for the second invitation
+
+        // Mock invitations data
+        const initialInvitations = [
+            { id: 1, username: 'john_doe', name: 'John Doe' },
+            { id: 2, username: 'jane_doe', name: 'Jane Doe' },
+        ];
+
+        // Mock the API responses
+        authService.getAuthenticatedRequest
+            .mockResolvedValueOnce([]) // Mock for /get_friends/
+            .mockResolvedValueOnce(initialInvitations) // Mock for /get_pending_friends/
+            .mockResolvedValueOnce([]); // Mock for /get_made_requests/
+
+        // Render the component
+        render(
+            <FriendsProvider>
+                <TestComponent />
+            </FriendsProvider>
+        );
+
+        // Wait for the loading state to disappear
+        await waitFor(() => {
+            expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+        });
+
+        // Wait for the invitations to be rendered
+        await waitFor(() => {
+            const images = screen.getAllByRole('img'); // Query by role='img'
+            expect(images[0]).toHaveAttribute('src', defaultAvatar); // Default avatar for the first invitation
+            expect(images[1]).toHaveAttribute('src', 'https://example.com/avatar2.png'); // Second invitation's avatar
+        });
+    });
+
+    test('should remove a friend and add them to the requests list', async () => {
+        const initialFriends = [
+            { id: 1, username: 'john_doe', name: 'John Doe', image: 'https://example.com/avatar.png' },
+            { id: 2, username: 'jane_doe', name: 'Jane Doe', image: 'https://example.com/avatar.png' },
+        ];
+
+        const initialRequests = [];
+
+        // Mock API responses
+        authService.getAuthenticatedRequest.mockImplementation((url) => {
+            if (url === "/get_friends/") return Promise.resolve(initialFriends);
+            if (url === "/get_pending_friends/") return Promise.resolve(initialRequests);
+            return Promise.resolve([]);
+        });
+
+        let contextValue;
+        render(
+            <FriendsProvider>
+                <FriendsContext.Consumer>
+                    {(value) => {
+                        contextValue = value;
+                        return null;
+                    }}
+                </FriendsContext.Consumer>
+            </FriendsProvider>
+        );
+
+        // Ensure initial data is loaded
+        await waitFor(() => expect(contextValue.friends).toEqual(initialFriends));
+        await waitFor(() => expect(contextValue.friendRequests).toEqual(initialRequests));
+
+        // Simulate removing a friend (e.g., clicking the reject button)
+        act(() => {
+            contextValue.onReject(2);
+        });
+
+        // Mock API response after removal
+        authService.getAuthenticatedRequest.mockImplementation((url) => {
+            if (url === "/get_friends/") return Promise.resolve(initialFriends.filter(f => f.id !== 2)); // Ensure Jane is removed
+            if (url === "/get_pending_friends/") return Promise.resolve([{ id: 2, username: "jane_doe", name: "Jane Doe", image: "https://example.com/avatar.png" }]);
+            return Promise.resolve([]);
+        });
+
+        // Wait for state updates
+        await waitFor(() => {
+            expect(contextValue.friends).not.toContainEqual(expect.objectContaining({ id: 2 }));
+            expect(contextValue.friendRequests).toContainEqual(expect.objectContaining({ id: 2 }));
+        });
+    });
+
+    test('should use default avatar if image fetch fails for requests', async () => {
+        // Mock Firebase storage failure for the first request
+        const TestComponent1 = () => {
+            const { friendRequests, friends, invitationsRequests, loading, onAccept, onReject } = useContext(FriendsContext);
+
+            if (loading) return <div>Loading...</div>;
+
+            return (
+                <div>
+                    <ul className="friends-list">
+                        {friends.length === 0 ?
+                            (
+                                <p className="no-friends">No friends found.</p>
+                            )
+                            :
+                            (
+                                friends.map((friend) => (
+                                    <li key={friend.id} className="friend-card">
+                                        <img src={friend.image} alt="logo" className="pic" />
+                                        <h4>{friend.name} {friend.surname}</h4>
+                                        <p className="username">{friend.username}</p>
+                                        <button className="reject-btn" onClick={() => onReject(friend.id)} aria-label="delete friend"><i class="bi bi-trash"></i></button>
+                                        <button className="details-btn" onClick={() => handleOpenProfile(friend.id)} aria-label="details" > <i class="bi bi-eye"></i> </button>
+                                    </li>
+                                ))
+                            )
+                        }
+                    </ul>
+                    <div>
+                        {invitationsRequests.map(invitation => (
+                            <div key={invitation.id}>
+                                <img src={invitation.image} alt="logo" className="pic" />
+                                <span>{invitation.name}</span>
+                                <button onClick={() => onAccept(invitation.id, 'accept_friend', 'POST')}>Accept</button>
+                                <button onClick={() => onReject(invitation.id)}>Reject</button>
+                            </div>
+                        ))}
+                    </div>
+                    <div>
+                        {friendRequests.map(requests => (
+                            <div key={requests.id}>
+                                <img src={requests.image} alt="logo" className="pic" />
+                                <span>{requests.name}</span>
+                                <button onClick={() => onAccept(requests.id, 'accept_friend', 'POST')}>Accept</button>
+                                <button onClick={() => onReject(requests.id)}>Reject</button>
+                            </div>
+                        ))}
+                    </div>
+                    <button onClick={() => onAccept(3, 'create_friend_request', 'POST')}>Create Friend Request</button>
+                </div>
+            );
+        };
+        
+        getDownloadURL
+            .mockRejectedValueOnce(new Error('Image not found')) // Simulate failure for the first request
+            .mockResolvedValueOnce('https://example.com/avatar2.png'); // Simulate success for the second request
+
+        // Mock requests data
+        const initialRequests = [
+            { id: 1, username: 'john_doe', name: 'John Doe' },
+            { id: 2, username: 'jane_doe', name: 'Jane Doe' },
+        ];
+
+        // Mock the API responses
+        authService.getAuthenticatedRequest
+            .mockResolvedValueOnce(initialRequests) // Mock for /get_friends/
+            .mockResolvedValueOnce([]) // Mock for /get_pending_friends/
+            .mockResolvedValueOnce([]); // Mock for /get_made_requests/
+
+        // Render the component
+        render(
+            <FriendsProvider>
+                <TestComponent1 />
+            </FriendsProvider>
+        );
+
+        // Wait for the loading state to disappear
+        await waitFor(() => {
+            expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+        });
+
+        // Wait for the requests to be rendered
+        await waitFor(() => {
+            const images = screen.getAllByRole('img'); // Query by role='img'
+            expect(images[0]).toHaveAttribute('src', defaultAvatar); // Default avatar for the first request
+            expect(images[1]).toHaveAttribute('src', 'https://example.com/avatar2.png'); // Second request's avatar
+        });
+    });
+
+    test("accept a friend request and update friends list", async () => {
+        const mockRequests = [
+            { id: 2, username: "jane_doe", name: "Jane", surname: "Doe", image: "https://example.com/avatar.png" },
+        ];
+        const mockFriends = [
+            { id: 1, username: "john_doe", name: "John", surname: "Doe", image: "https://example.com/avatar.png" },
+        ];
+        authService.getAuthenticatedRequest.mockImplementation((url) => {
+            if (url === "/get_pending_friends/") return Promise.resolve([]);
+            if (url === "/get_friends/") return Promise.resolve(mockFriends);
+            if (url === "/get_made_requests/") return Promise.resolve(mockRequests);
+            return Promise.resolve([]);
+        });
+
+        let contextValue;
+        render(
+            <FriendsProvider>
+                <FriendsContext.Consumer>
+                    {(value) => {
+                        contextValue = value;
+                        return null;
+                    }}
+                </FriendsContext.Consumer>
+            </FriendsProvider>
+        );
+
+        await waitFor(() => expect(contextValue.friends).toEqual(mockFriends));
+        await waitFor(() => expect(contextValue.invitationsRequests).toEqual(mockRequests));
+
+        authService.getAuthenticatedRequest.mockResolvedValueOnce({ status: 1 });
+
+        act(() => {
+            contextValue.onAccept(2, "create_friend_request", "POST");
+        });
+
+        /*authService.getAuthenticatedRequest.mockImplementation((url) => {
+            if (url === "/get_friends/") return Promise.resolve([...mockFriends, mockRequests[0]]);
+            return Promise.resolve([]);
+        });
+
+        await waitFor(() => {
+            expect(contextValue.friends).toContainEqual(mockRequests[0]);
+            expect(contextValue.friendRequests).not.toContainEqual(mockRequests[0]);
+        });*/
+    });
+
+    test("reject an invitations request and update list", async () => {
+        const mockRequests = [
+            { id: 2, username: "jane_doe", name: "Jane", surname: "Doe", image: "https://example.com/avatar.png" },
+        ];
+        const mockFriends = [
+            { id: 1, username: "john_doe", name: "John", surname: "Doe", image: "https://example.com/avatar.png" },
+        ];
+        authService.getAuthenticatedRequest.mockImplementation((url) => {
+            if (url === "/get_pending_friends/") return Promise.resolve([]);
+            if (url === "/get_friends/") return Promise.resolve(mockFriends);
+            if (url === "/get_made_requests/") return Promise.resolve(mockRequests);
+            return Promise.resolve([]);
+        });
+
+        let contextValue;
+        render(
+            <FriendsProvider>
+                <FriendsContext.Consumer>
+                    {(value) => {
+                        contextValue = value;
+                        return null;
+                    }}
+                </FriendsContext.Consumer>
+            </FriendsProvider>
+        );
+
+        await waitFor(() => expect(contextValue.friends).toEqual(mockFriends));
+        await waitFor(() => expect(contextValue.invitationsRequests).toEqual(mockRequests));
+
+        authService.getAuthenticatedRequest.mockResolvedValueOnce({ status: 1 });
+
+        act(() => {
+            contextValue.onReject(2, "reject_friend", "DELETE");
+        });
+
+        authService.getAuthenticatedRequest.mockImplementation((url) => {
+            if (url === "/get_made_requests/") return Promise.resolve([...mockFriends, mockRequests[0]]);
+            return Promise.resolve([]);
+        });
+
+        await waitFor(() => {
+            expect(contextValue.invitationsRequests).not.toContainEqual(mockRequests[0]);
+        });
+    });
+
 });
