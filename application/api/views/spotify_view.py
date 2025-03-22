@@ -10,11 +10,13 @@ import re
 from api.models import SpotifyToken
 class AuthURL(APIView):
     def get(self, request, format=True):
-
+        room_code = request.GET.get('room_code') 
         scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
+        redirect_uri_with_room = f"{REDIRECT_URI}?room_code={room_code}"
         url = Request('GET', 'https://accounts.spotify.com/authorize', params={
             'scope': scopes,
             'response_type': 'code',
+            'redirect_uri': redirect_uri_with_room, 
             'redirect_uri': REDIRECT_URI,
             'client_id': CLIENT_ID
         }).prepare().url
@@ -23,7 +25,7 @@ class AuthURL(APIView):
     
 def spotify_callback(request, format=None):
     code = request.GET.get('code')
-    error = request.GET.get('error')
+    room_code = request.GET.get('room_code')
 
     response = post('https://accounts.spotify.com/api/token', data={
         'grant_type': 'authorization_code',
@@ -46,7 +48,7 @@ def spotify_callback(request, format=None):
         request.session.session_key, access_token, token_type, expires_in, refresh_token
     )
 
-    return redirect("http://localhost:3000/")
+    return redirect(f"http://localhost:3000/login")
     
 class IsAuthenticated(APIView):
     def get(self, request, format=None):

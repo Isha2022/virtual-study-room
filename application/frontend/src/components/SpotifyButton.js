@@ -20,8 +20,10 @@ export default class SpotifyButton extends Component {
     };
 
     componentDidMount() {
+        const { roomCode } = this.props;
+        console.log("Room code in SpotifyButton:", roomCode);
         console.log("Component mounted, initiating authentication check.");
-        this.authenticateSpotify();
+        this.authenticateSpotify(roomCode);
         // this.fetchAlbumTracks();
         this.interval = setInterval(this.getCurrentSong, 1000)
     }
@@ -30,7 +32,7 @@ export default class SpotifyButton extends Component {
         clearInterval(this.interval);
     }
 
-    authenticateSpotify() {
+    authenticateSpotify(roomCode) {
 
         if (this.state.spotifyAuthenticated) {
             console.log("User is already authenticated.");
@@ -111,8 +113,8 @@ export default class SpotifyButton extends Component {
             console.log(data);
         });
     }
-    
 
+    
     render() {
         return (
             <div style={{ maxWidth: '300px', margin: 'auto', padding: '10px' }}>
