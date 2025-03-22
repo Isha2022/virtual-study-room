@@ -3,64 +3,77 @@ import "../../styles/toDoList/CreateNewTask.css";
 
 import { getAuthenticatedRequest } from "../../utils/authService";
 
-const AddTaskModal = ({ addTaskWindow, setAddTaskWindow, listId, setLists, isShared }) => {
-    const [formData, setFormData] = useState({ listId: listId, taskTitle: "", taskContent: "", isCompleted: false });
+const AddTaskModal = ({
+  addTaskWindow,
+  setAddTaskWindow,
+  listId,
+  setLists,
+  isShared,
+}) => {
+  const [formData, setFormData] = useState({
+    listId: listId,
+    taskTitle: "",
+    taskContent: "",
+    isCompleted: false,
+  });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        handleSaveTask(formData, listId);
-        setFormData({ taskTitle: "", taskContent: "" });
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleSaveTask(formData, listId);
+    setFormData({ taskTitle: "", taskContent: "" });
+  };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
+  const handleSaveTask = async (newTask, listId) => {
+    console.log(
+      "Saving task to list",
+      listId,
+      "Task:",
+      newTask.taskTitle,
+      "Content:",
+      newTask.taskContent
+    );
 
-    const handleSaveTask = async (newTask, listId) => {
-        console.log("Saving task to list", listId, "Task:", newTask.taskTitle, "Content:", newTask.taskContent);
+    try {
+      const response = await getAuthenticatedRequest("/new_task/", "POST", {
+        list_id: listId,
+        title: newTask.taskTitle,
+        content: newTask.taskContent,
+      });
 
-        try {
-            const response = await getAuthenticatedRequest("/new_task/", "POST", {
-                list_id: listId,
-                title: newTask.taskTitle,
-                content: newTask.taskContent
-            });
+      console.log("Task being added to list:", response);
 
-            console.log("Task being added to list:", response);
-            
-            
-            if (!isShared) {
-                setLists(prevLists =>
-                    prevLists.map(list =>
-                        list.id === listId
-                            ? { ...list, tasks: [...list.tasks, response] }
-                            : list
-                    )
-                );
-            }
-            setAddTaskWindow(false);
-            console.log("Task Created:", response);
+      if (!isShared) {
+        setLists((prevLists) =>
+          prevLists.map((list) =>
+            list.id === listId
+              ? { ...list, tasks: [...list.tasks, response] }
+              : list
+          )
+        );
+      }
+      setAddTaskWindow(false);
+      console.log("Task Created:", response);
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.error);
+      } else {
+        alert("An error occurred. Please try again.");
+      }
+    }
+  };
 
-        } catch (error) {
-            if (error.response) {
-                alert(error.response.data.error);
-            } else {
-                alert("An error occurred. Please try again.");
-            }
-        }
-    };
-
-
-
-    const handleCancel = () => {
-        setFormData({ taskTitle: "", taskContent: "" });
-        setAddTaskWindow(false);
-    };
+  const handleCancel = () => {
+    setFormData({ taskTitle: "", taskContent: "" });
+    setAddTaskWindow(false);
+  };
 
     if (!addTaskWindow) return null;
     

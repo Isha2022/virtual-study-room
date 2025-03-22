@@ -108,15 +108,16 @@
 }
 .chat-message:last-child {
     border-bottom: none;
+    margin-bottom: 20px;
 }
 
 .current-user {
-    color: #FFC107;
+    /* color: #FFC107; */
     text-align: right;
 }
 
 .other-user {
-    color: gray;
+    /* color: gray; */
     text-align: left;
 }
 
@@ -127,9 +128,14 @@
     padding: 5px 10px;
     margin-top: 5px;
 
-    position: absolute;  /* Fix position */
-    bottom: 0;       /* Position it at the bottom */
-    left: 40%;         /* Align it to the left (adjust as needed) */
-    width: 100%;        /* Ensure it spans across the width */
-    text-align: left;   /* Align text properly */
+    /* Remove position: absolute */
+    /* position: absolute; */
+    /* bottom: 0; */
+    /* left: 40%; */
+    /* width: 100%; */
+    /* text-align: left; */
+
+    /* Add flexbox to keep it at the bottom */
+    align-self: flex-start; /* Align to the left */
+    width: 100%; /* Ensure it spans the width */
 }
