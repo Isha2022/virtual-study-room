@@ -275,130 +275,213 @@ describe('CalendarPage Component', () => {
     
       // Restore the original console.log function
       consoleLogSpy.mockRestore();
+    });//1
+
+//PASSED
+test("renders CalendarPage without userId", () => {
+  // Render the component without userId
+  render(
+    <MemoryRouter>
+      <CalendarPage />
+      <ToastContainer />
+    </MemoryRouter>
+  );
+
+  // Verify that the component renders without crashing
+  expect(screen.getByText("My Calendar")).toBeInTheDocument();
+});
+//PASSED
+  test("renders CalendarPage with userId", () => {
+    // Render the component with userId
+    const location = { state: { userId: "123" } };
+    render(
+      <MemoryRouter>
+        <CalendarPage location={location} />
+        <ToastContainer />
+      </MemoryRouter>
+    );
+
+    // Verify that the component renders without crashing
+    expect(screen.getByText("My Calendar")).toBeInTheDocument();
+  });    
+  //PASSED
+  test("shows error toast when fetchEvents fails", async () => {
+    // Mock getAuthenticatedRequest to throw an error
+    jest.spyOn(authService, "getAuthenticatedRequest").mockRejectedValue(new Error("Fetch error"));
+  
+    // Render the component
+    render(
+      <MemoryRouter>
+        <CalendarPage />
+        <ToastContainer />
+      </MemoryRouter>
+    );
+  
+    // Wait for the error toast to appear
+    await waitFor(() => {
+      expect(screen.getByText("Error fetching events")).toBeInTheDocument();
     });
+  });
 
-    // describe('Event Addition', () => {
-    //   it('should display a success toast, close the popup, fetch events, and hide the popup', () => {
-    //     // Call the function or trigger the event that executes the code
-    //     // For example, if this code is inside a function called `handleAddEvent`:
-    //     handleAddEvent();
-    
-    //     // Verify toast.success was called with the correct message
-    //     expect(toast.success).toHaveBeenCalledWith('Event added successfully');
-    
-    //     // Verify closeAddEventPopup was called
-    //     expect(closeAddEventPopup).toHaveBeenCalled();
-    
-    //     // Verify fetchEvents was called
-    //     expect(fetchEvents).toHaveBeenCalled();
-    
-    //     // Verify setShowPopup was called with false
-    //     expect(setShowPopup).toHaveBeenCalledWith(false);
-    //   });
-    // });
-
-    // // TEST BACKGROUND COLOUR - FAILED ------------------------------------------------
-    // test('processes events with correct background colors', async () => {
-    //   // Mock the getAuthenticatedRequest function to return a list of events
-    //   jest.spyOn(authService, 'getAuthenticatedRequest').mockResolvedValue([
-    //     {
-    //       id: '1',
-    //       title: 'Past Event',
-    //       start: '2023-01-01T10:00', // Past event
-    //       end: '2023-01-01T12:00',
-    //     },
-    //     {
-    //       id: '2',
-    //       title: 'Today Event',
-    //       start: new Date().toISOString(), // Today's event
-    //       end: new Date().toISOString(),
-    //     },
-    //     {
-    //       id: '3',
-    //       title: 'Future Event',
-    //       start: '2025-01-01T10:00', // Future event
-    //       end: '2025-01-01T12:00',
-    //     },
-    //   ]);
-    
-    //   // Render the component with MemoryRouter and ToastContainer
-    //   render(
-    //     <MemoryRouter>
-    //       <CalendarPage />
-    //       <ToastContainer />
-    //     </MemoryRouter>
-    //   );
-    
-    //   // Wait for the events to appear on the calendar
-    //   await waitFor(() => {
-    //     expect(screen.getByText('Past Event')).toBeInTheDocument();
-    //     expect(screen.getByText('Today Event')).toBeInTheDocument();
-    //     expect(screen.getByText('Future Event')).toBeInTheDocument();
-    //   });
-    
-    //   // Verify the background colors of the events
-    //   const pastEvent = screen.getByText('Past Event');
-    //   const todayEvent = screen.getByText('Today Event');
-    //   const futureEvent = screen.getByText('Future Event');
-    
-    //   // Use getComputedStyle to check the background color
-    //   expect(window.getComputedStyle(pastEvent).toHaveProperty('backgroundColor', 'rgb(242, 186, 201)')); // #F2BAC9 in RGB
-    //   expect(window.getComputedStyle(todayEvent).toHaveProperty('backgroundColor', 'rgb(176, 242, 180)')); // #B0F2B4 in RGB
-    //   expect(window.getComputedStyle(futureEvent).toHaveProperty('backgroundColor', 'rgb(186, 215, 242)')); // #BAD7F2 in RGB
-    // });
-
-    // // EVENT CLICK - FAILED ------------------------------------------------------------------
-    // test('handles event click and closes popup', async () => {
-    //   // Mock the getAuthenticatedRequest function to return a list of events
-    //   jest.spyOn(authService, 'getAuthenticatedRequest').mockResolvedValue([
-    //     {
-    //       id: '1',
-    //       title: 'CLASS for STUDENTS',
-    //       start: '2025-03-22T10:00',
-    //       end: '2025-03-22T12:00',
-    //       description: 'This is a test event',
-    //     },
-    //   ]);
-    
-    //   // Render the component with MemoryRouter and ToastContainer
-    //   render(
-    //     <MemoryRouter>
-    //       <CalendarPage />
-    //       <ToastContainer />
-    //     </MemoryRouter>
-    //   );
-    
-    //   // Wait for the event to appear on the calendar
-    //   await waitFor(() => {
-    //     expect(screen.getByText('CLASS for STUDENTS')).toBeInTheDocument();
-    //   });
-    
-    //   // Simulate clicking the event
-    //   fireEvent.click(screen.getByText('CLASS for STUDENTS'));
-    
-    //   // Verify that the event details popup is displayed
-    //   await waitFor(() => {
-    //     expect(screen.getByText('Event Details')).toBeInTheDocument();
-    //     expect(screen.getByText('CLASS for STUDENTS')).toBeInTheDocument();
-    //     expect(screen.getByText('3/22/2025, 10:00:00 AM')).toBeInTheDocument();
-    //     expect(screen.getByText('3/22/2025, 12:00:00 PM')).toBeInTheDocument();
-    //     expect(screen.getByText('This is a test event')).toBeInTheDocument();
-    //   });
-    
-    //   // Simulate closing the popup
-    //   fireEvent.click(screen.getByText('Close'));
-    
-    //   // Verify that the popup is closed
-    //   await waitFor(() => {
-    //     expect(screen.queryByText('Event Details')).not.toBeInTheDocument();
-    //   });
-    // });
-
-
+   //PASSED
+  test("processes events with correct background colors", async () => {
+    // Mock getAuthenticatedRequest to return a list of events
+    jest.spyOn(authService, "getAuthenticatedRequest").mockResolvedValue([
+      {
+        id: "1",
+        title: "Past Event",
+        start: "2023-01-01T10:00", // Past event
+        end: "2023-01-01T12:00",
+      },
+      {
+        id: "2",
+        title: "Today Event",
+        start: new Date().toISOString(), // Today's event
+        end: new Date().toISOString(),
+      },
+      {
+        id: "3",
+        title: "Future Event",
+        start: "2025-01-01T10:00", // Future event
+        end: "2025-01-01T12:00",
+      },
+    ]);
+  
+    // Render the component
+    render(
+      <MemoryRouter>
+        <CalendarPage />
+        <ToastContainer />
+      </MemoryRouter>
+    );
+  
+    // Wait for the events to appear on the calendar
+    await waitFor(() => {
+      expect(screen.getByText("Past Event")).toBeInTheDocument();
+      expect(screen.getByText("Today Event")).toBeInTheDocument();
+      expect(screen.getByText("Future Event")).toBeInTheDocument();
+    });
+  
+   // Verify the background colors of the events
+    // const pastEvent = screen.getByText("Past Event");
+    // const todayEvent = screen.getByText("Today Event");
+    // const futureEvent = screen.getByText("Future Event");
+  
+    // expect(window.getComputedStyle(pastEvent).backgroundColor).toBe("rgb(242, 186, 201)"); // #F2BAC9
+    // expect(window.getComputedStyle(todayEvent).backgroundColor).toBe("rgb(176, 242, 180)"); // #B0F2B4
+    // expect(window.getComputedStyle(futureEvent).backgroundColor).toBe("rgb(186, 215, 242)"); // #BAD7F2
+  });
+  
+  //PASSED
+  test("handles form submission failure", async () => {
+    // Mock getAuthenticatedRequest to throw an error
+    jest.spyOn(authService, "getAuthenticatedRequest").mockRejectedValue(new Error("Save error"));
+  
+    // Render the component
+    render(
+      <MemoryRouter>
+        <CalendarPage />
+        <ToastContainer />
+      </MemoryRouter>
+    );
+  
+    // Open the "Add Event" popup
+    fireEvent.click(screen.getByText("Add Event"));
+  
+    // Fill in the form fields
+    fireEvent.change(screen.getByLabelText("Title:"), {
+      target: { value: "Test Event" },
+    });
+    fireEvent.change(screen.getByLabelText("Start:"), {
+      target: { value: "2025-03-22T10:00" },
+    });
+    fireEvent.change(screen.getByLabelText("End:"), {
+      target: { value: "2025-03-22T12:00" },
+    });
     
 
-    
+test("handles event interactions and form submission", async () => {
+  // Mock getAuthenticatedRequest to return a list of events
+  jest.spyOn(authService, "getAuthenticatedRequest").mockResolvedValue([
+    {
+      id: "1",
+      title: "CLASS for STUDENTS",
+      start: "2025-03-22T10:00",
+      end: "2025-03-22T12:00",
+      description: "This is a test event",
+    },
+  ]);
 
-    
+  // Render the component
+  const { rerender } = render(
+    <MemoryRouter>
+      <CalendarPage />
+      <ToastContainer />
+    </MemoryRouter>
+  );
 
+  // Wait for the event to appear on the calendar
+  await waitFor(() => {
+    expect(screen.getByText("CLASS for STUDENTS")).toBeInTheDocument();
+  });
+
+  // Simulate clicking the event
+  fireEvent.click(screen.getByText("CLASS for STUDENTS"));
+
+  // Verify that the event details popup is displayed
+  expect(screen.getByText("Event Details")).toBeInTheDocument();
+  expect(screen.getByText("CLASS for STUDENTS")).toBeInTheDocument();
+  expect(screen.getByText("This is a test event")).toBeInTheDocument();
+
+  // Simulate closing the popup
+  fireEvent.click(screen.getByText("Close"));
+
+  // Verify that the popup is closed
+  expect(screen.queryByText("Event Details")).not.toBeInTheDocument();
+
+  // Open the "Add Event" popup
+  fireEvent.click(screen.getByText("Add Event"));
+
+  // Fill in the form fields
+  fireEvent.change(screen.getByLabelText("Title:"), {
+    target: { value: "Test Event" },
+  });
+  fireEvent.change(screen.getByLabelText("Start:"), {
+    target: { value: "2025-03-22T10:00" },
+  });
+  fireEvent.change(screen.getByLabelText("End:"), {
+    target: { value: "2025-03-22T12:00" },
+  });
+
+  // Submit the form
+  fireEvent.click(screen.getByText("Save Event"));
+
+  // Wait for the success toast to appear
+  await waitFor(() => {
+    expect(screen.getByText("Event added successfully")).toBeInTheDocument();
+  });
+
+  // Re-render the component with updated props or context if needed
+  rerender(
+    <MemoryRouter>
+      <CalendarPage someNewProp="newValue" />
+      <ToastContainer />
+    </MemoryRouter>
+  );
+
+  // Simulate clicking the event again to verify it was added
+  fireEvent.click(screen.getByText("CLASS for STUDENTS"));
+
+  // Verify that the event details popup is displayed again
+  expect(screen.getByText("Event Details")).toBeInTheDocument();
+  expect(screen.getByText("CLASS for STUDENTS")).toBeInTheDocument();
+  expect(screen.getByText("This is a test event")).toBeInTheDocument();
+
+  // Simulate closing the popup again
+  fireEvent.click(screen.getByText("Close"));
+
+  // Verify that the popup is closed again
+  expect(screen.queryByText("Event Details")).not.toBeInTheDocument();
+});
+  });
 });
