@@ -96,13 +96,13 @@
     font-size: 30px;
     font-weight: 700;
     text-transform: uppercase;
-    color: #f4bdd0;  /* Changed to lighter pink */
+    color: #f4bdd0;  /* Lighter pink */
     text-shadow: 
-        0 2px 0 #f79cac,
-        0 4px 0 rgba(247, 156, 172, 0.6),
         0 0 5px #fef6ae,
         0 0 10px rgba(254, 246, 174, 0.6),
         0 0 15px rgba(254, 246, 174, 0.4),
+        0 2px 0 #f79cac,
+        0 4px 0 rgba(247, 156, 172, 0.6),
         0 0 2px rgba(0, 0, 0, 0.3);
 }
 .username-text, .password-text {
@@ -136,33 +136,58 @@
 .login-submit-button {
     padding: 15px 20px;
     width: 30%;
+    background-color: #ffdeef;
+    background-image: 
+        radial-gradient(circle at center, rgba(255, 236, 246, 0.4) 15%, transparent 60%),
+        radial-gradient(circle at 30% 30%, #f4bdd0 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, #ffb5d3 15%, transparent 50%);
+    color: white;
     border: none;
     border-radius: 40px;
-    background-color: white;  /* White background for contrast */
-    color: #f4bdd0;  /* Button text color */
     cursor: pointer;
     text-align: center;
-    font-weight: 900;
-    font-family: 'Inter', sans-serif;
-    transition: transform 0.2s, box-shadow 0.2s;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    text-transform: uppercase !important;
+    transition: all 0.2s ease;
+    text-shadow: 
+        0 1px 0 #b2b2b2,
+        1px 1px 3px rgba(0, 0, 0, 0.3);
     box-shadow: 
-        0 4px 0 #f79cac,
-        0 5px 8px rgba(0,0,0,0.15);
+        inset 0px 2px 4px rgba(255, 255, 255, 0.7),
+        inset 0px -2px 4px rgba(255, 222, 239, 0.2),
+        0 2px 8px rgba(244, 189, 208, 0.4);
     position: relative;
-    overflow: hidden;
-    text-shadow: none;  /* Remove text shadow for better readability */
+}
+
+.login-submit-button::before {
+    content: '';
+    position: absolute;
+    top: 25%;
+    left: 15%;
+    width: 5px;
+    height: 5px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
 }
 
 .login-submit-button:hover {
-    transform: translateY(-2px);
+    transform: scale(1.05);
+    background-image: 
+        radial-gradient(circle at center, rgba(255, 245, 251, 0.3) 15%, transparent 60%),
+        radial-gradient(circle at 30% 30%, #f9d2e2 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, #f8cad9 15%, transparent 50%);
     box-shadow: 
-        0 6px 0 #f79cac,
-        0 7px 10px rgba(0,0,0,0.2);
+        inset 0px 2px 4px rgba(255, 255, 255, 0.9),
+        inset 0px -2px 4px rgba(255, 222, 239, 0.3),
+        0 4px 12px rgba(244, 189, 208, 0.6);
 }
 
 .login-submit-button:active {
-    transform: translateY(2px);
+    transform: scale(0.95);
     box-shadow: 
-        0 2px 0 #f79cac,
-        0 3px 6px rgba(0,0,0,0.1);
+        inset 1px 1px 3px rgba(255, 255, 255, 0.5),
+        inset -1px -1px 3px rgba(0, 0, 0, 0.2);
 }
