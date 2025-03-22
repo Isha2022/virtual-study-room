@@ -1,102 +1,281 @@
+/* Import Orbitron font at the BEGINNING of the file */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+
 .signup-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f6f0f0;
+  background-color: #F6F0F0;
+  background-image: 
+      radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.8) 0%, transparent 8%),
+      radial-gradient(circle at 80% 40%, rgba(255, 255, 255, 0.8) 0%, transparent 10%),
+      radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.7) 0%, transparent 6%),
+      radial-gradient(circle at 10% 60%, rgba(255, 255, 255, 0.7) 0%, transparent 4%),
+      radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.7) 0%, transparent 7%),
+      radial-gradient(circle at 60% 20%, rgba(255, 255, 255, 0.7) 0%, transparent 5%),
+      /* Subtle color gradients */
+      radial-gradient(circle at 70% 50%, rgba(252, 235, 160, 0.2) 0%, transparent 25%),
+      radial-gradient(circle at 30% 40%, rgba(244, 189, 208, 0.15) 0%, transparent 30%),
+      radial-gradient(circle at 50% 80%, rgba(190, 220, 255, 0.15) 0%, transparent 35%);
   min-height: 100vh;
   width: 100vw;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
   padding: 20px;
 }
 
-.heading1 {
-  border: 3px solid #f2bac9;
-  padding: 15px;
-  text-align: center;
-  font-family: "Inter", sans-serif;
-  font-weight: 700;
-  font-size: 48px;
-  background-color: #f2bac9;
-  color: white;
-  width: 100%;
-  position: fixed;
+/* Add twinkling star effect */
+.signup-container::before {
+  content: "";
+  position: absolute;
   top: 0;
   left: 0;
-  box-sizing: border-box;
-  z-index: 1000;
+  right: 0;
+  bottom: 0;
+  background-image: 
+      radial-gradient(1px 1px at 10% 10%, rgba(255, 255, 255, 0.9) 50%, transparent 100%),
+      radial-gradient(1px 1px at 20% 50%, rgba(255, 255, 255, 0.9) 50%, transparent 100%),
+      radial-gradient(1px 1px at 30% 30%, rgba(255, 255, 255, 0.9) 50%, transparent 100%),
+      radial-gradient(1px 1px at 40% 70%, rgba(255, 255, 255, 0.9) 50%, transparent 100%),
+      radial-gradient(1px 1px at 65% 25%, rgba(255, 255, 255, 0.9) 50%, transparent 100%),
+      radial-gradient(1px 1px at 70% 90%, rgba(255, 255, 255, 0.9) 50%, transparent 100%),
+      radial-gradient(1px 1px at 85% 55%, rgba(255, 255, 255, 0.9) 50%, transparent 100%),
+      radial-gradient(1px 1px at 95% 40%, rgba(255, 255, 255, 0.9) 50%, transparent 100%);
+  opacity: 0.7;
+  z-index: 0;
+  pointer-events: none;
 }
 
+/* Add subtle floating floral elements */
+.signup-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath fill='%23ffffff' fill-opacity='0.05' d='M20 2c-4.4 0-8 3.6-8 8 0 1.7.7 3.4 1.5 5.3 1.2 2.8 2.8 5.5 4.4 7.6.3.4.9.4 1.2 0 1.6-2.1 3.2-4.8 4.4-7.6.9-1.9 1.5-3.6 1.5-5.3 0-4.4-3.6-8-8-8zm0 11c-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3-1.3 3-3 3z'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cpath fill='%23ffffff' fill-opacity='0.05' d='M15 2C14 2 13 2.5 12.3 3.3L11 5.8L8.3 3.3C7.1 2.1 4.9 2.1 3.7 3.3 2.5 4.5 2.5 6.7 3.7 7.9L11 15 15 19 19 15 26.3 7.9C27.5 6.7 27.5 4.5 26.3 3.3 25.1 2.1 22.9 2.1 21.7 3.3L19 5.8 17.7 3.3C17 2.5 16 2 15 2z'/%3E%3C/svg%3E");
+  opacity: 0.3;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Form styling to match login form */
 .signup-form {
-  border: 5px solid #ffe7ac;
-  width: 450px;
+  border: 5px solid #f4bdd0;
+  width: 480px;
   padding: 20px;
-  border-radius: 20px;
-  background-color: #ffe7ac;
+  border-radius: 50px;
+  background-color: #fef6ae;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-  margin-top: 200px;
+  position: relative;
+  margin-top: 80px;
+  box-shadow: 
+      0 8px 20px rgba(0,0,0,0.15),
+      0 0 30px rgba(244, 189, 208, 0.3),
+      inset 0 0 80px rgba(255, 255, 255, 0.6);
+  overflow: hidden;
   margin-bottom: 100px;
 }
 
+/* Add cherry blossom decoration to the background */
+.signup-form::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+      radial-gradient(circle at 20% 30%, rgba(244, 189, 208, 0.2) 0%, transparent 25%),
+      radial-gradient(circle at 80% 70%, rgba(244, 189, 208, 0.2) 0%, transparent 30%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23f4bdd0' fill-opacity='0.15' d='M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm.88 13.75h-1.75v-1.75h1.75v1.75zm0-2.87h-1.75c0-2.84 2.62-2.62 2.62-4.38 0-.96-.79-1.75-1.75-1.75s-1.75.79-1.75 1.75h-1.75c0-1.95 1.55-3.5 3.5-3.5s3.5 1.55 3.5 3.5c.01 2.12-2.62 2.12-2.62 4.38z'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  z-index: -1;
+}
+
+/* Add a subtle butterfly and flower glow effect */
+.signup-form::after {
+  content: "";
+  position: absolute;
+  bottom: -50px;
+  left: -50px;
+  width: 600px;
+  height: 180px;
+  background: 
+      radial-gradient(ellipse at center, rgba(244, 189, 208, 0.4) 0%, transparent 70%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath fill='%23a5ecfd' fill-opacity='0.1' d='M20 4c-4.4 0-8 3.6-8 8 0 1.7.7 3.4 1.5 5.3 1.2 2.8 2.8 5.5 4.4 7.6.3.4.9.4 1.2 0 1.6-2.1 3.2-4.8 4.4-7.6.9-1.9 1.5-3.6 1.5-5.3 0-4.4-3.6-8-8-8zM9.5 30.7l-1.2-1.4c-2.1 1.8-3.3 3.6-3.3 5.1 0 2 4.9 3.6 11 3.6s11-1.6 11-3.6c0-1.5-1.2-3.4-3.3-5.1l-1.2 1.4C25.4 32.5 28 34.5 28 37c0 4.4-7.2 8-16 8S-4 41.4-4 37c0-2.5 2.6-4.5 5.5-6.3z'/%3E%3C/svg%3E");
+  z-index: -1;
+}
+
+/* Header styling - EXACT MATCH to login header with forced font */
+.heading1 {
+  position: fixed !important;
+  width: 100% !important;
+  padding: 15px !important;
+  background: linear-gradient(135deg, #f4bdd0 0%, #ffdeef 100%) !important; 
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+  top: 0 !important;
+  left: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  z-index: 1000 !important;
+  border: 3px solid #f4bdd0 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  height: 80px !important;
+  padding-left: 50px !important;
+  padding-right: 50px !important;
+  text-align: center !important;
+  color: white !important;
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 32px !important;
+  font-weight: 600 !important;
+  letter-spacing: 1px !important;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.8) ,
+              0 0 8px rgba(244, 189, 208, 0.6) ,
+              0 0 12px rgba(244, 189, 208, 0.4) ,
+              0 1px 2px rgba(0, 0, 0, 0.3) ;
+}
+
+/* Create additional rules to force Orbitron on any text inside heading1 */
+.heading1 span, 
+.heading1 div, 
+.heading1 a,
+.heading1 h1,
+.heading1 h2 {
+  font-family: "Orbitron", sans-serif !important;
+  font-weight: 700 !important;
+}
+
+/* Signup heading text styling */
 .heading2 {
+  margin-top: 30px;
+  width: 100%;                  
   text-align: center;
-  font-size: 26px;
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
+  font-size: 36px;
   font-weight: 700;
+  text-transform: uppercase;
+  color: #7bcec3;
+  text-shadow: 
+      0 0 5px #fef6ae,
+      0 0 10px rgba(254, 246, 174, 0.6),
+      0 0 15px rgba(254, 246, 174, 0.4),
+      0 2px 0 #f79cac,
+      0 4px 0 rgba(247, 156, 172, 0.6),
+      0 0 2px rgba(0, 0, 0, 0.3);
   margin-bottom: 20px;
 }
 
+/* Label text styling */
 .label-text {
-    width: 90%;
-    text-align: left;
-    font-size: 18px;
-    font-weight: 500;
-    margin-top: 10px;
-    font-family: 'Inter', sans-serif;
-    color:black;
+  width: 100%;
+  text-align: left;
+  font-size: 20px;
+  margin-top: 10px;
+  margin-left: 50px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #7bcec3;
 }
 
+/* Input field styling */
 .input-field {
-  width: 90%;
-  padding: 12px;
-  margin-top: 5px;
-  margin-bottom: 10px;
-  border: 2px solid #ddd;
-  border-radius: 25px;
-  text-align: left;
+  width: 85%;
+  margin-top: 20px;
+  margin-bottom: 35px;
+  border: none;
+  border-radius: 40px;
+  padding: 18px;
+  text-align: center;
   background-color: white;
   outline: none;
+  box-shadow: 
+      inset 0 2px 5px rgba(247, 156, 172, 0.2),
+      0 2px 5px rgba(255, 255, 255, 0.8);
+  color: #f4bdd0;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
 }
 
-.username-field:focus,
-.password-field:focus {
-  border-color: #f2bac9;
-  box-shadow: 0 0 5px rgba(242, 186, 201, 0.5);
+.input-field:focus {
+  box-shadow: 
+      inset 0 2px 5px rgba(247, 156, 172, 0.3),
+      0 0 8px rgba(244, 189, 208, 0.5);
+  color: #f79cac;
 }
 
+/* Submit button styling to match login button */
 .submit-button {
-  margin-top: 20px;
-  padding: 12px 20px;
-  width: 50%;
+  padding: 15px 20px;
+  width: 30%;
+  background-color: #ffdeef;
+  background-image: 
+      radial-gradient(circle at center, rgba(255, 236, 246, 0.4) 15%, transparent 60%),
+      radial-gradient(circle at 30% 30%, #f4bdd0 15%, transparent 50%),
+      radial-gradient(circle at 70% 70%, #ffb5d3 15%, transparent 50%);
+  color: white;
   border: none;
-  border-radius: 25px;
-  background-color: #f2bac9;
-  color: black;
+  border-radius: 40px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-  font-family: "Inter", sans-serif;
-  transition: 0.3s ease-in-out;
+  text-align: center;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  text-transform: uppercase !important;
+  transition: all 0.2s ease;
+  text-shadow: 
+      0 1px 0 #b2b2b2,
+      1px 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 
+      inset 0px 2px 4px rgba(255, 255, 255, 0.7),
+      inset 0px -2px 4px rgba(255, 222, 239, 0.2),
+      0 2px 8px rgba(244, 189, 208, 0.4);
+  position: relative;
+  margin-top: 20px;
+}
+
+.submit-button::before {
+  content: '';
+  position: absolute;
+  top: 25%;
+  left: 15%;
+  width: 5px;
+  height: 5px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .submit-button:hover {
-  background-color: #f28ca6;
-  color: white;
+  transform: scale(1.05);
+  background-image: 
+      radial-gradient(circle at center, rgba(255, 245, 251, 0.3) 15%, transparent 60%),
+      radial-gradient(circle at 30% 30%, #f9d2e2 15%, transparent 50%),
+      radial-gradient(circle at 70% 70%, #f8cad9 15%, transparent 50%);
+  box-shadow: 
+      inset 0px 2px 4px rgba(255, 255, 255, 0.9),
+      inset 0px -2px 4px rgba(255, 222, 239, 0.3),
+      0 4px 12px rgba(244, 189, 208, 0.6);
 }
 
+.submit-button:active {
+  transform: scale(0.95);
+  box-shadow: 
+      inset 1px 1px 3px rgba(255, 255, 255, 0.5),
+      inset -1px -1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Checkbox styling */
 .checkbox-container {
   display: flex;
   align-items: center;
@@ -110,6 +289,7 @@
   height: 18px;
   margin-right: 10px;
   cursor: pointer;
+  accent-color: #f79cac;
 }
 
 .checkbox-label {
@@ -117,10 +297,11 @@
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
+  color: #f79cac;
 }
 
 .checkbox-label a {
-  color: #007bff;
+  color: #f4bdd0;
   text-decoration: none;
 }
 
@@ -130,8 +311,9 @@
 
 .error-message {
   font-size: 12px;
-  color: red;
+  color: #f06eaa;
   text-align: center;
+  margin-top: 5px;
 }
 
 .field {
