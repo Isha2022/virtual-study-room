@@ -8,11 +8,6 @@ Custom User Model & Manager. Extends AbstractBaseUser to create custom User mode
 
 Primary key     :   user_id (Auto-incremented)
 Required fields :   firstname, lastname, email, username, password, description
-
-WHEN USING: 
-    -   settings.AUTH_USER_MODEL for models OR
-    -   from django.contrib.auth import get_user_model
-        User = get_user_model() for views, forms ...
 '''
 
 class UserManager(BaseUserManager):
@@ -60,15 +55,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     ''' description can be left blank '''
     description = models.TextField(blank=True, default="") 
     total_sessions = models.IntegerField(default=0)
-    #profile_id = models.CharField(max_length=255, blank=True, null=True)  #For Firebase storage reference for image - if still needed
-
-
-    is_active = models.BooleanField(default=True)   #Allows users to be disabled if needed
-    is_staff = models.BooleanField(default=False)   # Required for admin access
-    is_superuser = models.BooleanField(default=False)  # Required for superuser privileges
     
     ''' Uses UserManager as custom manager '''
-    objects = UserManager()     #Uses UserManager as custom manager
+    objects = UserManager()
 
     ''' Uses email instead of username for authentication i.e. for login '''
     USERNAME_FIELD = 'email'    
