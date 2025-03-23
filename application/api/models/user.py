@@ -72,6 +72,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @staticmethod
     def find_user(search_query):
+        """
+        This function is used in the friends view class to find a user in the 
+        database using their first name, last name, or username
+        """
         return User.objects.filter(
             Q(username__icontains=search_query) |
             Q(firstname__icontains=search_query) |
