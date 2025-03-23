@@ -29,14 +29,16 @@ def get_analytics(request):
         8: 150,  # Badge 8 for 150 hours
     }
 
-    # Track earned badges and create them if not already earned
+    # Track earned badges or create them if not already earned
     earned_badges = []
     for reward_number, threshold in badge_thresholds.items():
         if user.hours_studied >= threshold:
             reward, _ = Rewards.objects.get_or_create(
                 user=user,
                 reward_number=reward_number,
-                defaults={"date_earned": timezone.now()}  # Set date_earned only if the badge is newly created
+                
+                # Set date_earned only if the badge is newly created
+                defaults={"date_earned": timezone.now()}  
             )
             earned_badges.append({
                 "reward_number": reward.reward_number,
