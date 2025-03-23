@@ -8,13 +8,13 @@
     justify-content: center;
     align-items: center;
     margin: 0;
-    /* Slightly more saturated base gradient */
+    /* Glossy pink gradient with subtle yellow accents */
     background: linear-gradient(135deg, 
-        #ffffff 0%, 
-        #fff0f5 25%, 
-        #ffe8ee 50%, 
-        #ffd8e8 75%, 
-        #fff0f6 100%);
+        #ffcce0 0%, 
+        #ffdfeb 25%, 
+        #ffe8f0 50%, 
+        #fff4e0 75%, 
+        #ffecf4 100%);
     min-height: 100vh; 
     width: 100vw; 
     flex-direction: column;
@@ -22,7 +22,7 @@
     overflow: hidden;
 }
 
-/* Enhanced soft color diffusion - more noticeable */
+/* Shimmering water effect overlay */
 .login-container::before {
     content: "";
     position: absolute;
@@ -31,16 +31,16 @@
     right: 0;
     bottom: 0;
     background: 
-        radial-gradient(circle at 30% 20%, rgba(254, 197, 209, 0.5) 0%, transparent 35%),
-        radial-gradient(circle at 70% 60%, rgba(251, 192, 155, 0.5) 0%, transparent 35%),
-        radial-gradient(circle at 10% 70%, rgba(254, 197, 209, 0.4) 0%, transparent 40%),
-        radial-gradient(circle at 85% 25%, rgba(251, 192, 155, 0.4) 0%, transparent 40%);
+        linear-gradient(45deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%, transparent 50%, 
+        rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.05) 75%, transparent 75%, transparent);
+    background-size: 100px 100px;
     z-index: 0;
     pointer-events: none;
-    animation: subtle-pulse 15s infinite alternate;
+    animation: shimmer-wave 15s infinite linear;
+    opacity: 0.7;
 }
 
-/* Enhanced diffused glow - more visible */
+/* Subtle color diffusion with yellow accents */
 .login-container::after {
     content: "";
     position: absolute;
@@ -49,27 +49,29 @@
     right: 0;
     bottom: 0;
     background: 
-        radial-gradient(circle at 30% 30%, rgba(254, 197, 209, 0.1) 0%, transparent 60%),
-        radial-gradient(circle at 70% 70%, rgba(251, 192, 155, 0.1) 0%, transparent 60%);
-    opacity: 0.8;
+        linear-gradient(to right, rgba(255, 230, 240, 0.2) 0%, rgba(255, 243, 224, 0.3) 50%, rgba(255, 230, 240, 0.2) 100%);
+    opacity: 0.6;
     z-index: 0;
     pointer-events: none;
+    filter: blur(50px);
 }
 
-/* Add subtle pulsing animation */
-@keyframes subtle-pulse {
+/* Shimmer wave animation */
+@keyframes shimmer-wave {
     0% {
+        background-position: 0px 0px;
         opacity: 0.5;
     }
     50% {
         opacity: 0.7;
     }
     100% {
+        background-position: 100px 100px;
         opacity: 0.5;
     }
 }
 
-/* Keep existing shimmer and subtle-shift animations */
+/* Keep existing animations */
 @keyframes shimmer {
     0% {
         background-position: 0% 0%;
