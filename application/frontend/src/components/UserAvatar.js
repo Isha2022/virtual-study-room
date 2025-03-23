@@ -27,10 +27,10 @@ const UserAvatar = ({ onSelect, currentAvatar }) => {
   return (
     <div data-testid="avatar-grid" style={{ width: '440px' }}>
       {Array.from({ length: Math.ceil(avatarUrls.length / 4) }, (_, rowIndex) => (
-        <div 
-          key={rowIndex} 
+        <div
+          key={rowIndex}
           data-testid="avatar-row"
-          role="row" 
+          role="row"
           style={{ display: 'flex' }}
         >
           {avatarUrls.slice(rowIndex * 4, (rowIndex + 1) * 4).map((url, colIndex) => (
