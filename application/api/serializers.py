@@ -11,7 +11,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Appointments
-        fields = ['id', 'title', 'description', 'start', 'end', 'status', 'created', 'modified', 'user']
+        fields = ['id', 'title', 'description', 'start', 'end', 'user']
         extra_kwargs = {
             'user': {'read_only': True},  # Prevent the client from setting the user
         }

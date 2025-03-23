@@ -10,6 +10,9 @@ from datetime import datetime, time, timedelta
 import json
 from django.test import TestCase
 
+"""
+Tests for the websockets used in the chat in the group study room
+"""
 
 # Define a URL router for the WebSocket consumer
 application = URLRouter([
@@ -23,10 +26,8 @@ class ChatConsumerTests(TestCase):
     ]
 
     def setUp(self):
-        # Create a user for testing
         self.user = User.objects.get(username='@alice123')
 
-        # Create a test study session
         self.study_session = StudySession.objects.create(createdBy=self.user, sessionName="Test Room")
 
 
