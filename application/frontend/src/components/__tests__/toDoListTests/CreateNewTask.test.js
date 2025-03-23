@@ -52,6 +52,7 @@ describe("CreateNewTask", () => {
         fireEvent.click(screen.getByText("Save"));
     }
 
+     // Tests that the modal renders correctly when `addTaskWindow` is true
     test("renders modal correctly when addTaskWindow is true", () => {
         setup();
 
@@ -60,6 +61,7 @@ describe("CreateNewTask", () => {
         expect(screen.getByPlaceholderText("Enter task content")).toBeInTheDocument();
     });
 
+    // Tests that the modal does not render when `addTaskWindow` is false
     test("does not render modal when addTaskWindow is false", () => {
         const { container } = render(
             <AddTaskModal
@@ -72,6 +74,7 @@ describe("CreateNewTask", () => {
         expect(container.firstChild).toBeNull();
     });
 
+    // Tests that the form is filled and submitted successfully
     test("allows input and submits the form successfully", async () => {
         authService.getAuthenticatedRequest.mockResolvedValue({
             id: 1,
@@ -117,6 +120,7 @@ describe("CreateNewTask", () => {
         await waitFor(() => expect(setAddTaskWindowMock).toHaveBeenCalledWith(false));
     });
 
+    // Tests that the error is handled correctly when there is a generic error with no response
     test("handles generic error without response", async () => {
         authService.getAuthenticatedRequest.mockRejectedValueOnce({
             message: "Network Error",
@@ -136,6 +140,7 @@ describe("CreateNewTask", () => {
         expect(setAddTaskWindowMock).not.toHaveBeenCalled();
     });
 
+    // Tests that the error is handled correctly when the API responds with an error
     test("handles error with response", async () => {
         authService.getAuthenticatedRequest.mockRejectedValueOnce({
             response: {
@@ -159,6 +164,7 @@ describe("CreateNewTask", () => {
         expect(setAddTaskWindowMock).not.toHaveBeenCalled();
     });
 
+    // Tests that the modal closes when the cancel button is clicked
     test("closes modal on cancel button click", async() => {
         setup();
         const cancelButton = screen.getByText("Cancel");
@@ -169,6 +175,7 @@ describe("CreateNewTask", () => {
 
     });
 
+    // Tests that tasks are not added when the list is shared
     test("does not update lists when isShared is true", async () => {
         authService.getAuthenticatedRequest.mockResolvedValue({
             id: 1,

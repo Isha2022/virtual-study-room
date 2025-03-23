@@ -37,6 +37,7 @@ describe('ToDoList Component', () => {
         }));
     });
 
+    // Test case to check if the ToDoList component renders correctly with lists and tasks
     test('renders the component with lists and tasks', async () => {
         render(<ToDoList isShared={false} />);
 
@@ -45,6 +46,7 @@ describe('ToDoList Component', () => {
         expect(screen.getByText('Task 1')).toBeInTheDocument();
     });
 
+    // Test case to check if the loading state is displayed correctly when loading is true
     test('displays loading message when loading', () => {
         useToDoList.mockImplementation(() => ({
             lists: [],
@@ -57,6 +59,7 @@ describe('ToDoList Component', () => {
         expect(screen.getByText('Loading To-Do Lists...')).toBeInTheDocument();
     });
 
+    // Test case to check if toggling task completion works as expected
     test('toggles task completion when clicked', async () => {
         const { rerender } = render(<ToDoList isShared={false} />);
 
@@ -87,6 +90,7 @@ describe('ToDoList Component', () => {
         });
     });
 
+    // Test case to check if task deletion works correctly
     test('deletes a task when delete button is clicked', async () => {
         
         authService.getAuthenticatedRequest.mockImplementation((url, method) => {
@@ -124,7 +128,8 @@ describe('ToDoList Component', () => {
         });
     });
 
-    it('opens the add task modal when add task button is clicked', async () => {
+    // Test case to check if add task modal opens correctly
+    test('opens the add task modal when add task button is clicked', async () => {
         render(<ToDoList isShared={false} />);
 
         const addTaskButton = screen.getByRole('button', { name: /add task/i });
@@ -132,7 +137,8 @@ describe('ToDoList Component', () => {
         expect(screen.getByText('Add Task')).toBeInTheDocument();
     });
 
-    it('sends WebSocket message when task is toggled in shared mode', async () => {
+    // Test case to check if task completion toggles correctly in shared mode and sends WebSocket message
+    test('sends WebSocket message when task is toggled in shared mode', async () => {
 
         const mockSocket = {
             readyState: WebSocket.OPEN, 
@@ -167,6 +173,7 @@ describe('ToDoList Component', () => {
         });
     });
 
+    // Test case to check if add list modal opens correctly
     test('opens the add list modal when add list button is clicked', async () => {
         render(<ToDoList isShared={false} />);
 
@@ -176,6 +183,7 @@ describe('ToDoList Component', () => {
         expect(screen.getByText('Add List')).toBeInTheDocument();
     });
 
+    // Test case to check if full-screen mode toggles correctly when button is clicked
     test('toggles full screen mode when full screen button is clicked', async () => {
         render(<ToDoList isShared={false} />);
 
@@ -189,6 +197,7 @@ describe('ToDoList Component', () => {
         expect(todoContainer).not.toHaveClass('full-screen');
     });
 
+    // Test case to check if task details toggle correctly when task is clicked
     test('toggles task details when task is clicked', async () => {
         render(<ToDoList isShared={false} />);
 
@@ -205,6 +214,7 @@ describe('ToDoList Component', () => {
         expect(screen.queryByText(/Description:/i)).not.toBeInTheDocument();
     });
 
+    // Test to ensure that clicking the "Delete List" button triggers a DELETE request and removes the list
     test('deletes a list when delete list button is clicked', async () => {
         authService.getAuthenticatedRequest.mockImplementation((url, method) => {
             if (method === "DELETE" && url.includes("/delete_list/")) {
@@ -240,6 +250,7 @@ describe('ToDoList Component', () => {
         });
     });
 
+    // Test to verify that an error is logged when deleting a list fails
     test('logs an error when deleting a list fails', async () => {
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
         authService.getAuthenticatedRequest.mockImplementation((url, method) => {
@@ -267,6 +278,7 @@ describe('ToDoList Component', () => {
         consoleErrorSpy.mockRestore();
     });
 
+    // Test to ensure WebSocket message is sent when a task is deleted in shared mode
     test('sends WebSocket message when task is deleted in shared mode', async () => {
         
         const mockSocket = {
@@ -298,6 +310,7 @@ describe('ToDoList Component', () => {
         });
     });
 
+    // Test to log an error when deleting a task fails
     test('logs an error when deleting a task fails', async () => {
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
 
@@ -327,6 +340,7 @@ describe('ToDoList Component', () => {
         consoleErrorSpy.mockRestore();
     });
 
+    // Test to verify WebSocket does not send a message when socket is closed
     test('does not send WebSocket message when socket is not open', async () => {
         
         const mockSocket = {
@@ -348,6 +362,7 @@ describe('ToDoList Component', () => {
         expect(mockSocket.send).not.toHaveBeenCalled();
     });
 
+    // Test case to verify WebSocket message formatting when deleting a task
     test('WebSocket message is correctly formatted when deleting a task', async () => {
         const mockSocket = {
             readyState: WebSocket.OPEN, 
@@ -373,6 +388,7 @@ describe('ToDoList Component', () => {
         );
     });
 
+    // Test case to ensure that an error is logged when toggling task completion fails
     test('logs an error when toggling task completion fails', async () => {
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
 
@@ -403,6 +419,7 @@ describe('ToDoList Component', () => {
         consoleErrorSpy.mockRestore();
     });
 
+    // Test case to verify task completion toggling works correctly in non-shared mode
     test('toggles task completion correctly in non-shared mode', async () => {
         authService.getAuthenticatedRequest.mockResolvedValue({
             id: 1,
@@ -440,6 +457,7 @@ describe('ToDoList Component', () => {
         });
     });
 
+    // Test case to ensure no WebSocket message is sent when socket is not open in shared mode
     test('does not send WebSocket message when socket is not open in shared mode', async () => {
         const mockSocket = {
             readyState: WebSocket.CLOSED, 
@@ -462,6 +480,7 @@ describe('ToDoList Component', () => {
         expect(mockSocket.send).not.toHaveBeenCalled();
     });
 
+    // Test case to verify WebSocket message is sent when adding a task in shared mode
     test('sends WebSocket message when adding a task in shared mode', async () => {
         
         const mockSocket = {
@@ -488,6 +507,7 @@ describe('ToDoList Component', () => {
         });
     });
 
+    // Test case to ensure task completion is not toggled for a non-matching task ID
     test('does not toggle task completion for non-matching task ID', async () => {
         authService.getAuthenticatedRequest.mockResolvedValue({
             id: 1,

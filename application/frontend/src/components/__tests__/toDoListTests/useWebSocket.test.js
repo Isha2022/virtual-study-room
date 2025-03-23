@@ -30,19 +30,24 @@ describe("useWebSocket Hook", () => {
         mockSetLists = jest.fn();
         mockSocket = {}; 
     });
-      test("does not connect WebSocket if isShared is false", () => {
+      
+    // Test case to verify that WebSocket is not connected when 'isShared' is false
+    test("does not connect WebSocket if isShared is false", () => {
         act(() => {
             renderHook(() => useWebSocket(false, mockSocket, 1, mockSetLists, "room123"));
         });
          expect(global.WebSocket).not.toHaveBeenCalled();
     });
-     test("connects WebSocket when isShared is true", () => {
+     
+    // Test case to verify WebSocket connection when 'isShared' is true
+    test("connects WebSocket when isShared is true", () => {
         act(() => {
             renderHook(() => useWebSocket(true, mockSocket, 1, mockSetLists, "room123"));
         });
          expect(global.WebSocket).toHaveBeenCalledWith("ws://localhost:8000/ws/todolist/room123/");
     });
 
+    // Test case to verify logging when WebSocket connection is successfully opened
     test("logs WebSocket connection when opened", () => {
          const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => { });
          act(() => {
@@ -56,6 +61,7 @@ describe("useWebSocket Hook", () => {
          consoleLogSpy.mockRestore();
     });
 
+    // Test case to verify that WebSocket messages are properly handled
     test("handles WebSocket messages", () => {
         const mockMessage = { data: JSON.stringify({ type: "add_task", task: { id: 1, name: "New Task", is_completed: false } }) };
 
@@ -70,6 +76,7 @@ describe("useWebSocket Hook", () => {
         expect(mockSetLists).toHaveBeenCalled();
     });
 
+    // Test case to verify that "remove_task" WebSocket messages are handled correctly
     test("handles remove_task WebSocket messages", () => {
 
         const initialLists = [
@@ -128,6 +135,7 @@ describe("useWebSocket Hook", () => {
         expect(updatedLists).toEqual(expectedLists);
     });
 
+    // Test case to verify that "toggle_task" WebSocket messages are handled correctly
     test("handles toggle_task WebSocket messages", () => {
         const initialLists = [
             {
@@ -180,6 +188,7 @@ describe("useWebSocket Hook", () => {
         expect(updatedLists).toEqual(expectedLists);
     });
 
+    // Test case to verify that "add_task" WebSocket messages are handled correctly
     test("handles add_task WebSocket messages", () => {
         const initialLists = [
             {
@@ -232,6 +241,7 @@ describe("useWebSocket Hook", () => {
         expect(updatedLists).toEqual(expectedLists);
     });
 
+    // Test case to verify handling of unknown WebSocket message types
     test("handles unknown WebSocket message types", () => {
         const initialLists = [
             {
@@ -269,6 +279,7 @@ describe("useWebSocket Hook", () => {
         expect(updatedLists).toEqual(expectedLists);
     });
 
+    // Test case to ensure no duplicate tasks are added for "add_task" WebSocket messages
     test("does not add duplicate tasks for add_task WebSocket messages", () => {
         const initialLists = [
             {

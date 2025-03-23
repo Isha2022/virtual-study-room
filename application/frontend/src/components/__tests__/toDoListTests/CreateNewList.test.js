@@ -47,6 +47,7 @@ describe("CreateNewList", () => {
         );
     };
 
+    // Tests the modal renders correctly when `addListWindow` is true
     test("renders modal correctly when addListWindow is true", () => {
         setup();
 
@@ -54,6 +55,7 @@ describe("CreateNewList", () => {
         expect(screen.getByPlaceholderText("Enter list name")).toBeInTheDocument();
     });
 
+    // Tests the modal does not render when `addListWindow` is false
     test("does not render modal when addListWindow is false", () => {
         const { container } = render(
             <AddListModal
@@ -65,6 +67,7 @@ describe("CreateNewList", () => {
         expect(container.firstChild).toBeNull();
     });
 
+    // Tests if the form is filled and submitted successfully
     test("allows input and submits the form successfully", async () => {
         authService.getAuthenticatedRequest.mockResolvedValue({
             listId: 2,
@@ -104,6 +107,7 @@ describe("CreateNewList", () => {
         await waitFor(() => expect(setAddListWindowMock).toHaveBeenCalledWith(false));
     });
 
+    // Tests handling a generic error when there's no response from the API
     test("handles generic error without response", async () => {
         authService.getAuthenticatedRequest.mockRejectedValueOnce({
             message: "Network Error",
@@ -123,6 +127,7 @@ describe("CreateNewList", () => {
         expect(setAddListWindowMock).not.toHaveBeenCalled();
     });
 
+    // Tests handling a specific error with a response from the API
     test("handles error with response", async () => {
         authService.getAuthenticatedRequest.mockRejectedValueOnce({
             response: {
@@ -146,6 +151,7 @@ describe("CreateNewList", () => {
         expect(setAddListWindowMock).not.toHaveBeenCalled();
     });
 
+    // Tests that the modal closes when the cancel button is clicked
     test("closes modal on cancel button click", async () => {
         setup();
         const cancelButton = screen.getByText("Cancel");

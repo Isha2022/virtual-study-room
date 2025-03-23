@@ -30,6 +30,7 @@ describe('TaskItem Component', () => {
         jest.clearAllMocks();
     });
 
+    // Test case to check that all expected UI elements (task title, checkbox, delete button, etc.) are rendered
     test('renders task title, checkbox, delete button, and expand/collapse button', () => {
         renderTaskItem();
 
@@ -42,6 +43,7 @@ describe('TaskItem Component', () => {
         expect(screen.getByRole('button', { name: /task details/i })).toBeInTheDocument();
     });
 
+    // Test case to verify that clicking the checkbox toggles task completion status
     test('checkbox toggles task completion status', () => {
         renderTaskItem();
 
@@ -50,6 +52,7 @@ describe('TaskItem Component', () => {
         expect(toggleTaskCompletion).toHaveBeenCalledWith(task.id);
     });
 
+    // Test case to ensure the delete button calls the appropriate function with the task ID
     test('delete button calls handleDeleteTask with task ID', () => {
         renderTaskItem();
 
@@ -58,6 +61,7 @@ describe('TaskItem Component', () => {
         expect(handleDeleteTask).toHaveBeenCalledWith(task.id);
     });
 
+    // Test case to ensure the expand/collapse button correctly toggles task details visibility
     test('expand/collapse button toggles task details visibility', () => {
         renderTaskItem();
 
@@ -66,6 +70,7 @@ describe('TaskItem Component', () => {
         expect(toggleTaskDetails).toHaveBeenCalledWith(task.id);
     });
 
+    // Test case to check if task details are correctly displayed when the task is expanded
     test('task details are visible when expanded', () => {
         renderTaskItem(true);
 
@@ -74,6 +79,7 @@ describe('TaskItem Component', () => {
         expect(screen.getByText(/hide details/i)).toBeInTheDocument();
     });
 
+    // Test case to check if task details are correctly hidden when the task is collapsed
     test('task details are hidden when collapsed', () => {
         renderTaskItem();
         
@@ -81,6 +87,7 @@ describe('TaskItem Component', () => {
         expect(screen.queryByText(task.content)).not.toBeInTheDocument();
     });
 
+    // Test case to ensure task title gets a "completed" class when the task is marked as completed
     test('task title has "completed" class when task is completed', () => {
         const completedTask = {
             id: 1,
@@ -93,6 +100,7 @@ describe('TaskItem Component', () => {
         expect(taskTitle).toHaveClass('completed');
     });
 
+    // Test case to ensure that task details display a default message when content is empty
     test('task details show "No details available" when content is empty', () => {
         const taskWithoutContent = { ...task, content: '' };
         renderTaskItem(true, taskWithoutContent);

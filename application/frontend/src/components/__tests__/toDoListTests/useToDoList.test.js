@@ -28,6 +28,7 @@ describe("useToDoList Hook", () => {
         jest.clearAllMocks();
     });
 
+    // Test case to verify successful fetching of non-shared lists
     test("fetches non-shared lists successfully", async () => {
 
         const mockLists = [
@@ -48,6 +49,7 @@ describe("useToDoList Hook", () => {
         expect(authService.getAuthenticatedRequest).toHaveBeenCalledWith("/todolists/");
     });
 
+    // Test case to verify proper error handling when fetching lists fails
     test("handles error when fetching lists", async () => {
         const errorMessage = "Failed to fetch lists";
         authService.getAuthenticatedRequest.mockRejectedValue({
@@ -68,6 +70,7 @@ describe("useToDoList Hook", () => {
         expect(screen.queryByText("Personal List 1")).not.toBeInTheDocument();
     });
 
+    // Test case to verify successful fetching of shared lists
     test("fetches shared list successfully", async () => {
         
         const mockList = { id: 1, name: "Shared List 1" };
@@ -82,6 +85,7 @@ describe("useToDoList Hook", () => {
         expect(authService.getAuthenticatedRequest).toHaveBeenCalledWith("/todolists/1/");
     });
 
+    // Test case to handle generic errors when fetching lists fails
     test("handles generic errors when fetching lists", async () => {
         const mockError = new Error("Network error");
         authService.getAuthenticatedRequest.mockRejectedValue(mockError);
