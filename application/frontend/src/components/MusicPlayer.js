@@ -11,77 +11,34 @@ export default class MusicPlayer extends Component{
         super(props)
     }
 
-    async playSong() {
+    //when play button is pressed, it communicates with spotify to pause, play or skip the song
+    //these features are only for premium spotify users
+    skipSong() {
         const requestOptions = {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
         };
-
-        try {
-            const response = await fetch("http://localhost:8000/api/play", requestOptions);
-            if (!response.ok) {
-                let data = await response.json().catch(() => ({ detail: "An unknown error occurred." })); // Fallback error message
-
-                if (response.status === 400) {
-                    toast.error("Access denied: You need a Spotify Premium account to use this feature.");
-                } else {
-                    toast.error(data.detail || "An error occurred. Please try again.");
-                }
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            toast.error("Network error. Please check your connection.");
-        }
-    }
-
-    async pauseSong() {
+        fetch("http://localhost:8000/api/skip", requestOptions);
+      }
+    
+      pauseSong() {
         const requestOptions = {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
         };
-
-        try {
-            const response = await fetch("http://localhost:8000/api/pause", requestOptions);
-            if (!response.ok) {
-                let data = await response.json().catch(() => ({ detail: "An unknown error occurred." })); // Fallback error message
-
-                if (response.status === 400) {
-                    toast.error("Access denied: You need a Spotify Premium account to use this feature.");
-                } else {
-                    toast.error(data.detail || "An error occurred. Please try again.");
-                }
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            toast.error("Network error. Please check your connection.");
-        }
-    }
-
-    async skipSong() {
+        fetch("http://localhost:8000/api/pause", requestOptions);
+      }
+    
+      playSong() {
         const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
         };
-
-        try {
-            const response = await fetch("http://localhost:8000/api/skip", requestOptions);
-            if (!response.ok) {
-                let data = await response.json().catch(() => ({ detail: "An unknown error occurred." })); // Fallback error message
-
-                if (response.status === 400) {
-                    toast.error("Access denied: You need a Spotify Premium account to use this feature.");
-                } else {
-                    toast.error(data.detail || "An error occurred. Please try again.");
-                }
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            toast.error("Network error. Please check your connection.");
-        }
-    }
+        fetch("http://localhost:8000/api/play", requestOptions);
+      }
     
     render(){
         const songProgress = (this.props.time / this.props.duration) * 100;

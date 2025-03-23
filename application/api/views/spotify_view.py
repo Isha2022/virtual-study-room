@@ -8,16 +8,16 @@ from requests import Request, post,get
 from api.utils import Spotify_API
 import re
 from api.models import SpotifyToken
+
+# retrieving information from spotify through get and callback methods 
 class AuthURL(APIView):
     def get(self, request, format=True):
         scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
-        state = room_code
         url = Request('GET', 'https://accounts.spotify.com/authorize', params={
             'scope': scopes,
             'response_type': 'code',
             'redirect_uri': REDIRECT_URI,
             'client_id': CLIENT_ID,
-            'state': state
         }).prepare().url
 
         return Response({'url': url}, status=status.HTTP_200_OK)
@@ -51,7 +51,8 @@ def spotify_callback(request, format=None):
         window.close();
     </script>
     """, content_type="text/html")
-    
+
+# authenticating a spotify user
 class IsAuthenticated(APIView):
     def get(self, request, format=None):
         spotify_api = Spotify_API()
@@ -59,7 +60,7 @@ class IsAuthenticated(APIView):
             self.request.session.session_key)
         return Response({'status': is_authenticated}, status=status.HTTP_200_OK)
     
-
+# retrieving album tracks via url
 class GetAlbumTracks(APIView):
     def post(self, request, *args, **kwargs):
         album_url = request.data.get('album_url')
@@ -87,6 +88,8 @@ class GetAlbumTracks(APIView):
             return Response({"Error": "Failed to fetch album tracks"}, status=response.status_code)
 
         return Response(response.json(), status=status.HTTP_200_OK)
+
+# retrieving spotify token
 class GetSpotifyToken(APIView):
     def get(self, request, *args, **kwargs):
         session_id = request.session.session_key
@@ -99,7 +102,9 @@ class GetSpotifyToken(APIView):
             return JsonResponse({'access_token': token.access_token}, safe=False)
         else:
             return JsonResponse({'error': 'No token available'}, status=404)
-        
+
+
+#retriving the current song the user is listening to      
 class CurrentSong(APIView):
     def get(self, request, format=None):
         endpoint = "player/currently-playing"
@@ -138,6 +143,7 @@ class CurrentSong(APIView):
 
         return Response(song, status=status.HTTP_200_OK)
     
+#allowing premium spotify users to pause song
 class PauseSong(APIView):
     def put(self, response, format=None):
         spotify_api = Spotify_API()
@@ -148,6 +154,7 @@ class PauseSong(APIView):
         
         return Response({}, status=status.HTTP_403_FORBIDDEN)
     
+#allowing premium spotify users to play song
 class PlaySong(APIView):
     def put(self, response, format=None):
         spotify_api = Spotify_API()
@@ -157,7 +164,8 @@ class PlaySong(APIView):
             return Response({}, status=status.HTTP_204_NO_CONTENT)
         
         return Response({}, status=status.HTTP_403_FORBIDDEN)
-    
+
+#allowing premium spotify users to skip song
 class SkipSong(APIView):
     def post(self, request, format=None):
         print("Request method:", request.method)  # Debug logging

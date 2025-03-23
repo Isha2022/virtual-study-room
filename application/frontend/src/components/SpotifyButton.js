@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component} from "react";
 import MusicPlayer from "./MusicPlayer";
 
 export default class SpotifyButton extends Component {
@@ -15,23 +15,20 @@ export default class SpotifyButton extends Component {
         this.getCurrentSong = this.getCurrentSong.bind(this);
     }
 
-    handleUrlChange = (e) => {
-        this.setState({ albumUrl: e.target.value });
-    };
-
+    // authenticating spotify and setting the interval to keep checking and getting the song the user is currently listening to
+    //creates an illusion that its getting the user data in real time
     componentDidMount() {
-        const { roomCode } = this.props;
-        console.log("Room code in SpotifyButton:", roomCode);
-        console.log("Component mounted, initiating authentication check.");
-        this.authenticateSpotify(roomCode);
+        this.authenticateSpotify();
         // this.fetchAlbumTracks();
         this.interval = setInterval(this.getCurrentSong, 1000)
     }
 
+    //clearing the interval 
     componentWillUnmount(){
         clearInterval(this.interval);
     }
 
+    //authenticating the spotify user 
     authenticateSpotify() {
 
         if (this.state.spotifyAuthenticated) {
@@ -67,6 +64,7 @@ export default class SpotifyButton extends Component {
             });
     }
 
+    //fetching the album tracks based on the url 
     fetchAlbumTracks = () => {
         const { albumUrl } = this.state;
         console.log("Fetching album tracks for URL:", albumUrl);
@@ -99,7 +97,8 @@ export default class SpotifyButton extends Component {
             this.setState({ error: "Invalid Spotify URL" });
         }
     };
-    
+
+    //retreving the current song being played
     getCurrentSong() {
         fetch("http://localhost:8000/api/current-playing", {credentials: "include"}).then((response) => {
             if(!response.ok){

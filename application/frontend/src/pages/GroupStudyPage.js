@@ -25,11 +25,11 @@ import {
 import SharedMaterials from "./SharedMaterials.js";
 import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
 import SpotifyButton from '../components/SpotifyButton';
-import MusicButton from "../components/MusicButton.js";
+import FloatingMusicPlayer from "../components/FloatingWindow.js";
 
 function GroupStudyPage() {
   const [participants, setParticipants] = useState([]); // State to store participants
-  const [open, setOpen] = useState(false); //open and close states for pop-up window for music button
+  const [open, setOpen] = useState(false); //open and close states for pop-up window for spotify button
 
   // Location object used for state
   const location = useLocation();
@@ -70,21 +70,22 @@ function GroupStudyPage() {
 
   const [shouldReconnect, setShouldReconnect] = useState(true); // Determines whether or not to auto-reconnect user to websocket server
 
+  //handle open for spotify button
   const handleClickOpen = () => {
     setOpen(true);
   };
-
+  
+  //handle close for spotify button
   const handleClose = () => {
-    toast.dismiss(); 
     setOpen(false);
   };
 
-  const [openMusicButton, setOpenMusicButton] = useState(false);
   const handleOpenMusicButton = () => {
-      setOpenMusicButton(true);
-      handleClose(true);
-  };
-  const handleCloseMusicButton = () => setOpenMusicButton(false);
+    // Assuming this should toggle the floating music player visibility
+    setOpenMusicPlayer(true);
+};
+
+  const [openMusicPlayer, setOpenMusicPlayer] = useState(false); //handle open and close for free tracks
 
   // Updates the websocket saved everytime it changes
   useEffect(() => {
@@ -451,20 +452,14 @@ function GroupStudyPage() {
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>
                   <div style={{ textAlign: 'center' }}>Spotify Player</div>
+                  <h2 style={{ textAlign: 'center', fontSize: '14px' }} >(playback for premium users only)</h2>
                 </DialogTitle>
                 <DialogContent>
                     <SpotifyButton />
                     <Button onClick={handleOpenMusicButton}>Switch to Free Tracks</Button>
                 </DialogContent>
             </Dialog>
-            <Dialog open={openMusicButton} onClose={handleCloseMusicButton}>
-                <DialogTitle>
-                  <div style={{ textAlign: 'center' }}>Free Tracks:</div>
-                </DialogTitle>
-                <DialogContent>
-                    <MusicButton />
-                </DialogContent>
-            </Dialog>
+            <FloatingMusicPlayer isOpen={openMusicPlayer} onClose={() => setOpenMusicPlayer(false)} />
             <button
               type="button"
               className={`customisation-button ${

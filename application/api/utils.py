@@ -46,22 +46,22 @@ class Calendar(HTMLCalendar):
 			cal += f'{self.formatweek(week, events)}\n'
 		return cal
 	
-
+# functions to retrieve data from spotify
 class Spotify_API():
+	# getting user tokens from session id 
 	def get_user_tokens(self, session_id):
 		user_tokens = SpotifyToken.objects.filter(user=session_id)
 		if user_tokens.exists():
-			print("Token found:", user_tokens[0])
 			return user_tokens[0]
 		else:
 			print("No token found for session_id:", session_id)
 			return None
 		
+	# updating the token or craeting a new token if not found for a session id
 	def update_or_create_user_tokens(self, session_id, access_token, token_type, expires_in, refresh_token=None):
 		tokens = self.get_user_tokens(session_id)
 		expires_in = timezone.now() + timedelta(seconds=expires_in)
 		if tokens:
-			print(f"Updating tokens for session_id={session_id}")
 			tokens.access_token = access_token
 			tokens.expires_in = expires_in
 			tokens.token_type = token_type
@@ -82,7 +82,7 @@ class Spotify_API():
         	)
 			tokens.save()
 
-
+	# checking spotify authentication via tokens 
 	def is_spotify_authenticated(self, session_id):
 		tokens = self.get_user_tokens(session_id)
 		if tokens:
@@ -93,6 +93,7 @@ class Spotify_API():
 
 		return False
 	
+	# getting a refresh token 
 	def refresh_spotify_token(self, session_id):
 		refresh_token = self.get_user_tokens(session_id).refresh_token
 		response = post('https://accounts.spotify.com/api/token', data = {
@@ -109,7 +110,7 @@ class Spotify_API():
 
 		self.update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
 
-
+	# getting the albums tracks, via token
 	def get_album_tracks(self, album_id, session_id):
 		tokens = self.get_user_tokens(session_id)
 		if not tokens or not tokens.access_token:
@@ -121,7 +122,7 @@ class Spotify_API():
 		else:
 			return {'error': 'Failed to fetch data from Spotify', 'status_code': response.status_code}
 		
-
+	# executing an api request to either, play, pause or skip songs 
 	def execute_spotify_api_request(self, session_id, endpoint, post_=False, put_=False):
 		tokens = self.get_user_tokens(session_id)
 		headers = {'Content-Type': 'application/json',
@@ -134,6 +135,8 @@ class Spotify_API():
 		response = get(BASE_URL + endpoint, {}, headers=headers)
 
 		try:
+			json_response = response.json()
+			print("JSON Response:", json_response)
 			return response.json()
 		except:
 			return {'Error': 'Issue with request'}

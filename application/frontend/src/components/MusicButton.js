@@ -8,6 +8,7 @@ import track6 from "../assets/music/[K.K. Slider] Bubblegum K.K. - K.K. Slider.m
 import track7 from "../assets/music/[Gyro Zeppeli] Pokemon X & Y-Bicycle theme [OST].mp3";
 import '../styles/MusicButton.css';
 
+//all free tracks 
 const tracks = [
     { title: "C U Again", src: track1 },
     { title: "On & On", src: track2 },
@@ -19,9 +20,12 @@ const tracks = [
 ];
 
 function MusicButton() {
+    //different variables to retrieve the track being played, whether the track is actually being played, the timestamp of the track, and 
     const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
+    // Create a persistent reference to an Audio object initialized with the first track's source URL.
+    // This allows for consistent control over the audio playback across re-renders.
     const audioRef = useRef(new Audio(tracks[0].src));
 
     const pastelRainbowColors = [
@@ -33,6 +37,7 @@ function MusicButton() {
 
     const [usedColors, setUsedColors] = useState([]);
 
+    //set the tracks to random colours 
     function getRandomColor() {
         const availableColors = pastelRainbowColors.filter(color => !usedColors.includes(color));
         if (availableColors.length === 0) {
@@ -62,10 +67,12 @@ function MusicButton() {
             setCurrentTime(audio.currentTime);
         };
 
+        // Attach the event listener to the audio element for continuous playback time updates.
         audio.addEventListener('timeupdate', updateProgress);
 
         applyRandomColors();
 
+        // Cleanup function to remove the event listener and pause the audio when the component unmounts.
         return () => {
             audio.removeEventListener('timeupdate', updateProgress);
             audio.pause();
@@ -74,6 +81,8 @@ function MusicButton() {
 
     useEffect(() => {
         const audio = audioRef.current;
+        
+        // Play or pause the audio based on the current value of 'playing'.
         if (playing) {
             audio.play();
         } else {
@@ -83,15 +92,19 @@ function MusicButton() {
 
     useEffect(() => {
         const audio = audioRef.current;
+
+        // Update the source of the audio element and reset play state and time when the track changes.
         audio.src = tracks[currentTrackIndex].src;
         setPlaying(false);
         setCurrentTime(0); // Reset time when track changes
     }, [currentTrackIndex]);
 
+    // Toggle playback state between playing and paused.
     const togglePlayPause = () => {
         setPlaying(!playing);
     };
 
+    // Handle user interactions with the playback slider to seek to different times in the current track.
     const handleSeek = (e) => {
         const audio = audioRef.current;
         audio.currentTime = e.target.value;
