@@ -98,11 +98,11 @@ const CalendarPage = () => {
   };
 
   const handleEventClick = (info) => {
-    setSelectedEvent(info.event); //----------------------------------------
+    setSelectedEvent(info.event);
   };
 
   const closePopup = () => {
-    setSelectedEvent(null); //-------------------------------------
+    setSelectedEvent(null);
   };
 
   const today = new Date();
@@ -114,9 +114,9 @@ const CalendarPage = () => {
 
     let backgroundColor = "#BAD7F2";
     if (eventDate < today) {
-      backgroundColor = "#F2BAC9"; //----------------------------------------------
+      backgroundColor = "#F2BAC9";
     } else if (eventDate.getTime() === today.getTime()) {
-      backgroundColor = "#B0F2B4";  //-----------------------------------------------
+      backgroundColor = "#B0F2B4";
     }
 
     return {
@@ -140,34 +140,25 @@ const CalendarPage = () => {
       </h1>
       <ToastContainer position="top-center" />
       <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin]}
-        initialView="timeGridWeek"
-        events={processedEvents}
-        headerToolbar={{
-          left: `
-            <button aria-label="prev" id="prev-button">Prev</button>
-            <button aria-label="today" id="today-button">Today</button>
-            <button aria-label="next" id="next-button">Next</button>
-          `,
-          center: 'title',
-          right: `
-            <button aria-label="add-event">Add Event</button>
-            <button aria-label="week-view">Week View</button>
-            <button aria-label="month-view">Month View</button>
-          `
-        }}
-        customButtons={{
-          addEventButton: {
-            text: "Add Event",
-            // Debugging
-            click: () => {
-              console.log("Add Event button clicked");
-              openAddEventPopup(); // Ensure this is correctly defined
+          plugins={[dayGridPlugin, timeGridPlugin]}
+          initialView="timeGridWeek"
+          events={processedEvents}
+          headerToolbar={{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'addEventButton,dayGridMonth,timeGridWeek,dayGridYear'
+          }}
+          customButtons={{
+            addEventButton: {
+              text: "Add Event",
+              click: () => {
+                console.log("Add Event button clicked");
+                openAddEventPopup();
+              },
             },
-          },
-        }}
-        eventClick={handleEventClick}
-      />
+          }}
+          eventClick={handleEventClick}
+        />
 
       {showPopup && (
         <div className="event-popup">

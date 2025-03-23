@@ -829,7 +829,7 @@
 
 
 /* Make root container fill the viewport but allow vertical scroll */
-#root {
+#groupStudyPage {
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
