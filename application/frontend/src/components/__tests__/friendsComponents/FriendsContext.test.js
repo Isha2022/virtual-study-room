@@ -78,6 +78,9 @@ describe('FriendsContext', () => {
         jest.restoreAllMocks();
     });
 
+
+    // Test if friends data is fetched from the API and rendered correctly in the component
+    // Verify loading state appears initially, then check if friends' names are displayed
     test('should correctly fetch and render friends data', async () => {
         
         authService.getAuthenticatedRequest
@@ -102,6 +105,8 @@ describe('FriendsContext', () => {
         expect(janeDoe).toBeInTheDocument();
     });
 
+    // Test if a default avatar image is used when fetching an avatar from the URL fails
+    // Simulate image fetch failure and verify that default avatar is shown for the friend
     test('should use default avatar if image fetch fails', async () => {
         
         getDownloadURL.mockRejectedValueOnce(new Error('Image not found'));
@@ -133,6 +138,8 @@ describe('FriendsContext', () => {
         });
     });
 
+    // Test if the onAccept function is triggered when accepting a friend request
+    // Ensure that the friends list is updated by adding the accepted friend and removing the invitation
     test('should call onAccept and update the friends list', async () => {
         
         const initialFriends = [
@@ -175,6 +182,8 @@ describe('FriendsContext', () => {
         });
     });
 
+    // Test if the onReject function is triggered when rejecting a friend invitation
+    // Ensure that the friend is removed from the list of friends after rejection
     test('should call onReject and remove friend from the list', async () => {
         
         const rejectResponse = { status: 1 };
@@ -212,6 +221,8 @@ describe('FriendsContext', () => {
         });
     }); 
 
+    // Test if creating a new friend request adds a new invitation to the invitations list
+    // Ensure that the request is made and the invitations list is updated accordingly
     test('should create a friend request and update the invitations list', async () => {
             
         const initialFriends = [
@@ -253,6 +264,8 @@ describe('FriendsContext', () => {
         });
     });
 
+    // Test if accepting a friend request correctly moves the friend from the invitations list to the friends list
+    // Verify that the invitation is removed from the requests and the friend is added to the friends list
     test("should accept a friend request and update friends list", async () => {
         const mockRequests = [
             { id: 2, username: "jane_doe", name: "Jane", surname: "Doe", image: "https://example.com/avatar.png" },
@@ -299,6 +312,8 @@ describe('FriendsContext', () => {
         });
     });
 
+    // Test if removing a friend from the friends list adds them to the friend requests list
+    // Ensure that the friend is removed from friends and appears in the invitations list for re-request
     test("should remove a friend and add them to the requests list", async () => {
         const initialFriends = [
             { id: 1, username: "john_doe", name: "John Doe", image: "https://example.com/avatar.png" },
@@ -340,6 +355,8 @@ describe('FriendsContext', () => {
         });
     });
 
+    // Test if an error is logged when the API call to accept a friend request fails
+    // Verify that an appropriate error is logged in the console if something goes wrong
     test("should log error when accepting friend request fails", async () => {
         const initialFriends = [
             { id: 1, username: "john_doe", name: "John Doe", image: "https://example.com/avatar.png" },
@@ -372,6 +389,8 @@ describe('FriendsContext', () => {
         consoleErrorSpy.mockRestore();
     });
 
+    // Test if the component displays a default avatar when fetching a friend's avatar fails
+    // Simulates a failed image fetch and checks if the fallback image is shown
     test('should use default avatar if image fetch fails for friends', async () => {
         
         getDownloadURL
@@ -405,6 +424,7 @@ describe('FriendsContext', () => {
         });
     });
 
+    // Similar to the previous test, but this time checks if the default avatar is used for friend invitations
     test('should use default avatar if image fetch fails for invitations', async () => {
         
         getDownloadURL
@@ -433,6 +453,8 @@ describe('FriendsContext', () => {
         });
     });
 
+    // Test if rejecting a friend correctly removes them from the friends list and adds them to the requests list
+    // Verifies that after rejection, the friend is moved from the friends list to the invitations list
     test('should remove a friend and add them to the requests list', async () => {
         const initialFriends = [
             { id: 1, username: 'john_doe', name: 'John Doe', image: 'https://example.com/avatar.png' },
@@ -473,6 +495,7 @@ describe('FriendsContext', () => {
         });
     });
 
+    // Similar to the previous tests, but this one checks for friend requests and how the default avatar is applied when fetching fails
     test('should use default avatar if image fetch fails for requests', async () => {
         const TestComponent1 = () => {
             const { friendRequests, friends, invitationsRequests, loading, onAccept, onReject } = useContext(FriendsContext);
@@ -551,6 +574,8 @@ describe('FriendsContext', () => {
         });
     });
 
+    // Test if accepting a friend request correctly adds the friend to the friends list
+    // Verifies that the request is accepted and the friends list is updated accordingly
     test("accept a friend request and update friends list", async () => {
         const mockRequests = [
             { id: 2, username: "jane_doe", name: "Jane", surname: "Doe", image: "https://example.com/avatar.png" },
@@ -587,6 +612,7 @@ describe('FriendsContext', () => {
         });
     });
 
+    // Tests the rejection of an invitation and ensures the invitations list is updated correctly after the rejection
     test("reject an invitations request and update list", async () => {
         const mockRequests = [
             { id: 2, username: "jane_doe", name: "Jane", surname: "Doe", image: "https://example.com/avatar.png" },

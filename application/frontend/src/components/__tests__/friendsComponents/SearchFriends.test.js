@@ -61,12 +61,14 @@ describe("SearchFriends Component", () => {
         jest.restoreAllMocks(); 
     });
 
+    //Verifies that the loading state message "Loading Friends..." is displayed when the loading state is true
     test("displays loading state when loading is true", () => {
         renderWithContext({ loading: true });
 
         expect(screen.getByText(/Loading Friends.../i)).toBeInTheDocument();
     });
 
+    // Verifies that the friend list is fetched and displayed when the user enters a search query longer than 2 characters
     test("fetches and displays friends when search query is longer than 2 characters", async () => {
         renderWithContext();
 
@@ -81,6 +83,7 @@ describe("SearchFriends Component", () => {
         });
     });
 
+    // Checks if the "you are already friends" message is displayed with a remove button when the user is already friends with someone
     test("renders 'you are already friends' message with remove button", async () => {
         renderWithContext({ friends: [{ id: 3, username: "sam_smith" }] });
 
@@ -96,6 +99,7 @@ describe("SearchFriends Component", () => {
         expect(mockOnReject).toHaveBeenCalledWith(3);
     });
 
+    // Verifies that the "user sent you request" message is shown with accept/reject buttons when a user has sent a request
     test("renders 'user sent you request' message with accept/reject buttons", async () => {
         renderWithContext({ friendRequests: [{ id: 3, username: "sam_smith" }] });
 
@@ -111,6 +115,7 @@ describe("SearchFriends Component", () => {
         expect(mockOnAccept).toHaveBeenCalledWith(3, 'accept_friend', 'PATCH');
     });
 
+    // Verifies that the "user sent you request" message is shown with a reject button when a user has sent a friend request
     test("renders 'user sent you request' message with reject buttons", async () => {
         renderWithContext({ friendRequests: [{ id: 3, username: "sam_smith" }] });
 
@@ -126,6 +131,7 @@ describe("SearchFriends Component", () => {
         expect(mockOnReject).toHaveBeenCalledWith(3);
     });
 
+    // Verifies that the "you sent request" message is displayed with a cancel button when the user has sent a friend request
     test("renders 'you sent request' message with cancel button", async () => {
         renderWithContext({ invitationsRequests: [{ id: 3, username: "sam_smith" }] });
 
@@ -141,6 +147,7 @@ describe("SearchFriends Component", () => {
         expect(mockOnReject).toHaveBeenCalledWith(3);
     });
 
+    //Verifies that the "add friend" button is displayed when the user is not in any request list (i.e., a new friend)
     test("renders 'add friend' button when user is not in any request list", async () => {
         renderWithContext();
 
@@ -156,6 +163,7 @@ describe("SearchFriends Component", () => {
         expect(mockOnAccept).toHaveBeenCalledWith(3, 'create_friend_request', 'POST');
     });
 
+    // Verifies that an API error is handled properly and shows an alert when the friend-fetching API call fails
     test("should handle API error and show an alert when fetching friends fails", async () => {
         jest.spyOn(console, "error").mockImplementation(() => { });
 
@@ -185,6 +193,7 @@ describe("SearchFriends Component", () => {
         console.error.mockRestore();
     });
 
+    //Verifies that a default avatar is used when the image fetch fails during the friend search
     test("uses default avatar when getDownloadURL fails", async () => {
         const defaultAvatar = "http://localhost/";
 
@@ -204,12 +213,5 @@ describe("SearchFriends Component", () => {
         console.log("Image src after update:", imgElement.src);
         expect(imgElement.src).toBe(defaultAvatar); 
     });
-
-
-
-
-
-
-
 
 });

@@ -43,6 +43,9 @@ jest.mock("../../friends/FriendsContext", () => ({
 }));
 
 describe("FriendsTab Component", () => {
+    
+    // Verifies that "All Friends" tab is active by default
+    // Confirms that content corresponding to "All Friends" is displayed
     test("renders correctly with All Friends tab active by default", () => {
         render(<FriendsTab />);
 
@@ -52,6 +55,7 @@ describe("FriendsTab Component", () => {
         expect(screen.getByText("All Friends Content")).toBeInTheDocument();
     });
 
+    //Ensures that clicking on the "All Friends" tab keeps it active
     test("clicking on the All Friends tab ensures it stays active", () => {
         render(<FriendsTab />);
 
@@ -63,6 +67,7 @@ describe("FriendsTab Component", () => {
         expect(allFriendsButton).toHaveClass("active");
     });
 
+    //Checks if switching to the "Pending Requests" tab correctly toggles the active class
     test("switches to Pending Requests tab and toggles active class correctly", () => {
         render(<FriendsTab />);
 
@@ -77,6 +82,7 @@ describe("FriendsTab Component", () => {
         expect(allFriendsButton).not.toHaveClass("active");
     });
 
+    //Verifies that the active class toggles correctly when switching between multiple tabs
     test("ensures the active class toggles correctly when switching tabs", () => {
         render(<FriendsTab />);
 
