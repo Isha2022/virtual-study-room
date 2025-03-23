@@ -98,29 +98,45 @@
 .groupStudyRoom-container {
     margin: 0;
     display: flex;
-    flex-wrap: wrap;
-    min-width: 1500px;
+    flex-wrap: nowrap; /* Prevent wrapping */
     width: 100%;
     height: 100vh;
-    background-color: #f8f7fa ;
+    background-color: #f8f7fa;
     box-sizing: border-box;
     overflow-y: auto;
-    padding-top: 100px;
-    flex: 1 2 1;
+    padding-top: 100px; /* Account for fixed header */
 }
 
-.column {
-    flex: 1;
-    flex-grow: 1;
+/* Left and right columns (fixed at 1/4 of the screen each) */
+.column:first-child,
+.column:last-child {
+    flex: 0 0 25%; /* Fixed width (1/4 of the screen) */
+    max-width: 25%; /* Ensure they don't exceed 1/4 of the screen */
     margin: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    max-height: calc(100vh - 120px);
-    box-sizing: border-box;
-    margin-left: 0;
+    max-height: calc(100vh - 120px); /* Account for header */
 }
+
+/* Middle column (resizable) */
+.column:nth-child(2) {
+    flex: 1; /* Takes up remaining space */
+    min-width: 0; /* Allow shrinking below 50% if necessary */
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    max-height: calc(100vh - 120px); /* Account for header */
+}
+
+/* Constrain components inside columns */
+.column > * {
+    max-width: 100%; /* Ensure components don't exceed column width */
+}
+
 
 /* Standard container styling for different widgets */
 .todo-list-container, .sharedMaterials-container, .motivationMessage-container, .timer-container, .chatBox-container {
@@ -138,7 +154,7 @@
     flex-direction: column;
     height: 500px;
     max-height: 500px;
-    width: 320px;
+    flex-grow: 1;
     border-radius: 40px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     overflow-y: auto;
