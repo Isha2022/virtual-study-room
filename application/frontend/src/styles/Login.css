@@ -4,30 +4,104 @@
 
 /* Main container for the login page */
 .login-container {
-    margin-top: 130px;
     display: flex;
-    justify-content: center;  /* center horizontally */
+    justify-content: center;
     align-items: center;
     margin: 0;
-    background-color: #F6F0F0;
+    /* Slightly more saturated base gradient */
+    background: linear-gradient(135deg, 
+        #ffffff 0%, 
+        #fff0f5 25%, 
+        #ffe8ee 50%, 
+        #ffd8e8 75%, 
+        #fff0f6 100%);
     min-height: 100vh; 
     width: 100vw; 
     flex-direction: column;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Header styling for the login page */
+/* Enhanced soft color diffusion - more noticeable */
+.login-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 30% 20%, rgba(254, 197, 209, 0.5) 0%, transparent 35%),
+        radial-gradient(circle at 70% 60%, rgba(251, 192, 155, 0.5) 0%, transparent 35%),
+        radial-gradient(circle at 10% 70%, rgba(254, 197, 209, 0.4) 0%, transparent 40%),
+        radial-gradient(circle at 85% 25%, rgba(251, 192, 155, 0.4) 0%, transparent 40%);
+    z-index: 0;
+    pointer-events: none;
+    animation: subtle-pulse 15s infinite alternate;
+}
+
+/* Enhanced diffused glow - more visible */
+.login-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 30% 30%, rgba(254, 197, 209, 0.1) 0%, transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(251, 192, 155, 0.1) 0%, transparent 60%);
+    opacity: 0.8;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Add subtle pulsing animation */
+@keyframes subtle-pulse {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+
+/* Keep existing shimmer and subtle-shift animations */
+@keyframes shimmer {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+@keyframes subtle-shift {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+/* Header styling for the login page - combining signup and login colors */
 .login-heading1 {
     position: fixed;
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #f4bdd0 0%, #ffdeef 100%); 
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #f4bdd0 0%, #fbc09b 50%, rgba(251, 119, 102, 0.8) 100%);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     top: 0;
     left: 0;
     margin: 0;
     box-sizing: border-box;
     z-index: 1000;
-    border: 3px solid #f4bdd0;
+    border: 3px solid #f79cac !important;
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
@@ -43,30 +117,30 @@
     text-shadow: 
         0 0 2px rgba(255, 255, 255, 0.8),
         0 0 8px rgba(244, 189, 208, 0.6),
-        0 0 12px rgba(244, 189, 208, 0.4),
+        0 0 12px rgba(251, 119, 102, 0.4),
         0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Main form container with decorative border and styling */
+/* Main form container with matching border and corner radius to signup */
 .login-form {
-    border: 5px solid #f4bdd0;
     width: 480px;
-    height: 480px;
-    border-radius: 50px;
-    background-color: #fef6ae;
+    border: 5px solid #f79cac !important; /* Match login title shadow color with signup thickness */
+    border-radius: 50px !important; /* Match signup border radius exactly */
+    background: linear-gradient(135deg, #fff2e6 0%, #ffd6d1 40%, #fec5d1 70%, #fff6f2 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
     margin-top: 80px;
+    padding: 40px 20px;
     box-shadow: 
-        0 8px 20px rgba(0,0,0,0.15),
-        0 0 30px rgba(244, 189, 208, 0.3),
-        inset 0 0 80px rgba(255, 255, 255, 0.6);
-    overflow: hidden;
+        0 10px 30px rgba(0, 0, 0, 0.1),
+        inset 0 0 10px rgba(255, 255, 255, 0.5);
+    overflow: visible;
+    z-index: 1;
 }
 
-/* Decorative background pattern for the form */
+/* Enhanced matte effect like signup form - adjusted border radius */
 .login-form::before {
     content: "";
     position: absolute;
@@ -74,139 +148,163 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: 
-        radial-gradient(circle at 20% 30%, rgba(244, 189, 208, 0.2) 0%, transparent 25%),
-        radial-gradient(circle at 80% 70%, rgba(244, 189, 208, 0.2) 0%, transparent 30%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23f4bdd0' fill-opacity='0.15' d='M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm.88 13.75h-1.75v-1.75h1.75v1.75zm0-2.87h-1.75c0-2.84 2.62-2.62 2.62-4.38 0-.96-.79-1.75-1.75-1.75s-1.75.79-1.75 1.75h-1.75c0-1.95 1.55-3.5 3.5-3.5s3.5 1.55 3.5 3.5c.01 2.12-2.62 2.12-2.62 4.38z'/%3E%3C/svg%3E"),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cpath fill='%23f4bdd0' fill-opacity='0.1' d='M15 2C14 2 13 2.5 12.3 3.3L11 5.8L8.3 3.3C7.1 2.1 4.9 2.1 3.7 3.3 2.5 4.5 2.5 6.7 3.7 7.9L11 15 15 19 19 15 26.3 7.9C27.5 6.7 27.5 4.5 26.3 3.3 25.1 2.1 22.9 2.1 21.7 3.3L19 5.8 17.7 3.3C17 2.5 16 2 15 2z'/%3E%3C/svg%3E");
-    opacity: 0.5;
+    background: 
+        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8) 0%, transparent 60%),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
+    opacity: 0.6;
     z-index: -1;
+    pointer-events: none;
+    border-radius: 45px; /* Adjusted to account for thicker border */
 }
 
-/* Bottom glow effect for the form */
+/* Add subtle texture overlay for matte finish - adjusted border radius */
 .login-form::after {
     content: "";
     position: absolute;
-    bottom: -50px;
-    left: -50px;
-    width: 600px;
-    height: 180px;
-    background: 
-        radial-gradient(ellipse at center, rgba(244, 189, 208, 0.4) 0%, transparent 70%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath fill='%23a5ecfd' fill-opacity='0.1' d='M20 4c-4.4 0-8 3.6-8 8 0 1.7.7 3.4 1.5 5.3 1.2 2.8 2.8 5.5 4.4 7.6.3.4.9.4 1.2 0 1.6-2.1 3.2-4.8 4.4-7.6.9-1.9 1.5-3.6 1.5-5.3 0-4.4-3.6-8-8-8zM9.5 30.7l-1.2-1.4c-2.1 1.8-3.3 3.6-3.3 5.1 0 2 4.9 3.6 11 3.6s11-1.6 11-3.6c0-1.5-1.2-3.4-3.3-5.1l-1.2 1.4C25.4 32.5 28 34.5 28 37c0 4.4-7.2 8-16 8S-4 41.4-4 37c0-2.5 2.6-4.5 5.5-6.3z'/%3E%3C/svg%3E");
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='4' height='4' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+    opacity: 0.1;
+    pointer-events: none;
     z-index: -1;
+    border-radius: 45px; /* Adjusted to account for thicker border */
 }
 
-/* Form title styling */
+/* Form title styling - matching Welcome page heading */
 .login-heading2 {
-    margin-top: 30px;
-    width: 100%;                  
-    text-align: center;
-    font-family: 'Inter', sans-serif;
-    font-size: 30px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 42px;
     font-weight: 700;
-    text-transform: uppercase;
-    color: #7bcec3; 
+    margin-top: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: white;
+    background: linear-gradient(to right, #fb7766, #fee09a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    z-index: 1;
+    position: relative;
     text-shadow: 
-        0 0 5px #fef6ae,
-        0 0 10px rgba(254, 246, 174, 0.6),
-        0 0 15px rgba(254, 246, 174, 0.4),
         0 2px 0 #f79cac,
         0 4px 0 rgba(247, 156, 172, 0.6),
-        0 0 2px rgba(0, 0, 0, 0.3);
-}
-
-/* Label styling for username and password fields */
-.username-text, .password-text {
+        0 6px 10px rgba(251, 119, 102, 0.3),
+        0 0 5px #fef6ae,
+        0 0 10px rgba(254, 246, 174, 0.6);
+    letter-spacing: 1px;
+    transform: rotate(-2deg);
     width: 100%;
+}
+
+/* Label styling */
+.username-text, .password-text {
+    width: 80%;
     text-align: left;
-    font-size: 20px;
-    margin-top: 10px;
-    margin-left: 50px;
+    font-size: 16px;
+    margin-top: 15px;
     font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #7bcec3; 
-}
-
-/* Input field styling */
-.username-field, .password-field {
-    width: 85%;
-    margin-top: 20px;
-    margin-bottom: 35px;
-    border: none;
-    border-radius: 40px;
-    padding: 18px;
-    text-align: center;
-    background-color: white;
-    border-color: white;
-    outline: none;
-    box-shadow: 
-        inset 0 2px 5px rgba(247, 156, 172, 0.2),
-        0 2px 5px rgba(255, 255, 255, 0.8);
-    color: #f4bdd0;  /* Text color while typing */
     font-weight: 600;
+    color: #f69c97;
 }
 
-/* Submit button styling*/
-.login-submit-button {
-    padding: 15px 20px;
-    width: 30%;
-    background-color: #ffdeef;
-    background-image: 
-        radial-gradient(circle at center, rgba(255, 236, 246, 0.4) 15%, transparent 60%),
-        radial-gradient(circle at 30% 30%, #f4bdd0 15%, transparent 50%),
-        radial-gradient(circle at 70% 70%, #ffb5d3 15%, transparent 50%);
-    color: white;
-    border: none;
-    border-radius: 40px;
-    cursor: pointer;
-    text-align: center;
-    font-family: 'Inter', sans-serif !important;
-    font-weight: 700 !important;
-    font-size: 16px !important;
-    text-transform: uppercase !important;
+/* Input fields with exactly matching border radius to signup */
+.username-field, .password-field {
+    width: 80%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(246, 156, 151, 0.3);
+    border-radius: 20px; /* Match signup input field corner radius */
+    padding: 12px 20px; /* Slightly more horizontal padding */
+    background-color: rgba(255, 255, 255, 0.7);
+    outline: none;
+    color: #f69c97;
+    font-weight: 500;
     transition: all 0.2s ease;
-    text-shadow: 
-        0 1px 0 #b2b2b2,
-        1px 1px 3px rgba(0, 0, 0, 0.3);
-    box-shadow: 
-        inset 0px 2px 4px rgba(255, 255, 255, 0.7),
-        inset 0px -2px 4px rgba(255, 222, 239, 0.2),
-        0 2px 8px rgba(244, 189, 208, 0.4);
     position: relative;
+    z-index: 5;
+    /* Add subtle inner shadow for matte effect */
+    box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.05);
+    font-size: 15px; /* Match signup form font size */
 }
 
-/* Decorative highlight on the button */
+.username-field:focus, .password-field:focus {
+    border-color: #f79cac;
+    box-shadow: 
+        0 0 0 2px rgba(247, 156, 172, 0.2),
+        inset 0 2px 3px rgba(0, 0, 0, 0.02);
+    background-color: rgba(255, 255, 255, 0.85); /* Slightly brighter on focus */
+}
+
+/* Login button with more subtle shine effect for better readability */
+.login-submit-button {
+  padding: 15px 20px;
+  width: 200px !important;
+  height: 50px !important;
+  background-color: #f69c97;
+  background-image: 
+      radial-gradient(circle at center, rgba(254, 197, 209, 0.4) 15%, transparent 60%), /* reduced opacity from 0.7 to 0.4 */
+      radial-gradient(circle at 30% 30%, #fec5d1 15%, transparent 50%),
+      radial-gradient(circle at 70% 70%, #f79cac 15%, transparent 50%);
+  color: white;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 18px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  transition: all 0.2s ease;
+  text-shadow: 
+      0 1px 1px rgba(0, 0, 0, 0.4); /* simplified shadow for better readability */
+  box-shadow: 
+      inset 0px 2px 4px rgba(255, 255, 255, 0.5), /* reduced opacity from 0.7 to 0.5 */
+      inset 0px -2px 4px rgba(246, 156, 151, 0.2),
+      0 2px 8px rgba(246, 156, 151, 0.4);
+  position: relative;
+  margin-top: 30px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0 20px !important;
+  line-height: 50px !important;
+  z-index: 5;
+  min-height: 50px;
+}
+
+/* Button highlight effect - same as signup */
 .login-submit-button::before {
-    content: '';
-    position: absolute;
-    top: 25%;
-    left: 15%;
-    width: 5px;
-    height: 5px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%);
-    border-radius: 50%;
-    pointer-events: none;
+  content: '';
+  position: absolute;
+  top: 25%;
+  left: 15%;
+  width: 5px;
+  height: 5px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
-/* Button hover effect */
+/* Button hover state - keeping login colors */
 .login-submit-button:hover {
-    transform: scale(1.05);
-    background-image: 
-        radial-gradient(circle at center, rgba(255, 245, 251, 0.3) 15%, transparent 60%),
-        radial-gradient(circle at 30% 30%, #f9d2e2 15%, transparent 50%),
-        radial-gradient(circle at 70% 70%, #f8cad9 15%, transparent 50%);
-    box-shadow: 
-        inset 0px 2px 4px rgba(255, 255, 255, 0.9),
-        inset 0px -2px 4px rgba(255, 222, 239, 0.3),
-        0 4px 12px rgba(244, 189, 208, 0.6);
+  transform: scale(1.05);
+  background-image: 
+      radial-gradient(circle at center, rgba(254, 197, 209, 0.7) 15%, transparent 60%),
+      radial-gradient(circle at 30% 30%, #fec5d1 15%, transparent 50%),
+      radial-gradient(circle at 70% 70%, #f79cac 15%, transparent 50%);
+  box-shadow: 
+      inset 0px 2px 4px rgba(255, 255, 255, 0.9),
+      inset 0px -2px 4px rgba(246, 156, 151, 0.3),
+      0 4px 12px rgba(246, 156, 151, 0.6);
 }
 
-/* Button active/click effect */
+/* Button active/pressed state - same as signup */
 .login-submit-button:active {
-    transform: scale(0.95);
-    box-shadow: 
-        inset 1px 1px 3px rgba(255, 255, 255, 0.5),
-        inset -1px -1px 3px rgba(0, 0, 0, 0.2);
+  transform: scale(0.95);
+  box-shadow: 
+      inset 1px 1px 3px rgba(255, 255, 255, 0.5),
+      inset -1px -1px 3px rgba(0, 0, 0, 0.2);
 }
