@@ -269,7 +269,7 @@ button[aria-label="Add Task"]:hover::after {
 /* Lists container */
 .todo-list {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjust minmax values as needed */
     gap: 15px;
     padding: 12px;
     background: white;
@@ -279,7 +279,7 @@ button[aria-label="Add Task"]:hover::after {
     border: 1px solid rgba(186, 198, 241, 0.4);
     background-color: rgba(255, 255, 255, 0.8);
     flex-grow: 1;
-    max-height: calc(100% - 80px);
+    max-height: calc(100% - 20px);
 }
 
 /* Individual list card */
@@ -490,12 +490,12 @@ button[aria-label="Add Task"]:hover::after {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 95%;
     height: 100vh;
     z-index: 10000;
     display: flex;
-    flex-direction: column;
-    padding: 80px 20px 20px;
+    flex-direction: row;
+    justify-content: center;
     background: linear-gradient(180deg, rgba(238, 241, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
     overflow-y: auto;
 }
@@ -506,17 +506,15 @@ button[aria-label="Add Task"]:hover::after {
     top: 0;
     left: 0;
     width: 60vw;
-    height: 100vh;
+    height: 60vh;
     z-index: 10000;
-    padding: 80px 20px 20px;
     background: linear-gradient(180deg, rgba(238, 241, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
     overflow: auto;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 20px;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Controls card width in overview mode */

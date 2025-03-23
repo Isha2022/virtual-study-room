@@ -5,7 +5,7 @@
     position: fixed;
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #bac6f1 0%, #d1cbed 100%); 
+    background: linear-gradient(135deg, #bac6f1 0%, #d1cbed 100%);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     top: 0;
     left: 0;
@@ -13,9 +13,9 @@
     box-sizing: border-box;
     z-index: 1000;
     border: 3px solid #bac6f1;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
+    display: flex ;
+    justify-content: space-between ;
+    align-items: center ;
     height: 80px;
     padding-left: 50px;
     padding-right: 50px;
@@ -29,14 +29,14 @@
     margin: 0;
     line-height: 1.2;
     letter-spacing: 1px;
-    text-shadow: 
+    text-shadow:
         0 0 2px rgba(255, 255, 255, 0.8),
         0 0 8px rgba(186, 198, 241, 0.6),
         0 0 12px rgba(186, 198, 241, 0.4),
         0 1px 2px rgba(0, 0, 0, 0.3);
-    margin-left: 0 !important; 
-    margin-right: auto !important; 
-    order: 0 !important; 
+    margin-left: 0 ;
+    margin-right: auto ;
+    order: 0 ;
 }
 
 .gs-heading2 {
@@ -44,31 +44,31 @@
     font-size: 24px;
     font-weight: 400;
     color: white;
-    margin: 0 !important;
+    margin: 0 ;
     letter-spacing: 0.5px;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     position: relative;
     display: inline-block;
-    padding-bottom: 12px; 
-    margin-right: 10px !important;
-    margin: 0 !important;
+    padding-bottom: 12px;
+    margin-right: 10px ;
+    margin: 0 ;
     white-space: nowrap;
 }
 
 .gs-heading2::after {
     content: '';
     position: absolute;
-    bottom: 8px; 
+    bottom: 8px;
     left: 0;
     right: 0;
     height: 1px;
     background: linear-gradient(
-        to right, 
-        rgba(255, 255, 255, 0.7) 0%, 
-        rgba(255, 255, 255, 0.7) 42%, 
-        transparent 42%, 
-        transparent 58%, 
-        rgba(255, 255, 255, 0.7) 58%, 
+        to right,
+        rgba(255, 255, 255, 0.7) 0%,
+        rgba(255, 255, 255, 0.7) 42%,
+        transparent 42%,
+        transparent 58%,
+        rgba(255, 255, 255, 0.7) 58%,
         rgba(255, 255, 255, 0.7) 100%
     );
     box-shadow: 0 0 5px rgba(186, 198, 241, 0.5);
@@ -82,14 +82,14 @@
     transform: translateX(-50%) rotate(45deg);
     font-size: 16px;
     color: white;
-    text-shadow: 
+    text-shadow:
         0 0 3px white,
         0 0 5px rgba(186, 198, 241, 1),
         0 0 8px rgba(209, 203, 237, 1);
     z-index: 2;
 }
 
-.user-list-container h2, 
+.user-list-container h2,
 .user-list-container h3,
 .room-code-display:not(.gs-heading2) {
     display: none;
@@ -98,25 +98,26 @@
 .groupStudyRoom-container {
     margin: 0;
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     min-width: 1500px;
     width: 100%;
     height: 100vh;
-    background-color: #f8f7fa !important; 
+    background-color: #f8f7fa ;
     box-sizing: border-box;
-    overflow-y: hidden !important;
-    overflow-x: visible !important;
-    padding-top: 100px; 
+    overflow-y: auto;
+    padding-top: 100px;
+    flex: 1 2 1;
 }
 
 .column {
     flex: 1;
+    flex-grow: 1;
     margin: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    max-height: calc(100vh - 120px); 
+    max-height: calc(100vh - 120px);
     box-sizing: border-box;
     margin-left: 0;
 }
@@ -146,25 +147,25 @@
 
 /* Hide scrollbar track */
 .todo-list-container::-webkit-scrollbar {
-    width: 10px; 
+    width: 10px;
 }
 
 /* Style scrollbar thumb */
 .todo-list-container::-webkit-scrollbar-thumb {
-    border-radius: 40px; 
-    opacity: 0; 
-    transition: opacity 0.2s; 
+    border-radius: 40px;
+    opacity: 0;
+    transition: opacity 0.2s;
 }
 
 /* Show scrollbar only on hover or when active */
 .todo-list-container:hover::-webkit-scrollbar-thumb,
 .todo-list-container:active::-webkit-scrollbar-thumb {
-    background-color: #96d8c8; 
+    background-color: #96d8c8;
 }
 
 /* Scrollbar thumb hover state */
 .todo-list-container::-webkit-scrollbar-thumb:hover {
-    background-color: #96d8c8; 
+    background-color: #96d8c8;
 }
 
 /* Section heading styling for all widgets */
@@ -174,17 +175,17 @@
 .todo-list-container h3,
 .section-heading {
     /* Match the study room header text font */
-    font-family: 'Orbitron', sans-serif !important;
-    font-size: 22px !important;
-    font-weight: 600 !important;
-    letter-spacing: 1px !important;
-    color: rgba(186, 198, 241, 0.95) !important;
-    
-    text-shadow: 
+    font-family: 'Orbitron', sans-serif ;
+    font-size: 22px ;
+    font-weight: 600 ;
+    letter-spacing: 1px ;
+    color: rgba(186, 198, 241, 0.95) ;
+
+    text-shadow:
         0 0 1px rgba(255, 255, 255, 0.7),
         0 0 4px rgba(186, 198, 241, 0.5),
-        0 0 8px rgba(186, 198, 241, 0.3) !important;
-        
+        0 0 8px rgba(186, 198, 241, 0.3) ;
+
     width: 100%;
     margin-bottom: 10px;
     display: flex;
@@ -204,10 +205,10 @@
 /* Individual task item styling */
 .todo-item {
     display: flex;
-    align-items: center; 
+    align-items: center;
     justify-content: space-between;
     width: 100%;
-    min-height: 60px; 
+    min-height: 60px;
     margin: 10px 0;
     background: linear-gradient(135deg, #b0adfc 0%, #e6fdfe 50%, #c4d7fe 100%);
     border-radius: 40px;
@@ -226,7 +227,7 @@
 /* Checkbox container spacing */
 .checkbox-wrapper-28 {
     display: flex;
-    align-items: center; 
+    align-items: center;
     flex: 1;
     min-width: 0;
     padding-left: 15px;
@@ -267,25 +268,25 @@
 
 /* Task text styling */
 .todo-label {
-    font-family: 'Inter', sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 900 !important;
-    color: #F0F3FC !important;
+    font-family: 'Inter', sans-serif ;
+    font-size: 14px ;
+    font-weight: 900 ;
+    color: #F0F3FC ;
     cursor: pointer;
-    letter-spacing: 0.5px !important;
-    text-transform: uppercase !important;
-    white-space: normal !important; 
-    word-break: break-word !important; 
+    letter-spacing: 0.5px ;
+    text-transform: uppercase ;
+    white-space: normal ;
+    word-break: break-word ;
     flex: 1;
     padding-right: 10px;
-    line-height: 1.3 !important;
-    overflow: visible !important; 
+    line-height: 1.3 ;
+    overflow: visible ;
 }
 
 /* Completed task styling */
 .checkbox:checked + .todo-label {
     text-decoration: line-through;
-    opacity: 0.7; 
+    opacity: 0.7;
 }
 
 /* Delete task button */
@@ -437,9 +438,9 @@
     margin: 10px auto;
     display: block;
     padding: 15px 40px;
-    font-size: 16px !important;
-    font-family: 'Press Start 2P', monospace !important;
-    font-weight: 400 !important;
+    font-size: 16px ;
+    font-family: 'Press Start 2P', monospace ;
+    font-weight: 400 ;
     color: #FFFFFF;
     background: linear-gradient(to right, #b0adfc 0%, #e6fdfe 50%, #c4d7fe 100%);
     border: none;
@@ -448,8 +449,8 @@
     outline: none;
     box-shadow: none;
     transition: transform 0.1s;
-    letter-spacing: 0px !important;
-    line-height: 1.2 !important;
+    letter-spacing: 0px ;
+    line-height: 1.2 ;
 }
 
 /* Remove default pseudo-element */
@@ -481,8 +482,8 @@
         "code"
         "users";
     grid-template-rows: auto auto 1fr;
-    height: 690px;
-    width: 600px;
+    height: 60vh;
+    width: 40hw;
     align-items: start;
 }
 
@@ -491,19 +492,19 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    position: static !important;
+    position: static ;
     z-index: 1001;
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    margin-right: 25px !important;
+    background-color: transparent ;
+    border: none ;
+    box-shadow: none ;
+    margin-right: 25px ;
 }
 
 /* Secondary utility bar styling */
 .utility-bar-2 {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+    background-color: transparent ;
+    border: none ;
+    box-shadow: none ;
 }
 
 /* Grid area for displaying participant thumbnails */
@@ -558,27 +559,27 @@
 
 /* Fixed position timer widget */
 .timer-container{
-    position: fixed !important;
-    top: 85px !important;
-    right: 20px !important;
-    z-index: 9999 !important;
-    width: 320px !important;
-    height: 500px !important;
-    border-radius: 40px !important;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
-    background-color: #FFFFFF !important;
+    position: fixed ;
+    top: 85px ;
+    right: 20px ;
+    z-index: 9999 ;
+    width: 320px ;
+    height: 500px ;
+    border-radius: 40px ;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1) ;
+    background-color: #FFFFFF ;
 }
 
 /* Reset positioning for timer container children */
 .timer-container * {
-    position: relative !important; 
-    left: auto !important; 
-    right: auto !important;
-    top: auto !important;
-    bottom: auto !important;
-    margin: initial !important;
-    padding: initial !important; 
-    transform: none !important; 
+    position: relative ;
+    left: auto ;
+    right: auto ;
+    top: auto ;
+    bottom: auto ;
+    margin: initial ;
+    padding: initial ;
+    transform: none ;
 }
 
 /* Chat box styling */
@@ -592,67 +593,67 @@
 }
 
 /* Common styles for utility buttons */
-.music-button, 
+.music-button,
 .customisation-button,
 .copy-button,
 .exit-button {
-    position: static !important;
+    position: static ;
     width: 30px;
     height: 30px;
-    background-color: transparent !important;
+    background-color: transparent ;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: none !important;
-    box-shadow: none !important;
+    border: none ;
+    box-shadow: none ;
     padding: 0;
-    margin: 0 !important;
+    margin: 0 ;
     transition: transform 0.2s ease;
 }
 
 /* Position for music button */
 .music-button {
-    right: 260px !important; 
+    right: 260px ;
 }
 
 /* Position for customization button */
 .customisation-button {
-    right: 310px !important;
+    right: 310px ;
 }
 
 /* Position for copy link button */
 .copy-button {
-    right: 360px !important; 
+    right: 360px ;
 }
 
 /* Position for exit room button */
 .exit-button {
-    right: 410px !important; 
+    right: 410px ;
 }
 
 /* Right margin for heading and room code */
-.gs-heading2, 
+.gs-heading2,
 .room-code-display {
-    margin-right: 10px !important;
+    margin-right: 10px ;
 }
 
 /* Active state for music button */
-.music-button.active { 
+.music-button.active {
     transform: scale(0.9);
 }
 
 /* Active state for customization button */
-.customisation-button.active { 
+.customisation-button.active {
     transform: scale(0.9);
 }
 
 /* Active state for copy link button */
-.copy-button.active { 
+.copy-button.active {
     transform: scale(0.9);
 }
 
 /* Active state for exit button */
-.exit-button.active { 
+.exit-button.active {
     transform: scale(0.9);
 }
 
@@ -662,7 +663,7 @@
 }
 
 /* Hover effect for button icons - makes them brighter */
-.music-button:hover img, 
+.music-button:hover img,
 .customisation-button:hover img,
 .copy-button:hover img,
 .exit-button:hover img {
@@ -681,7 +682,7 @@
 
 /* Tooltip for music button */
 .music-button::after {
-    content: "Play Music"; 
+    content: "Play Music";
     visibility: hidden;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
@@ -782,17 +783,17 @@
     position: fixed;
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #bad7f2 0%, #d1cbed 100%); 
+    background: linear-gradient(135deg, #bad7f2 0%, #d1cbed 100%);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     top: 0;
     left: 0;
     margin: 0;
     box-sizing: border-box;
     z-index: 1000;
-    border: 3px solid #cfc9f5; 
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
+    border: 3px solid #cfc9f5;
+    display: flex ;
+    justify-content: space-between ;
+    align-items: center ;
     height: 80px;
     padding-left: 50px;
     padding-right: 50px;
@@ -802,48 +803,21 @@
     font-size: 32px;
     font-weight: 600;
     letter-spacing: 1px;
-    text-shadow: 
+    text-shadow:
         0 0 2px rgba(255, 255, 255, 0.8),
         0 0 8px rgba(236, 213, 229, 0.6),
         0 0 12px rgba(236, 213, 229, 0.4),
         0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Reset default margins to prevent unwanted scrolling */
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow-y: hidden; /* Prevent vertical scrolling */
-    overflow-x: auto; /* Allow horizontal scrolling */
-    width: auto !important; /* Ensure width isn't constrained */
-}
 
-/* Make root container fill the viewport but allow horizontal scroll */
+/* Make root container fill the viewport but allow vertical scroll */
 #root {
     height: 100%;
-    overflow-y: hidden;
-    overflow-x: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-/* Container sizing for app */
-.app-container {
-    height: 100%;
-    overflow-y: hidden;
-    overflow-x: auto;
-}
-
-/* Prevent vertical scrolling across all containers */
-html, body, #root, .groupStudyRoom-container {
-    overflow-y: hidden !important; 
-    overflow-x: auto !important; /* Allow horizontal scrolling */
-}
-
-/* Ensure all main containers maintain proper overflow settings */
-.app, #app, main, .main-container, .app-container {
-    overflow-y: hidden !important;
-    overflow-x: auto !important; /* Allow horizontal scrolling */
-}
 
 /* Show horizontal scrollbar for better usability */
 body::-webkit-scrollbar {
@@ -857,14 +831,7 @@ body::-webkit-scrollbar-thumb {
     border-radius: 6px;
 }
 
-/* Ensure parent containers handle content properly */
-#root, .app, #app, main, .main-container, .app-container {
-    height: 100%;
-    overflow-y: hidden !important;
-    overflow-x: auto !important;
-    min-width: fit-content !important; /* Ensures all content is accounted for */
-    width: auto !important;
-}
+
 
 /* Right section of header with controls */
 .header-right-section {
@@ -876,13 +843,13 @@ body::-webkit-scrollbar-thumb {
 /* Transparent styling for header elements */
 .header-right-section,
 .header-right-section > * {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+    background-color: transparent ;
+    border: none ;
+    box-shadow: none ;
 }
 
 /* Button icon sizing and visibility */
-.music-button img, 
+.music-button img,
 .customisation-button img,
 .copy-button img,
 .exit-button img {
@@ -893,7 +860,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 /* Hover effect with scaling and background */
-.music-button:hover, 
+.music-button:hover,
 .customisation-button:hover,
 .copy-button:hover,
 .exit-button:hover {
@@ -902,7 +869,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 /* Pressed state for buttons */
-.music-button.active, 
+.music-button.active,
 .customisation-button.active,
 .copy-button.active,
 .exit-button.active {
@@ -912,6 +879,6 @@ body::-webkit-scrollbar-thumb {
 
 /* Prevent heading text wrapping */
 .gs-heading2 {
-    margin: 0 !important;
+    margin: 0 ;
     white-space: nowrap;
 }
