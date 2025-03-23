@@ -7,7 +7,6 @@
   justify-content: center !important;
   align-items: center !important;
   margin: 0 !important;
-  /* Soft gradient background identical to login page */
   background: linear-gradient(135deg, 
       #ffffff 0%, 
       #fff0f5 25%, 
@@ -21,7 +20,6 @@
   overflow: hidden !important;
 }
 
-/* Soft color diffusion - identical to login page */
 .signup-container::before {
   content: "" !important;
   position: absolute !important;
@@ -39,7 +37,6 @@
   opacity: 1 !important; /* Ensure visibility */
 }
 
-/* Soft diffused glow - identical to login page */
 .signup-container::after {
   content: "" !important;
   position: absolute !important;
@@ -55,7 +52,6 @@
   pointer-events: none !important;
 }
 
-/* Target ALL possible header elements to ensure styling is applied */
 .heading1, 
 header, 
 .header, 
@@ -95,7 +91,6 @@ header,
       0 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Force Orbitron font on all possible header text elements */
 .heading1 *, 
 header *, 
 .header *, 
@@ -109,7 +104,7 @@ header *,
 /* Main form container */
 .signup-form {
   width: 650px !important;
-  padding: 40px 50px 10px 50px !important;
+  padding: 40px 50px 40px 50px !important;
   border: 5px solid #f79cac !important;
   border-radius: 50px !important;
   background: linear-gradient(135deg, #fff2e6 0%, #ffd6d1 40%, #fec5d1 70%, #fff6f2 100%) !important;
@@ -118,7 +113,6 @@ header *,
   align-items: center !important;
   position: relative !important;
   margin-top: 80px !important;
-  padding: 40px 50px 10px 50px !important;
   box-shadow: 
       0 10px 30px rgba(0, 0, 0, 0.1),
       inset 0 0 10px rgba(255, 255, 255, 0.5) !important;
@@ -126,12 +120,10 @@ header *,
   z-index: 1 !important;
 }
 
-/* Disable default red border */
 .signup-form::before {
   display: none !important;
 }
 
-/* Aggressive title styling with all possible properties */
 .signup-form h2,
 .signup-form .heading2,
 .signup-form .form-title,
@@ -149,7 +141,6 @@ header *,
     margin-top: 10px !important;
     margin-bottom: 30px !important;
     text-align: center !important;
-    text-transform: uppercase !important;
     color: #f69c97 !important;
     background: linear-gradient(to right, #fb7766, #fee09a) !important;
     -webkit-background-clip: text !important;
@@ -171,7 +162,6 @@ header *,
     overflow: visible !important;
 }
 
-/* Ensure all children get the styling too */
 .signup-form h2 *,
 .signup-form .heading2 *,
 .signup-form .form-title *,
@@ -193,33 +183,33 @@ header *,
 .label-text {
   width: 100% !important;
   text-align: left !important;
-  font-size: 20px !important;
+  font-size: 16px !important;
   margin-top: 10px !important;
   margin-left: 30px !important;
   font-family: 'Inter', sans-serif !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
-  color: #7bcec3 !important;
+  color: #f69c97 !important;
 }
 
 /* Input field design */
 .input-field {
-  width: 90% !important;
-  margin-top: 20px !important;
-  margin-bottom: 35px !important;
-  border: none !important;
-  border-radius: 40px !important;
-  padding: 18px !important;
-  text-align: center !important;
-  background-color: white !important;
+  width: 80% !important;
+  margin-top: 10px !important;
+  margin-bottom: 20px !important;
+  border: 1px solid rgba(246, 156, 151, 0.3) !important;
+  border-radius: 20px !important;
+  padding: 12px 20px !important;
+  text-align: left !important;
+  background-color: rgba(255, 255, 255, 0.7) !important;
   outline: none !important;
   box-shadow: 
       inset 0 2px 5px rgba(247, 156, 172, 0.2),
       0 2px 5px rgba(255, 255, 255, 0.8) !important;
-  color: #f4bdd0 !important;
-  font-weight: 600 !important;
+  color: #febbbd !important;
+  font-weight: 500 !important;
   font-family: 'Inter', sans-serif !important;
-  font-size: 16px !important;
+  font-size: 15px !important;
 }
 
 .input-field:focus {
@@ -229,7 +219,6 @@ header *,
   color: #f79cac !important;
 }
 
-/* Submit button */
 .submit-button {
   padding: 15px 20px !important;
   width: 200px !important;
@@ -280,7 +269,6 @@ header *,
   pointer-events: none !important;
 }
 
-/* Button hover state */
 .submit-button:hover {
   transform: scale(1.05) !important;
   background-image: 
@@ -293,7 +281,6 @@ header *,
       0 4px 12px rgba(246, 156, 151, 0.6) !important;
 }
 
-/* Button active/pressed state */
 .submit-button:active {
   transform: scale(0.95) !important;
   box-shadow: 
@@ -301,7 +288,6 @@ header *,
       inset -1px -1px 3px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Heart checkbox container */
 .checkbox-container {
   display: flex !important;
   align-items: center !important;
@@ -310,7 +296,6 @@ header *,
   font-size: 14px !important;
 }
 
-/* Custom heart checkbox */
 .checkbox-container input[type="checkbox"] {
   appearance: none !important;
   -webkit-appearance: none !important;
@@ -335,38 +320,33 @@ header *,
   justify-content: center !important;
 }
 
-/* Filled heart state */
 .checkbox-container input[type="checkbox"]:checked::before {
-  content: '💗' !important; /* Pink heart emoji */
+  content: '💗' !important;
 }
 
-/* Checkbox label text */
 .checkbox-label {
   font-family: "Inter", sans-serif !important;
   font-weight: 700 !important;
   font-size: 15px !important;
   cursor: pointer !important;
-  color: #f4bdd0 !important;
+  color: #f79cac !important;
   transition: color 0.2s ease !important;
 }
 
-/* Link styling in checkbox label */
 .checkbox-label a {
-  color: #f06eaa !important;
+  color: #fb7766 !important;
   text-decoration: none !important;
   font-weight: 700 !important;
   position: relative !important;
   transition: all 0.2s ease !important;
 }
 
-/* Link hover state */
 .checkbox-label a:hover {
   text-decoration: none !important;
-  color: #f4bdd0 !important;
-  text-shadow: 0 0 1px rgba(244, 189, 208, 0.4) !important;
+  color: #ffa28a !important;
+  text-shadow: 0 0 1px rgba(251, 119, 102, 0.4) !important;
 }
 
-/* Underline animation for links */
 .checkbox-label a::after {
   content: '' !important;
   position: absolute !important;
@@ -374,16 +354,14 @@ header *,
   height: 2px !important;
   bottom: -2px !important;
   left: 0 !important;
-  background-color: #f4bdd0 !important;
+  background-color: #fb7766 !important;
   transition: width 0.3s ease !important;
 }
 
-/* Underline animation on hover */
 .checkbox-label a:hover::after {
   width: 100% !important;
 }
 
-/* Form validation error messages */
 .error-message {
   font-size: 12px;
   color: #f06eaa;
@@ -391,7 +369,6 @@ header *,
   margin-top: 5px;
 }
 
-/* Form field container */
 .field {
   width: 90%;
   gap: 0;
@@ -399,7 +376,6 @@ header *,
   margin-bottom: 15px;
 }
 
-/* Custom scrollbar track */
 .signup-form::-webkit-scrollbar {
   width: 8px !important;
 }
@@ -409,14 +385,12 @@ header *,
   border-radius: 10px !important;
 }
 
-/* Custom scrollbar thumb */
 .signup-form::-webkit-scrollbar-thumb {
   background-color: #f4bdd0 !important;
   border-radius: 10px !important;
   border: 2px solid #fef6ae !important;
 }
 
-/* Two-column form layout */
 .form-row {
   display: flex !important;
   width: 100% !important;
@@ -432,7 +406,6 @@ header *,
   margin-bottom: 10px !important;
 }
 
-/* Column containers */
 .field-column {
   width: 48% !important;
   display: flex !important;
@@ -443,13 +416,11 @@ header *,
   width: 100% !important;
 }
 
-/* Label positioning in columns */
 .field-column .label-text {
   margin-left: 15px !important;
   width: auto !important;
 }
 
-/* Input field sizing in columns */
 .field-column .input-field {
   width: 100% !important;
   margin-top: 5px !important;
@@ -473,7 +444,6 @@ header *,
   }
 }
 
-/* Terms and submit button container */
 .terms-and-submit-row {
   display: flex !important;
   width: 100% !important;
@@ -483,13 +453,11 @@ header *,
   padding: 0 15px !important;
 }
 
-/* Checkbox positioning in row */
 .checkbox-container {
   margin: 0 !important;
   flex: 1 !important;
 }
 
-/* Submit button in row layout */
 .terms-and-submit-row .submit-button {
   display: flex !important;
   justify-content: center !important;

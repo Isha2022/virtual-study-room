@@ -325,3 +325,116 @@
 .description-display::-webkit-scrollbar {
   width: 10px;
 }
+
+/* Styling for rewards/badges button */
+.inventory-button {
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50% !important;
+    background-color: #bad7f5 !important; /* Default blue color */
+    background-image: 
+        radial-gradient(circle at center, rgba(201, 224, 247, 0.9) 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, rgba(222, 235, 249, 0.8) 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(186, 215, 242, 0.8) 15%, transparent 50%) !important;
+    border: none !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 24px !important;
+    box-shadow: 
+        inset 2px 2px 5px rgba(255, 255, 255, 0.8),
+        inset -2px -2px 5px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(186, 215, 242, 0.6),
+        0 0 15px rgba(186, 215, 242, 0.4) !important;
+    transition: all 0.3s ease !important;
+    margin-bottom: 10px !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Rewards button when active (showing inventory) */
+.inventory-button[aria-label="Hide Badge Collection"] {
+    background-color: #baf2e9 !important; /* Teal color when active */
+    background-image: 
+        radial-gradient(circle at center, rgba(201, 247, 241, 0.9) 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, rgba(222, 249, 244, 0.8) 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(186, 242, 233, 0.8) 15%, transparent 50%) !important;
+    box-shadow: 
+        inset 2px 2px 5px rgba(255, 255, 255, 0.8),
+        inset -2px -2px 5px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(186, 242, 233, 0.6),
+        0 0 15px rgba(186, 242, 233, 0.4) !important;
+}
+
+/* Calendar button styling */
+.CalendarButton {
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50% !important;
+    background-color: #bad7f5 !important;
+    background-image: 
+        radial-gradient(circle at center, rgba(201, 224, 247, 0.9) 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, rgba(222, 235, 249, 0.8) 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(186, 215, 242, 0.8) 15%, transparent 50%) !important;
+    border: none !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 24px !important;
+    box-shadow: 
+        inset 2px 2px 5px rgba(255, 255, 255, 0.8),
+        inset -2px -2px 5px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(186, 215, 242, 0.6),
+        0 0 15px rgba(186, 215, 242, 0.4) !important;
+    transition: all 0.3s ease !important;
+    margin-bottom: 10px !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Hover effects for both buttons */
+.inventory-button:hover,
+.CalendarButton:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 20px rgba(186, 215, 242, 0.6) !important;
+}
+
+/* Active state for both buttons */
+.inventory-button:active,
+.CalendarButton:active {
+    transform: scale(0.95) !important;
+    box-shadow: 
+        inset 1px 1px 3px rgba(255, 255, 255, 0.5),
+        inset -1px -1px 3px rgba(0, 0, 0, 0.2),
+        0 2px 6px rgba(186, 215, 242, 0.5) !important;
+}
+
+/* Shine effect overlay for both buttons */
+.inventory-button::after,
+.CalendarButton::after {
+    content: '' !important;
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    background: linear-gradient(135deg, 
+        transparent 0%, 
+        transparent 40%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        transparent 60%, 
+        transparent 100%) !important;
+    border-radius: 50% !important;
+    transition: all 0.5s ease !important;
+    z-index: 1 !important;
+}
+
+/* Animates shine on hover */
+.inventory-button:hover::after,
+.CalendarButton:hover::after {
+    transform: translateX(100%) translateY(-100%) rotate(30deg) !important;
+}
