@@ -73,7 +73,6 @@ describe("CreateNewTask", () => {
     });
 
     test("allows input and submits the form successfully", async () => {
-        // Setup mock response
         authService.getAuthenticatedRequest.mockResolvedValue({
             id: 1,
             title: "New Task",
@@ -106,11 +105,7 @@ describe("CreateNewTask", () => {
             );
             
         });
-
-        // Ensure setListsMock was called
         await waitFor(() => expect(setListsMock).toHaveBeenCalled());
-
-        // Check updated lists
         await waitFor(() => {
             expect(updatedMockLists[0].tasks).toHaveLength(1);
             expect(updatedMockLists[0].tasks[0]).toMatchObject({
@@ -119,13 +114,10 @@ describe("CreateNewTask", () => {
                 content: "Task details",
             });
         });
-
-        // Ensure modal closes
         await waitFor(() => expect(setAddTaskWindowMock).toHaveBeenCalledWith(false));
     });
 
     test("handles generic error without response", async () => {
-        // Simulate a generic error without response data
         authService.getAuthenticatedRequest.mockRejectedValueOnce({
             message: "Network Error",
         });
@@ -145,7 +137,6 @@ describe("CreateNewTask", () => {
     });
 
     test("handles error with response", async () => {
-        // Simulate an error with a response object containing an error message
         authService.getAuthenticatedRequest.mockRejectedValueOnce({
             response: {
                 data: {
@@ -164,8 +155,6 @@ describe("CreateNewTask", () => {
         await waitFor(() => {
             expect(global.alert).toHaveBeenCalledWith("Something went wrong with the request");
         });
-
-        // Check that setLists and setAddTaskWindow were not called
         expect(setListsMock).not.toHaveBeenCalled();
         expect(setAddTaskWindowMock).not.toHaveBeenCalled();
     });
@@ -181,15 +170,12 @@ describe("CreateNewTask", () => {
     });
 
     test("does not update lists when isShared is true", async () => {
-        // Setup mock response
         authService.getAuthenticatedRequest.mockResolvedValue({
             id: 1,
             title: "New Task",
             content: "Task details",
             is_completed: false,
         });
-
-        // Render the component with isShared set to true
         render(
             <AddTaskModal
                 addTaskWindow={true}
@@ -199,11 +185,7 @@ describe("CreateNewTask", () => {
                 isShared={true} // Set isShared to true
             />
         );
-
-        // Submit the form
         submitForm();
-
-        // Wait for the API call to complete
         await waitFor(() => {
             expect(authService.getAuthenticatedRequest).toHaveBeenCalledWith(
                 "/new_task/",
@@ -215,11 +197,7 @@ describe("CreateNewTask", () => {
                 }
             );
         });
-
-        // Ensure setListsMock was NOT called
         await waitFor(() => expect(setListsMock).not.toHaveBeenCalled());
-
-        // Ensure modal closes
         await waitFor(() => expect(setAddTaskWindowMock).toHaveBeenCalledWith(false));
     });
 })

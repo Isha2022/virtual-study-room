@@ -71,7 +71,6 @@ describe("ToDoList", () => {
     });
 
     test('handles error while fetching lists (without response)', async () => {
-        // Mock API rejection with an error that does NOT have a response
         authService.getAuthenticatedRequest.mockRejectedValueOnce(new Error('Some network error'));
 
         render(<ToDoList />);
@@ -79,8 +78,6 @@ describe("ToDoList", () => {
         expect(screen.getByText('Loading To-Do Lists...')).toBeInTheDocument();
 
         window.alert = jest.fn(); // Mock alert
-
-        // Ensure alert is NOT called because error.response is missing
         await waitFor(() => expect(window.alert).not.toHaveBeenCalled());
     });
 
@@ -145,8 +142,6 @@ describe("ToDoList", () => {
 
 
     test("should log an error if task update request fails", async () => {
-
-        // Step 1: Render successfully with mock data
         authService.getAuthenticatedRequest.mockResolvedValueOnce(mockListsData);
 
         render(<ToDoList />);
@@ -418,8 +413,6 @@ describe("ToDoList", () => {
         });
 
         render(<ToDoList isShared={true} listId={99} />);
-
-        //await waitFor(() => expect(authService.getAuthenticatedRequest).toHaveBeenCalled());
 
         await waitFor(() => expect(screen.getByText("Shared List")).toBeInTheDocument());
         expect(screen.getByText("Shared Task 1")).toBeInTheDocument();

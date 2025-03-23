@@ -4,8 +4,6 @@ import FriendsProfile from '../../friends/FriendsProfile';
 import { getAuthenticatedRequest } from "../../../utils/authService";
 import { getDownloadURL } from 'firebase/storage';
 import defaultAvatar from '../../../assets/avatars/avatar_2.png';
-
-// Mocking external modules
 jest.mock("../../../utils/authService", () => ({
     getAuthenticatedRequest: jest.fn(),
 }));

@@ -40,7 +40,6 @@ describe('TaskItem Component', () => {
         expect(checkbox).not.toBeChecked();
         expect(screen.getByRole('button', { name: /delete list/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /task details/i })).toBeInTheDocument();
-        //expect(screen.getByTestId('chevron-down-icon')).toBeInTheDocument();
     });
 
     test('checkbox toggles task completion status', () => {
@@ -72,7 +71,6 @@ describe('TaskItem Component', () => {
 
         expect(screen.getByText(/description:/i)).toBeInTheDocument();
         expect(screen.getByText(task.content)).toBeInTheDocument();
-        //expect(screen.getByTestId('chevron-up-icon')).toBeInTheDocument();
         expect(screen.getByText(/hide details/i)).toBeInTheDocument();
     });
 
@@ -84,21 +82,14 @@ describe('TaskItem Component', () => {
     });
 
     test('task title has "completed" class when task is completed', () => {
-        // Define a completed task object
         const completedTask = {
             id: 1,
             title: 'Test Task',
             content: 'This is a test task description',
             is_completed: true, // Mark the task as completed
         };
-
-        // Render the component with the completed task
         renderTaskItem(false, completedTask);
-
-        // Get the task title element
         const taskTitle = screen.getByText(completedTask.title);
-
-        // Verify it has the "completed" class
         expect(taskTitle).toHaveClass('completed');
     });
 

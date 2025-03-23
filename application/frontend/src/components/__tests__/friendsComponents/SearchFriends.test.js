@@ -171,8 +171,6 @@ describe("SearchFriends Component", () => {
             invitationsRequests: [],
             friends: [],
         });
-
-        // Simulate user input to trigger API call
         fireEvent.change(screen.getByPlaceholderText("Add new friends..."), {
             target: { value: "Sam" }, // Needs to be >2 characters
         });
@@ -201,8 +199,6 @@ describe("SearchFriends Component", () => {
         fireEvent.change(screen.getByPlaceholderText("Add new friends..."), {
             target: { value: "Sam" },
         });
-
-        // ✅ Wait for the image to appear and check its src
         const imgElement = await waitFor(() => screen.getByRole("img"));
 
         console.log("Image src after update:", imgElement.src); // Debugging output

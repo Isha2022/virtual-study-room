@@ -5,8 +5,6 @@ import * as authService from '../../../utils/authService';
 import { FriendsContext } from "../../friends/FriendsContext";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
-
-// Mocking modules
 jest.mock('../../../utils/authService', () => ({
     getAuthenticatedRequest: jest.fn(),
 }));
@@ -129,8 +127,6 @@ describe("AllFriends", () => {
             friends: mockFriendsData,
             loading: mockLoading,
         });
-
-        // Click the "Details" button for the first friend
         const detailsButton = screen.getAllByRole('button', { name: /details/i })[0];
         fireEvent.click(detailsButton);
     });

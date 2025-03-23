@@ -2,8 +2,6 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import FriendsTab from "../../friends/FriendsTab";
 import * as authService from "../../../utils/authService"; // Ensure correct import
-
-// Mock child components
 jest.mock("../../friends/AllFriends", () => () => <div data-testid="all-friends">All Friends Content</div>);
 jest.mock("../../friends/PendingRequests", () => () => <div data-testid="pending-requests">Pending Requests Content</div>);
 jest.mock("../../friends/FriendsRequested", () => () => <div data-testid="friends-requested">Sent Requests Content</div>);

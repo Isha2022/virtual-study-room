@@ -66,14 +66,11 @@ describe("CreateNewList", () => {
     });
 
     test("allows input and submits the form successfully", async () => {
-        // Setup mock response
         authService.getAuthenticatedRequest.mockResolvedValue({
             listId: 2,
             name: "New List",
             isShared: true
         });
-
-        // Initialize the mock list state
         let updatedMockLists = [
             { id: 1, name: "List 1", tasks: [] },
         ];
@@ -95,11 +92,7 @@ describe("CreateNewList", () => {
                 }
             );
         });
-
-        // Ensure setListsMock was called
         await waitFor(() => expect(setListsMock).toHaveBeenCalled());
-
-        // Check updated lists correctly
         await waitFor(() => {
             expect(updatedMockLists).toHaveLength(2);
             expect(updatedMockLists[1]).toMatchObject({
@@ -108,13 +101,10 @@ describe("CreateNewList", () => {
                 tasks: [],
             });
         });
-
-        // Ensure modal closes
         await waitFor(() => expect(setAddListWindowMock).toHaveBeenCalledWith(false));
     });
 
     test("handles generic error without response", async () => {
-        // Simulate a generic error without response data
         authService.getAuthenticatedRequest.mockRejectedValueOnce({
             message: "Network Error",
         });
@@ -134,7 +124,6 @@ describe("CreateNewList", () => {
     });
 
     test("handles error with response", async () => {
-        // Simulate an error with a response object containing an error message
         authService.getAuthenticatedRequest.mockRejectedValueOnce({
             response: {
                 data: {
@@ -151,11 +140,8 @@ describe("CreateNewList", () => {
         });
 
         await waitFor(() => {
-            // Ensure the alert is called with the error message from the response
             expect(global.alert).toHaveBeenCalledWith("Something went wrong with the request");
         });
-
-        // Check that setLists and setAddTaskWindow were not called
         expect(setListsMock).not.toHaveBeenCalled();
         expect(setAddListWindowMock).not.toHaveBeenCalled();
     });

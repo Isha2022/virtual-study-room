@@ -28,7 +28,7 @@ const mockRequestData = [
 
 describe("PendingRequests", () => {
 
-    const mockOnReject = jest.fn(); // ✅ Use jest.fn() here
+    const mockOnReject = jest.fn();
     const mockOnAccept = jest.fn();
     const mockLoading = false;
 
