@@ -179,4 +179,47 @@ describe("CreateNewTask", () => {
         await waitFor(() => expect(setAddTaskWindowMock).toHaveBeenCalledWith(false));
 
     });
+
+    test("does not update lists when isShared is true", async () => {
+        // Setup mock response
+        authService.getAuthenticatedRequest.mockResolvedValue({
+            id: 1,
+            title: "New Task",
+            content: "Task details",
+            is_completed: false,
+        });
+
+        // Render the component with isShared set to true
+        render(
+            <AddTaskModal
+                addTaskWindow={true}
+                setAddTaskWindow={setAddTaskWindowMock}
+                listId={1}
+                setLists={setListsMock}
+                isShared={true} // Set isShared to true
+            />
+        );
+
+        // Submit the form
+        submitForm();
+
+        // Wait for the API call to complete
+        await waitFor(() => {
+            expect(authService.getAuthenticatedRequest).toHaveBeenCalledWith(
+                "/new_task/",
+                "POST",
+                {
+                    list_id: 1,
+                    title: "New Task",
+                    content: "Task details",
+                }
+            );
+        });
+
+        // Ensure setListsMock was NOT called
+        await waitFor(() => expect(setListsMock).not.toHaveBeenCalled());
+
+        // Ensure modal closes
+        await waitFor(() => expect(setAddTaskWindowMock).toHaveBeenCalledWith(false));
+    });
 })

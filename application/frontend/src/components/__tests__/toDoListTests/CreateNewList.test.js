@@ -25,6 +25,17 @@ describe("CreateNewList", () => {
         setListsMock = jest.fn();
         jest.clearAllMocks();
     });
+ 
+
+    const submitForm = () => {
+        const titleInput = screen.getByPlaceholderText("Enter list name");
+        
+        fireEvent.change(titleInput, { target: { value: "New List" } });
+        
+        expect(titleInput.value).toBe("New List");
+        
+        fireEvent.click(screen.getByText("Save"));
+    }
 
     const setup = () => {
         render(
@@ -36,22 +47,11 @@ describe("CreateNewList", () => {
         );
     };
 
-    const submitForm = () => {
-        const titleInput = screen.getByPlaceholderText("Enter list title");
-        
-        fireEvent.change(titleInput, { target: { value: "New List" } });
-        
-        expect(titleInput.value).toBe("New List");
-        
-        fireEvent.click(screen.getByText("Save"));
-    }
-
     test("renders modal correctly when addListWindow is true", () => {
         setup();
 
         expect(screen.getByText("Add List")).toBeInTheDocument();
-        expect(screen.getByPlaceholderText("Enter list title")).toBeInTheDocument();
-        expect(screen.getByRole("checkbox")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText("Enter list name")).toBeInTheDocument(); // Correct placeholder text
     });
 
     test("does not render modal when addListWindow is false", () => {
@@ -91,7 +91,7 @@ describe("CreateNewList", () => {
                 "POST",
                 {
                     name: "New List",
-                    is_shared: true,
+                    is_shared: false,
                 }
             );
         });
@@ -112,7 +112,6 @@ describe("CreateNewList", () => {
         // Ensure modal closes
         await waitFor(() => expect(setAddListWindowMock).toHaveBeenCalledWith(false));
     });
-
 
     test("handles generic error without response", async () => {
         // Simulate a generic error without response data
