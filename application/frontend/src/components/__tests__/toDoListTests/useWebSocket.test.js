@@ -12,7 +12,7 @@ global.WebSocket = jest.fn().mockImplementation(() => {
         close: jest.fn().mockImplementation(function () {
             console.log("WebSocket close called");
             if (typeof this.onclose === 'function') {
-                this.onclose(); // Trigger the onclose handler
+                this.onclose(); 
             }
         }),
     };
@@ -25,10 +25,10 @@ describe("useWebSocket Hook", () => {
 
     beforeEach(() => {
         
-        jest.clearAllMocks(); // Clear all mocks before each test
-        jest.spyOn(console, 'log').mockImplementation(() => { }); // Suppress console.log
+        jest.clearAllMocks(); 
+        jest.spyOn(console, 'log').mockImplementation(() => { }); 
         mockSetLists = jest.fn();
-        mockSocket = {}; // Mock socket object if needed (empty object here)
+        mockSocket = {}; 
     });
       test("does not connect WebSocket if isShared is false", () => {
         act(() => {
@@ -114,7 +114,7 @@ describe("useWebSocket Hook", () => {
             {
                 id: 1,
                 tasks: [
-                    { id: 1, name: "Task 1", is_completed: false }, // Task 2 is removed
+                    { id: 1, name: "Task 1", is_completed: false },
                 ],
             },
             {
@@ -148,8 +148,8 @@ describe("useWebSocket Hook", () => {
         const mockMessage = {
             data: JSON.stringify({
                 type: "toggle_task",
-                task_id: 1, // Task ID to toggle
-                is_completed: true, // New completion status
+                task_id: 1,  
+                is_completed: true, 
             }),
         };
         act(() => {
@@ -166,7 +166,7 @@ describe("useWebSocket Hook", () => {
             {
                 id: 1,
                 tasks: [
-                    { id: 1, name: "Task 1", is_completed: true }, // Task 1 is toggled
+                    { id: 1, name: "Task 1", is_completed: true },
                     { id: 2, name: "Task 2", is_completed: true },
                 ],
             },
@@ -200,7 +200,7 @@ describe("useWebSocket Hook", () => {
         const mockMessage = {
             data: JSON.stringify({
                 type: "add_task",
-                task: { id: 4, name: "Task 4", is_completed: false }, // New task to add
+                task: { id: 4, name: "Task 4", is_completed: false },  
             }),
         };
         act(() => {
@@ -219,7 +219,7 @@ describe("useWebSocket Hook", () => {
                 tasks: [
                     { id: 1, name: "Task 1", is_completed: false },
                     { id: 2, name: "Task 2", is_completed: true },
-                    { id: 4, name: "Task 4", is_completed: false }, // New task added
+                    { id: 4, name: "Task 4", is_completed: false }, 
                 ],
             },
             {
@@ -251,7 +251,7 @@ describe("useWebSocket Hook", () => {
         const mockSetLists = jest.fn();
         const mockMessage = {
             data: JSON.stringify({
-                type: "unknown_type", // Unknown message type
+                type: "unknown_type",
                 task_id: 1,
             }),
         };
@@ -289,7 +289,7 @@ describe("useWebSocket Hook", () => {
         const mockMessage = {
             data: JSON.stringify({
                 type: "add_task",
-                task: { id: 1, name: "Task 1", is_completed: false }, // Duplicate task
+                task: { id: 1, name: "Task 1", is_completed: false }, 
             }),
         };
         act(() => {

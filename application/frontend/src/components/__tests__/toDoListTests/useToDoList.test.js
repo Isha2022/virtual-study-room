@@ -71,7 +71,7 @@ describe("useToDoList Hook", () => {
     test("fetches shared list successfully", async () => {
         
         const mockList = { id: 1, name: "Shared List 1" };
-        authService.getAuthenticatedRequest.mockResolvedValue([mockList]); // Wrap in an array
+        authService.getAuthenticatedRequest.mockResolvedValue([mockList]);  
         render(<TestComponent isShared={true} listId={1} />);
         expect(screen.getByText("Loading...")).toBeInTheDocument();
 

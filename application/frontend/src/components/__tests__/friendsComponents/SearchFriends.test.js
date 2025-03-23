@@ -58,7 +58,7 @@ describe("SearchFriends Component", () => {
         authService.getAuthenticatedRequest.mockResolvedValue(mockRequestData);
     });
     afterEach(() => {
-        jest.restoreAllMocks(); // ✅ Restores all spies/mocks to their original behavior
+        jest.restoreAllMocks(); 
     });
 
     test("displays loading state when loading is true", () => {
@@ -157,7 +157,7 @@ describe("SearchFriends Component", () => {
     });
 
     test("should handle API error and show an alert when fetching friends fails", async () => {
-        jest.spyOn(console, "error").mockImplementation(() => { }); // Mock console.error
+        jest.spyOn(console, "error").mockImplementation(() => { });
 
         authService.getAuthenticatedRequest.mockRejectedValueOnce(
             new Error("Error fetching friends")
@@ -172,7 +172,7 @@ describe("SearchFriends Component", () => {
             friends: [],
         });
         fireEvent.change(screen.getByPlaceholderText("Add new friends..."), {
-            target: { value: "Sam" }, // Needs to be >2 characters
+            target: { value: "Sam" },
         });
 
         await waitFor(() => {
@@ -182,13 +182,13 @@ describe("SearchFriends Component", () => {
         expect(console.error).toHaveBeenCalled();
         expect(console.error.mock.calls[0][0]).toContain("Error fetching friends");
 
-        console.error.mockRestore(); // Restore console.error
+        console.error.mockRestore();
     });
 
     test("uses default avatar when getDownloadURL fails", async () => {
-        const defaultAvatar = "http://localhost/"; // This should be the path to your default avatar
+        const defaultAvatar = "http://localhost/";
 
-        getDownloadURL.mockRejectedValue(new Error("Failed to fetch image")); // Simulate failure
+        getDownloadURL.mockRejectedValue(new Error("Failed to fetch image"));
 
         render(
             <FriendsContext.Provider value={{ loading: false, onAccept: jest.fn(), onReject: jest.fn(), friendRequests: [], invitationsRequests: [], friends: [] }}>
@@ -201,8 +201,8 @@ describe("SearchFriends Component", () => {
         });
         const imgElement = await waitFor(() => screen.getByRole("img"));
 
-        console.log("Image src after update:", imgElement.src); // Debugging output
-        expect(imgElement.src).toBe(defaultAvatar); // Check if default avatar is used
+        console.log("Image src after update:", imgElement.src);
+        expect(imgElement.src).toBe(defaultAvatar); 
     });
 
 

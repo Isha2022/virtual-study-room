@@ -21,9 +21,9 @@ jest.mock('../../friends/FriendsProfile', () => {
 jest.mock('firebase/storage');
 jest.mock('../../../firebase-config.js');
 jest.mock('react-toastify', () => {
-    const actual = jest.requireActual('react-toastify'); // Preserve the actual module
+    const actual = jest.requireActual('react-toastify');
     return {
-        ...actual, // Spread actual exports
+        ...actual,
         toast: {
             error: jest.fn(),
             success: jest.fn(),
@@ -38,7 +38,7 @@ const mockFriendsData = [
 
 describe("AllFriends", () => {
 
-    const mockOnReject = jest.fn(); // ✅ Use jest.fn() here
+    const mockOnReject = jest.fn(); 
     const mockLoading = false;
 
     const renderWithContext = (contextValue) => {
@@ -112,11 +112,11 @@ describe("AllFriends", () => {
 
         fireEvent.click(rejectButtons[0]);
         expect(mockOnReject).toHaveBeenCalledWith(mockFriendsData[0].id);
-        expect(mockOnReject).toHaveBeenCalledTimes(1);  // Ensure it was called exactly once
+        expect(mockOnReject).toHaveBeenCalledTimes(1); 
 
         fireEvent.click(rejectButtons[1]);
         expect(mockOnReject).toHaveBeenCalledWith(mockFriendsData[1].id);
-        expect(mockOnReject).toHaveBeenCalledTimes(2);  // Ensure it was called exactly twice
+        expect(mockOnReject).toHaveBeenCalledTimes(2);
     });
 
     test('handles profile button click and opens user profile window', async () => {

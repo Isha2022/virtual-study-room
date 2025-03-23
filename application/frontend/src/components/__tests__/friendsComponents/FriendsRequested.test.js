@@ -29,7 +29,7 @@ const mockRequestData = [
 
 describe("PendingRequests", () => {
 
-    const mockOnAccept = jest.fn();
+    const mockOnReject = jest.fn();
     const mockLoading = false;
 
     const renderWithContext = (contextValue) => {
@@ -60,7 +60,7 @@ describe("PendingRequests", () => {
 
     test("shows loading state", () => {
         renderWithContext({
-            onAccept: mockOnAccept,
+            onReject: mockOnReject,
             invitationsRequests: [],
             loading: true,
         });
@@ -70,7 +70,7 @@ describe("PendingRequests", () => {
 
     test('renders the list of friends correctly', async () => {
         renderWithContext({
-            onAccept: mockOnAccept,
+            onReject: mockOnReject,
             invitationsRequests: mockRequestData,
             loading: mockLoading,
         });
@@ -83,7 +83,7 @@ describe("PendingRequests", () => {
 
     test('renders the empty list of friends correctly', async () => {
         renderWithContext({
-            onAccept: mockOnAccept,
+            onReject: mockOnReject,
             invitationsRequests: [],
             loading: mockLoading,
         });
@@ -93,7 +93,7 @@ describe("PendingRequests", () => {
 
     test('renders the invitation actions and handles accept/reject button clicks', async () => {
         renderWithContext({
-            onAccept: mockOnAccept,
+            onReject: mockOnReject,
             invitationsRequests: mockRequestData,
             loading: mockLoading,
         });

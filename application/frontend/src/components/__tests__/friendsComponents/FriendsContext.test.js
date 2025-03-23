@@ -127,9 +127,9 @@ describe('FriendsContext', () => {
         );
         
         await waitFor(() => {
-            const images = screen.getAllByRole('img'); // Find all images
-            expect(images[0]).toHaveAttribute('src', ''); // Default avatar
-            expect(images[1]).toHaveAttribute('src', 'https://example.com/avatar.png'); // Second friend's avatar
+            const images = screen.getAllByRole('img');
+            expect(images[0]).toHaveAttribute('src', '');
+            expect(images[1]).toHaveAttribute('src', 'https://example.com/avatar.png');
         });
     });
 
@@ -160,18 +160,18 @@ describe('FriendsContext', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText('Jane Doe')).toBeInTheDocument(); // Invitation
+            expect(screen.getByText('Jane Doe')).toBeInTheDocument();
         });
 
         const acceptButtons = screen.getAllByText('Accept');
-        fireEvent.click(acceptButtons[0]); // Click the first "Accept" button
+        fireEvent.click(acceptButtons[0]);
 
         await waitFor(() => {
             expect(authService.getAuthenticatedRequest).toHaveBeenCalled();
         });
 
         await waitFor(() => {
-            expect(screen.getByText('Jane Doe')).toBeInTheDocument(); // Jane Doe should now be in the friends list
+            expect(screen.getByText('Jane Doe')).toBeInTheDocument();
         });
     });
 
@@ -348,12 +348,12 @@ describe('FriendsContext', () => {
         const initialInvitations = [
             { id: 2, username: "jane_doe", name: "Jane Doe", image: "https://example.com/avatar2.png" },
         ];
-        const errorResponse = { status: 0 };  // Simulate failure (status: 0)
+        const errorResponse = { status: 0 };
         authService.getAuthenticatedRequest
-            .mockResolvedValueOnce(initialFriends) // Mock for /get_friends/
-            .mockResolvedValueOnce(initialInvitations) // Mock for /get_pending_friends/
-            .mockResolvedValueOnce([]) // Mock for /get_made_requests/
-            .mockResolvedValueOnce(errorResponse); // Mock for /accept_friend/2/
+            .mockResolvedValueOnce(initialFriends) 
+            .mockResolvedValueOnce(initialInvitations)
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce(errorResponse); 
         getDownloadURL.mockResolvedValue('https://example.com/avatar.png');
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
         render(
@@ -362,10 +362,10 @@ describe('FriendsContext', () => {
             </FriendsProvider>
         );
         await waitFor(() => {
-            expect(screen.getByText('Jane Doe')).toBeInTheDocument(); // Invitation should be there
+            expect(screen.getByText('Jane Doe')).toBeInTheDocument(); 
         });
         const acceptButtons = screen.getAllByText('Accept');
-        fireEvent.click(acceptButtons[0]);  // Click on the first accept button
+        fireEvent.click(acceptButtons[0]); 
         await waitFor(() => {
             expect(consoleErrorSpy).toHaveBeenCalledWith("Error accepting friend request");
         });
@@ -375,8 +375,8 @@ describe('FriendsContext', () => {
     test('should use default avatar if image fetch fails for friends', async () => {
         
         getDownloadURL
-            .mockRejectedValueOnce(new Error('Image not found')) // Simulate failure for the first invitation
-            .mockResolvedValueOnce('https://example.com/avatar2.png'); // Simulate success for the second invitation
+            .mockRejectedValueOnce(new Error('Image not found')) 
+            .mockResolvedValueOnce('https://example.com/avatar2.png'); 
 
         const initialInvitations = [
             { id: 1, username: 'john_doe', name: 'John Doe', image: 'https://example.com/avatar.png' },
@@ -384,9 +384,9 @@ describe('FriendsContext', () => {
         ];
 
         authService.getAuthenticatedRequest
-            .mockResolvedValueOnce([]) // Mock for /get_friends/
-            .mockResolvedValueOnce([]) // Mock for /get_pending_friends/
-            .mockResolvedValueOnce(initialInvitations); // Mock for /get_made_requests/
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce([]) 
+            .mockResolvedValueOnce(initialInvitations); 
 
         render(
             <FriendsProvider>
@@ -399,25 +399,25 @@ describe('FriendsContext', () => {
         });
 
         await waitFor(() => {
-            const images = screen.getAllByRole('img'); // Query by role='img'
-            expect(images[0]).toHaveAttribute('src', defaultAvatar); // Default avatar for the first invitation
-            expect(images[1]).toHaveAttribute('src', 'https://example.com/avatar2.png'); // Second invitation's avatar
+            const images = screen.getAllByRole('img');
+            expect(images[0]).toHaveAttribute('src', defaultAvatar);
+            expect(images[1]).toHaveAttribute('src', 'https://example.com/avatar2.png');
         });
     });
 
     test('should use default avatar if image fetch fails for invitations', async () => {
         
         getDownloadURL
-            .mockRejectedValueOnce(new Error('Image not found')) // Simulate failure for the first invitation
-            .mockResolvedValueOnce('https://example.com/avatar2.png'); // Simulate success for the second invitation
+            .mockRejectedValueOnce(new Error('Image not found')) 
+            .mockResolvedValueOnce('https://example.com/avatar2.png');
         const initialInvitations = [
             { id: 1, username: 'john_doe', name: 'John Doe' },
             { id: 2, username: 'jane_doe', name: 'Jane Doe' },
         ];
         authService.getAuthenticatedRequest
-            .mockResolvedValueOnce([]) // Mock for /get_friends/
-            .mockResolvedValueOnce(initialInvitations) // Mock for /get_pending_friends/
-            .mockResolvedValueOnce([]); // Mock for /get_made_requests/
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce(initialInvitations)
+            .mockResolvedValueOnce([]);
         render(
             <FriendsProvider>
                 <TestComponent />
@@ -427,9 +427,9 @@ describe('FriendsContext', () => {
             expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
         });
         await waitFor(() => {
-            const images = screen.getAllByRole('img'); // Query by role='img'
-            expect(images[0]).toHaveAttribute('src', defaultAvatar); // Default avatar for the first invitation
-            expect(images[1]).toHaveAttribute('src', 'https://example.com/avatar2.png'); // Second invitation's avatar
+            const images = screen.getAllByRole('img');
+            expect(images[0]).toHaveAttribute('src', defaultAvatar);
+            expect(images[1]).toHaveAttribute('src', 'https://example.com/avatar2.png');
         });
     });
 
@@ -463,7 +463,7 @@ describe('FriendsContext', () => {
             contextValue.onReject(2);
         });
         authService.getAuthenticatedRequest.mockImplementation((url) => {
-            if (url === "/get_friends/") return Promise.resolve(initialFriends.filter(f => f.id !== 2)); // Ensure Jane is removed
+            if (url === "/get_friends/") return Promise.resolve(initialFriends.filter(f => f.id !== 2));
             if (url === "/get_pending_friends/") return Promise.resolve([{ id: 2, username: "jane_doe", name: "Jane Doe", image: "https://example.com/avatar.png" }]);
             return Promise.resolve([]);
         });
@@ -526,16 +526,16 @@ describe('FriendsContext', () => {
         };
         
         getDownloadURL
-            .mockRejectedValueOnce(new Error('Image not found')) // Simulate failure for the first request
-            .mockResolvedValueOnce('https://example.com/avatar2.png'); // Simulate success for the second request
+            .mockRejectedValueOnce(new Error('Image not found'))
+            .mockResolvedValueOnce('https://example.com/avatar2.png');
         const initialRequests = [
             { id: 1, username: 'john_doe', name: 'John Doe' },
             { id: 2, username: 'jane_doe', name: 'Jane Doe' },
         ];
         authService.getAuthenticatedRequest
-            .mockResolvedValueOnce(initialRequests) // Mock for /get_friends/
-            .mockResolvedValueOnce([]) // Mock for /get_pending_friends/
-            .mockResolvedValueOnce([]); // Mock for /get_made_requests/
+            .mockResolvedValueOnce(initialRequests)
+            .mockResolvedValueOnce([])
+            .mockResolvedValueOnce([]);
         render(
             <FriendsProvider>
                 <TestComponent1 />
@@ -545,9 +545,9 @@ describe('FriendsContext', () => {
             expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
         });
         await waitFor(() => {
-            const images = screen.getAllByRole('img'); // Query by role='img'
-            expect(images[0]).toHaveAttribute('src', defaultAvatar); // Default avatar for the first request
-            expect(images[1]).toHaveAttribute('src', 'https://example.com/avatar2.png'); // Second request's avatar
+            const images = screen.getAllByRole('img');
+            expect(images[0]).toHaveAttribute('src', defaultAvatar);
+            expect(images[1]).toHaveAttribute('src', 'https://example.com/avatar2.png');
         });
     });
 
@@ -585,16 +585,6 @@ describe('FriendsContext', () => {
         act(() => {
             contextValue.onAccept(2, "create_friend_request", "POST");
         });
-
-        /*authService.getAuthenticatedRequest.mockImplementation((url) => {
-            if (url === "/get_friends/") return Promise.resolve([...mockFriends, mockRequests[0]]);
-            return Promise.resolve([]);
-        });
-
-        await waitFor(() => {
-            expect(contextValue.friends).toContainEqual(mockRequests[0]);
-            expect(contextValue.friendRequests).not.toContainEqual(mockRequests[0]);
-        });*/
     });
 
     test("reject an invitations request and update list", async () => {

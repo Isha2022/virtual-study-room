@@ -18,7 +18,7 @@ describe('TaskItem Component', () => {
     const renderTaskItem = (expanded = false, taskProps = task) => {
         render(
             <TaskItem
-                task={taskProps} // Use the custom task object if provided
+                task={taskProps} 
                 toggleTaskCompletion={toggleTaskCompletion}
                 handleDeleteTask={handleDeleteTask}
                 toggleTaskDetails={toggleTaskDetails}
@@ -38,7 +38,7 @@ describe('TaskItem Component', () => {
         const checkbox = screen.getByRole('checkbox', { name: /complete test task/i });
         expect(checkbox).toBeInTheDocument();
         expect(checkbox).not.toBeChecked();
-        expect(screen.getByRole('button', { name: /delete list/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /delete task/i })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /task details/i })).toBeInTheDocument();
     });
 
@@ -53,7 +53,7 @@ describe('TaskItem Component', () => {
     test('delete button calls handleDeleteTask with task ID', () => {
         renderTaskItem();
 
-        const deleteButton = screen.getByRole('button', { name: /delete list/i });
+        const deleteButton = screen.getByRole('button', { name: /delete task/i });
         fireEvent.click(deleteButton);
         expect(handleDeleteTask).toHaveBeenCalledWith(task.id);
     });
@@ -86,7 +86,7 @@ describe('TaskItem Component', () => {
             id: 1,
             title: 'Test Task',
             content: 'This is a test task description',
-            is_completed: true, // Mark the task as completed
+            is_completed: true,
         };
         renderTaskItem(false, completedTask);
         const taskTitle = screen.getByText(completedTask.title);

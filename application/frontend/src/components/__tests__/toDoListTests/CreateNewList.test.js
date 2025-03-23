@@ -11,13 +11,13 @@ describe("CreateNewList", () => {
     let setAddListWindowMock, setListsMock;
  
     beforeAll(() => {
-        global.alert = jest.fn(); // Mock window.alert
-        global.console.log = jest.fn(); // Mock window.alert
+        global.alert = jest.fn(); 
+        global.console.log = jest.fn();
     });
 
     afterAll(() => {
         global.alert.mockRestore();
-        global.console.log.mockRestore(); // Restore alert after tests
+        global.console.log.mockRestore();
     });
  
     beforeEach(() => {
@@ -51,7 +51,7 @@ describe("CreateNewList", () => {
         setup();
 
         expect(screen.getByText("Add List")).toBeInTheDocument();
-        expect(screen.getByPlaceholderText("Enter list name")).toBeInTheDocument(); // Correct placeholder text
+        expect(screen.getByPlaceholderText("Enter list name")).toBeInTheDocument();
     });
 
     test("does not render modal when addListWindow is false", () => {

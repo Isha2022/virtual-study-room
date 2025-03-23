@@ -12,13 +12,13 @@ describe("CreateNewTask", () => {
     let setAddTaskWindowMock, setListsMock;
  
     beforeAll(() => {
-        global.alert = jest.fn(); // Mock window.alert
-        global.console.log = jest.fn(); // Mock window.alert
+        global.alert = jest.fn();
+        global.console.log = jest.fn();
     });
 
     afterAll(() => {
         global.alert.mockRestore();
-        global.console.log.mockRestore(); // Restore alert after tests
+        global.console.log.mockRestore();
     }); 
 
     beforeEach(() => {
@@ -182,7 +182,7 @@ describe("CreateNewTask", () => {
                 setAddTaskWindow={setAddTaskWindowMock}
                 listId={1}
                 setLists={setListsMock}
-                isShared={true} // Set isShared to true
+                isShared={true}
             />
         );
         submitForm();
