@@ -9,8 +9,7 @@
     background-size: 20px 20px;
     border-radius: 40px;
     padding: 25px;
-    width: 450px;
-    height: 700px;
+    height: 110vh;
     min-width: 400px;
     min-height: 600px;
     margin: 1.5%;
@@ -506,7 +505,7 @@ button[aria-label="Add Task"]:hover::after {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 60vw;
     height: 100vh;
     z-index: 10000;
     padding: 80px 20px 20px;

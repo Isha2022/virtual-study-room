@@ -19,7 +19,7 @@
     width: 100vw; 
     flex-direction: column;
     position: relative;
-    overflow: hidden;
+    overflow: auto;
 }
 
 /* Shimmering water effect overlay */
@@ -103,10 +103,10 @@
     margin: 0;
     box-sizing: border-box;
     z-index: 1000;
-    border: 3px solid #f79cac !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
+    border: 3px solid #f79cac ;
+    display: flex ;
+    justify-content: space-between ;
+    align-items: center ;
     height: 80px;
     padding-left: 50px;
     padding-right: 50px;
@@ -126,8 +126,8 @@
 /* Main form container with matching border and corner radius to signup */
 .login-form {
     width: 480px;
-    border: 5px solid #f79cac !important; /* Match login title shadow color with signup thickness */
-    border-radius: 50px !important; /* Match signup border radius exactly */
+    border: 5px solid #f79cac ; /* Match login title shadow color with signup thickness */
+    border-radius: 50px ; /* Match signup border radius exactly */
     background: linear-gradient(135deg, #fff2e6 0%, #ffd6d1 40%, #fec5d1 70%, #fff6f2 100%);
     display: flex;
     flex-direction: column;
@@ -245,8 +245,8 @@
 /* Login button with more subtle shine effect for better readability */
 .login-submit-button {
   padding: 15px 20px;
-  width: 200px !important;
-  height: 50px !important;
+  width: 200px ;
+  height: 50px ;
   background-color: #f69c97;
   background-image: 
       radial-gradient(circle at center, rgba(254, 197, 209, 0.4) 15%, transparent 60%), /* reduced opacity from 0.7 to 0.4 */
@@ -257,11 +257,11 @@
   border-radius: 40px;
   cursor: pointer;
   text-align: center;
-  font-family: 'Inter', sans-serif !important;
-  font-weight: 700 !important;
-  font-size: 18px !important;
-  text-transform: uppercase !important;
-  letter-spacing: 1px !important;
+  font-family: 'Inter', sans-serif ;
+  font-weight: 700 ;
+  font-size: 18px ;
+  text-transform: uppercase ;
+  letter-spacing: 1px ;
   transition: all 0.2s ease;
   text-shadow: 
       0 1px 1px rgba(0, 0, 0, 0.4); /* simplified shadow for better readability */
@@ -270,12 +270,12 @@
       inset 0px -2px 4px rgba(246, 156, 151, 0.2),
       0 2px 8px rgba(246, 156, 151, 0.4);
   position: relative;
-  margin-top: 30px !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  padding: 0 20px !important;
-  line-height: 50px !important;
+  margin-top: 30px ;
+  display: flex ;
+  justify-content: center ;
+  align-items: center ;
+  padding: 0 20px ;
+  line-height: 50px ;
   z-index: 5;
   min-height: 50px;
 }

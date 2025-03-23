@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/Signup.css";
+import "../styles/Login.css";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
@@ -152,10 +153,10 @@ function Signup() {
   };
 
   return (
-    <div className="login-container">
+    <div className="signup-container">
       <ToastContainer position='top-center'/>
       <Link to="/">
-        <h1 className="heading1">The Study Spot</h1>
+        <h1 className="login-heading1">The Study Spot</h1>
       </Link>
       <form className="signup-form">
         <h1 className="heading2">Signup</h1>
