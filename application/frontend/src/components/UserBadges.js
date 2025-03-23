@@ -16,7 +16,7 @@ import badge8 from '../assets/badges/badge_8.png';  // Fire
 //List of all available badges
 const badges = [
   badge1, badge2, badge3, badge4,
-  badge5, badge6, badge7, badge8 
+  badge5, badge6, badge7, badge8
 ];
 
 const UserBadges = () => {
@@ -77,9 +77,9 @@ const UserBadges = () => {
             const isEarned = userBadges && isBadgeEarned(badgeIndex);
 
             return (
-              <div 
-                key={rowIndex * 4 + colIndex} 
-                style={{ 
+              <div
+                key={rowIndex * 4 + colIndex}
+                style={{
                   margin: '10px',
                   textAlign: 'center',
                   position: 'relative',
@@ -101,7 +101,7 @@ const UserBadges = () => {
                     transition: 'all 0.2s ease-in-out'
                   }}
                 />
-                <div style={{ 
+                <div style={{
                   fontSize: '14px',
                   fontWeight: isEarned ? 'bold' : 'normal',
                   color: isEarned ? '#000' : '#666'
@@ -109,8 +109,8 @@ const UserBadges = () => {
                   Badge {badgeIndex}
                 </div>
                 {isEarned && (
-                  <div style={{ 
-                    fontSize: '12px', 
+                  <div style={{
+                    fontSize: '12px',
                     color: '#666',
                     marginTop: '2px'
                   }}>
@@ -118,8 +118,8 @@ const UserBadges = () => {
                   </div>
                 )}
                 {!isEarned && (
-                  <div style={{ 
-                    fontSize: '12px', 
+                  <div style={{
+                    fontSize: '12px',
                     color: '#666',
                     marginTop: '2px'
                   }}>
