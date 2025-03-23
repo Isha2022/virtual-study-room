@@ -43,7 +43,7 @@ const StudyRoomComponent = () => {
   const joinRoom = async () => {
     try {
       console.log("Attempting to join room...");
-      
+
       // This stuff gets sent to the backend!
       const response = await getAuthenticatedRequest("/join-room/", "POST", {
         roomCode: roomCode, // Sends the room name to the backend
@@ -71,37 +71,37 @@ const StudyRoomComponent = () => {
       <h2>  Study Room </h2>
       <div>
         {!joined ? (
-            <div className="generate-panel">
-              <img src={generate} alt="Generate Room" className="generate-image" />
+          <div className="generate-panel">
+            <img src={generate} alt="Generate Room" className="generate-image" />
 
-              <div className="input-panel">
-                {/* To create a study room, text field to enter a room name ( NOT CODE, code is auto generated ) */}
-                <div className="input-group">
-                  <input
-                    type="text"
-                    placeholder="I want to study..."
-                    value={roomName}
-                    onChange={(e) => setRoomName(e.target.value)}
-                  />
-                  <button className="gsr" onClick={createRoom}>
-                    Create Room
-                  </button>
-                </div>
+            <div className="input-panel">
+              {/* To create a study room, text field to enter a room name ( NOT CODE, code is auto generated ) */}
+              <div className="input-group">
+                <input
+                  type="text"
+                  placeholder="I want to study..."
+                  value={roomName}
+                  onChange={(e) => setRoomName(e.target.value)}
+                />
+                <button className="gsr" onClick={createRoom}>
+                  Create Room
+                </button>
+              </div>
 
-                {/* For joining the room, there is also a text input for the room code"*/}
-                <div className="input-group">
-                  <input
-                    type="text"
-                    placeholder="Room Code... "
-                    value={roomCode}
-                    onChange={(e) => setRoomCode(e.target.value)}
-                  />
-                  <button className="gsr" onClick={joinRoom}>
-                    Join Room
-                  </button>
-                </div>
+              {/* For joining the room, there is also a text input for the room code"*/}
+              <div className="input-group">
+                <input
+                  type="text"
+                  placeholder="Room Code... "
+                  value={roomCode}
+                  onChange={(e) => setRoomCode(e.target.value)}
+                />
+                <button className="gsr" onClick={joinRoom}>
+                  Join Room
+                </button>
               </div>
             </div>
+          </div>
         ) : (
           <GroupStudyRoom roomCode={roomCode} />
         )}

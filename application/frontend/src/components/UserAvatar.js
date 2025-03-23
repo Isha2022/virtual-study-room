@@ -1,4 +1,5 @@
 import React from 'react';
+
 // Import avatar images from assets
 import avatar1 from '../assets/avatars/avatar_1.png';
 import avatar2 from '../assets/avatars/avatar_2.png';
@@ -10,11 +11,13 @@ import avatar7 from '../assets/avatars/avatar_7.png';
 import avatar8 from '../assets/avatars/avatar_8.png';
 
 const UserAvatar = ({ onSelect, currentAvatar }) => {
+  // Available user avatars
   const avatarUrls = [
     avatar1, avatar2, avatar3, avatar4,
     avatar5, avatar6, avatar7, avatar8,
   ];
 
+  // A const to handle avatar selection
   const handleSelect = (url) => {
     if (onSelect) {
       onSelect(url);
@@ -42,7 +45,8 @@ const UserAvatar = ({ onSelect, currentAvatar }) => {
                 height: '100px',
                 margin: '5px',
                 cursor: 'pointer',
-                border: url === currentAvatar ? '2px solid #f2bac9' : '1px solid #bad7f5'
+                border: url === currentAvatar ? '2px solid #f2bac9' : '1px solid #bad7f5',
+                borderRadius: '5%',
               }}
             />
           ))}
