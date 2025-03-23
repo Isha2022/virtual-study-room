@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from api.credentials import REDIRECT_URI, CLIENT_ID, CLIENT_SECRET
 from rest_framework.views import APIView
@@ -10,22 +10,20 @@ import re
 from api.models import SpotifyToken
 class AuthURL(APIView):
     def get(self, request, format=True):
-        room_code = request.GET.get('room_code') 
         scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
-        redirect_uri_with_room = f"{REDIRECT_URI}?room_code={room_code}"
+        state = room_code
         url = Request('GET', 'https://accounts.spotify.com/authorize', params={
             'scope': scopes,
             'response_type': 'code',
-            'redirect_uri': redirect_uri_with_room, 
             'redirect_uri': REDIRECT_URI,
-            'client_id': CLIENT_ID
+            'client_id': CLIENT_ID,
+            'state': state
         }).prepare().url
 
         return Response({'url': url}, status=status.HTTP_200_OK)
     
 def spotify_callback(request, format=None):
     code = request.GET.get('code')
-    room_code = request.GET.get('room_code')
 
     response = post('https://accounts.spotify.com/api/token', data={
         'grant_type': 'authorization_code',
@@ -48,7 +46,11 @@ def spotify_callback(request, format=None):
         request.session.session_key, access_token, token_type, expires_in, refresh_token
     )
 
-    return redirect(f"http://localhost:3000/login")
+    return HttpResponse("""
+    <script type="text/javascript">
+        window.close();
+    </script>
+    """, content_type="text/html")
     
 class IsAuthenticated(APIView):
     def get(self, request, format=None):

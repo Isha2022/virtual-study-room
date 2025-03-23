@@ -32,7 +32,7 @@ export default class SpotifyButton extends Component {
         clearInterval(this.interval);
     }
 
-    authenticateSpotify(roomCode) {
+    authenticateSpotify() {
 
         if (this.state.spotifyAuthenticated) {
             console.log("User is already authenticated.");
@@ -58,7 +58,7 @@ export default class SpotifyButton extends Component {
                         .then(data => {
                             console.log("Redirecting to Spotify login:", data.url);
                             // Using window.location.replace to ensure the history is replaced not to fall back to the same unauthenticated state
-                            window.location.replace(data.url);
+                            window.open(data.url);
                         });
                 }
             })

@@ -93,11 +93,7 @@ function GroupStudyPage() {
     }
   }, [socket]); // This effect runs whenever `socket` changes
 
-  const handleSpotifyAuth = () => {
-    const authUrl = `/api/auth-url?room_code=${finalRoomCode}`; // Pass roomCode to the backend
-    window.location.href = authUrl; // Redirect to the Spotify authorization URL
-};
-
+  
   useEffect(() => {
     // Ensure room code is given
     if (!finalRoomCode) {
@@ -457,7 +453,7 @@ function GroupStudyPage() {
                   <div style={{ textAlign: 'center' }}>Spotify Player</div>
                 </DialogTitle>
                 <DialogContent>
-                    <SpotifyButton roomCode={finalRoomCode} />
+                    <SpotifyButton />
                     <Button onClick={handleOpenMusicButton}>Switch to Free Tracks</Button>
                 </DialogContent>
             </Dialog>
