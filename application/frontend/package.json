@@ -102,6 +102,12 @@
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
     ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/src/firebase-config.js",
+      "/src/index.js",
+      "/src/reportWebVitals.js"
+    ],
     "setupFiles": [
       "react-app-polyfill/jsdom"
     ],
