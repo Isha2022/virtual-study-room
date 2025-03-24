@@ -137,7 +137,7 @@ function GroupStudyPage() {
       return; // Reuse the existing connection
     }
 
-    const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`); 
+    const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
     // const socket = new WebSocket("wss://studyspot.pythonanywhere.com/ws/room/room_code/");  // Production (deployed backend)
 
     //Logs when connection is established
@@ -310,7 +310,6 @@ function GroupStudyPage() {
 
   // Method to leave room
   const leaveRoom = useCallback(async () => {
-
     try {
       // Close the WebSocket connection if it exists
       if (socket) {
@@ -404,10 +403,6 @@ function GroupStudyPage() {
           toast.error("Failed to copy code!");
         });
     }
-  };
-
-  const handleExit = () => {
-    navigate("/dashboard");
   };
 
   let typingTimeout;
@@ -548,15 +543,17 @@ function GroupStudyPage() {
                 const isSameUserAsPrevious =
                   index > 0 && messages[index - 1].sender === msg.sender;
 
-                return  (
+                return (
                   <div
                     key={index}
                     className={`chat-message ${
                       msg.sender === username ? "current-user" : "other-user"
                     }`}
-                    style={{ 
+                    style={{
                       color: userColor,
-                      borderBottom: isSameUserAsPrevious ? "none" : "1px dotted #eee", // Conditionally apply border
+                      borderBottom: isSameUserAsPrevious
+                        ? "none"
+                        : "1px dotted #eee", // Conditionally apply border
                     }}
                   >
                     <strong>{msg.sender}:</strong> {msg.text}
@@ -573,14 +570,14 @@ function GroupStudyPage() {
             {/* Chat Input */}
             <div className="input-container">
               <input
-                  value={chatInput}
-                  onChange={(e) => {
-                    setChatInput(e.target.value);
-                    handleTyping();
-                  }}
-                  onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
-                  placeholder="Type a message..."
-                />
+                value={chatInput}
+                onChange={(e) => {
+                  setChatInput(e.target.value);
+                  handleTyping();
+                }}
+                onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
+                placeholder="Type a message..."
+              />
               <button onClick={sendMessage}>Send</button>
             </div>
           </div>

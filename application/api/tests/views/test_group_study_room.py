@@ -102,10 +102,11 @@ class GroupStudyRoomViewsTests(TestCase):
 
     def test_leave_room(self):
         """
-        Test leaving a study room.
+        Test leaving a study room successfully
         """
-        # Add the user to the room first
+        # Add two users to the room first
         self.study_session.participants.add(self.user)
+        self.study_session.participants.add(User.objects.get(username= "@bob456"))
         SessionUser.objects.create(user=self.user, session=self.study_session)
 
         data = {"roomCode": self.study_session.roomCode}
@@ -127,6 +128,38 @@ class GroupStudyRoomViewsTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.data["error"], "Room not found")
+
+    def test_leave_nonexistent_room(self):
+        self.study_session.participants.add(self.user)
+        response = self.client.post('/leave_room/', {'roomCode': 'NONEXISTENT'}, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_leave_room_unauthenticated(self):
+        self.study_session.participants.add(self.user)
+        response = self.client.post('/leave_room/', {'roomCode': self.study_session.roomCode}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_leave_room_destroy_when_empty(self):
+
+        self.study_session.participants.add(self.user)
+
+        SessionUser.objects.create(user=self.user, session=self.study_session)
+
+        data = {"roomCode": self.study_session.roomCode}
+        response = self.client.post("/api/leave-room/", data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["message"], "Left successfully!")
+        self.assertFalse(StudySession.objects.filter(roomCode=self.study_session.roomCode).exists())
+
+    def test_leave_room_not_in_session(self):
+        another_user =  User.objects.get(username='@bob456')
+        self.client.force_authenticate(user=another_user)
+        response = self.client.post('/leave_room/', {'roomCode': self.study_session.roomCode}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+   
 
 
     # def test_notify_participants(self):
