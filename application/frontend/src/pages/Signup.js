@@ -305,24 +305,22 @@ function Signup() {
           </div>
         </div>
 
-        <div className="terms-and-submit-row">
-          <div className="checkbox-container">
-            <input
-              type="checkbox"
-              name="acceptTerms"
-              id="acceptTerms"
-              checked={formData.acceptTerms}
-              onChange={handleChange}
-            />
-            <label htmlFor="acceptTerms" className="checkbox-label">
-              I accept the <a href="#">terms and conditions</a>
-            </label>
-          </div>
-          
-          <button type="button" className="submit-button" onClick={handleSignup}>
-            SIGNUP
-          </button>
+        <div className="checkbox-container">
+          <input
+            type="checkbox"
+            name="acceptTerms"
+            id="acceptTerms"
+            checked={formData.acceptTerms}
+            onChange={handleChange}
+          />
+          <label htmlFor="acceptTerms" className="checkbox-label">
+            I accept the <a href="#">terms and conditions</a>
+          </label>
         </div>
+
+        <button type="button" data-testid="signup-button-click" className="submit-button" onClick={handleSignup}>
+          SIGNUP
+        </button>
       </form>
     </div>
   );
