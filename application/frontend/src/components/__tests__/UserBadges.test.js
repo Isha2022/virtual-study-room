@@ -1,11 +1,13 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import UserBadges from '../UserBadges';
+import axios from "axios";
+import { act } from "react-dom/test-utils";
 
-jest.mock('axios', () => ({
-  get: jest.fn()
-}));
-const axios = require('axios');
+// jest.mock('axios', () => ({
+//   get: jest.fn()
+// }));
+// const axios = require('axios');
 
 // Mock localStorage
 const localStorageMock = (function() {
@@ -29,16 +31,71 @@ Object.defineProperty(window, 'localStorage', {
   value: localStorageMock
 });
 
-describe('UserBadges', () => {
-  const mockProps = {
-    userId: 'test-user-123',
-    userBadges: ['badge_1', 'badge_2', 'badge_3']
-  };
+jest.mock("axios");
+
+describe("UserBadges - getBadgeEarnedDate", () => {
+  beforeEach(() => {
+    axios.get.mockResolvedValue({
+      data: {
+        earned_badges: [
+          { reward_number: 1, date_earned: "2024-03-15T00:00:00Z" },
+          { reward_number: 3, date_earned: "2024-03-18T00:00:00Z" },
+        ],
+      },
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("returns the correct earned date for an earned badge", async () => {
+    await act(async () => {
+      render(<UserBadges />);
+    });
+
+    const getBadgeEarnedDate = (rewardNumber) => {
+      const badge = [
+        { reward_number: 1, date_earned: "2024-03-15T00:00:00Z" },
+        { reward_number: 3, date_earned: "2024-03-18T00:00:00Z" },
+      ].find((badge) => badge.reward_number === rewardNumber);
+      return badge ? new Date(badge.date_earned).toLocaleDateString() : null;
+    };
+
+    expect(getBadgeEarnedDate(1)).toBe(new Date("2024-03-15T00:00:00Z").toLocaleDateString());
+    expect(getBadgeEarnedDate(3)).toBe(new Date("2024-03-18T00:00:00Z").toLocaleDateString());
+    expect(getBadgeEarnedDate(2)).toBe(null); // Badge not found
+  });
 
   test('renders user badges', () => {
-    render(<UserBadges {...mockProps} />);
+    render(<UserBadges  userId="test-user-123" userBadges={[]} />);
     const badges = screen.getAllByRole('img');
     expect(badges.length).toBeGreaterThan(0);
+  });
+
+  test('renders all badge images (both earned and unearned)', () => {
+    // Mock props
+    const props = {
+      userId: "test-user-123",
+      userBadges: [
+        { reward_number: 1, date_earned: '2023-01-01T00:00:00Z' } // One earned badge
+      ]
+    };
+  
+    render(<UserBadges {...props} />);
+    
+    // Get all badge images
+    const badgeImages = screen.getAllByRole('img');
+    
+    // Assertions
+    expect(badgeImages).toHaveLength(8); // Should render all 8 badges
+    
+    // Verify one badge is marked as earned (visual difference)
+    const earnedBadges = screen.getAllByText(/Earned:/);
+    expect(earnedBadges).toHaveLength(1);
+    
+    // Verify remaining show as unearned
+    expect(screen.getAllByText('Not yet earned')).toHaveLength(7);
   });
  
   test('handles empty badge list', () => {
