@@ -18,15 +18,18 @@ The deployed version of the application can be found at [*virtual-study-room-phi
 
 
 ## Default Logins for Testing
-- _Alice Smith?_
+- _Alice Smith_
 	- Email: alice@exmaple.com
    	- Password: Password123
-- _Bob ?_
+- _Bob _
 	- Email: bob@exmaple.com
    	- Password: Password123
 - _John Doe_
 	- Email: john@exmaple.com
    	- Password: Password123
+- _Name Surname_
+  	- Email: name@exmaple.com
+  	- Password: Password123
 
 ## Project structure
 The project consists of the following components:
@@ -69,6 +72,7 @@ $ python3 manage.py runserver
 
 ### 6. Migrate the Database - make migrations as well?
 ```
+$ python3 manage.py makemigrations
 $ python3 manage.py migrate
 ```
 
