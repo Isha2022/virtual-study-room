@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import OneHour from '../assets/badges/badge_1.png';  // Trophy
+import FiveHours from '../assets/badges/badge_2.png';  // Star
+import FifteenHours from '../assets/badges/badge_3.png';  // Glowing star
+import ThirtyHours from '../assets/badges/badge_4.png';  // 1st place medal
+import FiftyHours from '../assets/badges/badge_5.png';  // 2nd place medal
+import SeventyFiveHours from '../assets/badges/badge_6.png';  // 3rd place medal
+import OneHundredHours from '../assets/badges/badge_7.png';  // Crown
+import OneHundredFiftyHours from '../assets/badges/badge_8.png';  // Fire
 
-// Import badge images
-import badge1 from '../assets/badges/badge_1.png';  // Trophy
-import badge2 from '../assets/badges/badge_2.png';  // Star
-import badge3 from '../assets/badges/badge_3.png';  // Glowing star
-import badge4 from '../assets/badges/badge_4.png';  // 1st place medal
-import badge5 from '../assets/badges/badge_5.png';  // 2nd place medal
-import badge6 from '../assets/badges/badge_6.png';  // 3rd place medal
-import badge7 from '../assets/badges/badge_7.png';  // Crown
-import badge8 from '../assets/badges/badge_8.png';  // Fire
+// UserBadges Component to display all badges for the users
 
-//UserBadges Component to display all badges for the users
-
-//List of all available badges
+// List of all available badges
 const badges = [
-  badge1, badge2, badge3, badge4,
-  badge5, badge6, badge7, badge8
+  OneHour, FiveHours, FifteenHours, ThirtyHours,
+  FiftyHours, SeventyFiveHours, OneHundredHours, OneHundredFiftyHours
 ];
 
 const UserBadges = () => {
@@ -51,7 +49,7 @@ const UserBadges = () => {
     fetchBadges();
   }, []); // Empty dependency array ensures this runs only once when the component mounts
 
-  // Used to organise badges into rows of 4 for disply
+  // Used to organise badges into rows of 4 for display
   const rows = [];
   for (let i = 0; i < badges.length; i += 4) {
     rows.push(badges.slice(i, i + 4));
@@ -66,6 +64,15 @@ const UserBadges = () => {
   const getBadgeEarnedDate = (rewardNumber) => {
     const badge = userBadges.find((badge) => badge.reward_number === rewardNumber);
     return badge ? new Date(badge.date_earned).toLocaleDateString() : null;
+  }
+
+  // Function to get the hour requirement for each badge
+  const getBadgeHours = (badgeIndex) => {
+    const hourRequirements = [
+      "1 Hour", "5 Hours", "15 Hours", "30 Hours",
+      "50 Hours", "75 Hours", "100 Hours", "150 Hours"
+    ];
+    return hourRequirements[badgeIndex - 1];
   }
 
   return (
@@ -91,7 +98,7 @@ const UserBadges = () => {
               >
                 <img
                   src={badgeUrl}
-                  alt={`Badge ${badgeIndex}`}
+                  alt={`Badge ${getBadgeHours(badgeIndex)}`}
                   style={{
                     width: '80px',
                     height: '80px',
@@ -106,7 +113,7 @@ const UserBadges = () => {
                   fontWeight: isEarned ? 'bold' : 'normal',
                   color: isEarned ? '#000' : '#666'
                 }}>
-                  Badge {badgeIndex}
+                  {getBadgeHours(badgeIndex)}
                 </div>
                 {isEarned && (
                   <div style={{
