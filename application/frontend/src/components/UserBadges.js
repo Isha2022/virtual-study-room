@@ -76,7 +76,7 @@ const UserBadges = () => {
   }
 
   return (
-    <div style={{ width: '500px' }}>
+    <div style={{ width: '500px' }} data-testid="user-badges-container" >
       {rows.map((row, rowIndex) => (
         <div key={rowIndex} style={{ display: 'flex' }}>
           {row.map((badgeUrl, colIndex) => {
