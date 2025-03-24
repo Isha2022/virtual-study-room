@@ -53,41 +53,29 @@ const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
     setAddListWindow(false);
   };
 
-  if (!addListWindow) return null;
-  return (
-    <div role="dialog" className="modal-overlay-new-list">
-      <div className="modal-content-new-list">
-        <h2>Add List</h2>
-        <div className="form-class-list">
-          <form onSubmit={handleSubmit}>
-            <div className="form-group-list">
-              <label>List Name:</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Enter list name"
-                required
-              />
+        if (!addListWindow) return null;
+        return (
+            <div role="dialog" className="modal-overlay add-list-modal">
+                <div className="modal-content">
+                    <h4>Add List</h4>
+                    <form onSubmit={handleSubmit}>
+                        <input
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            placeholder="Enter list title"
+                            required
+                        />
+
+                        <div>
+                            <button type="submit" className="btn btn-primary">Save</button>
+                            <button type="button" className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div className="button-group-list">
-              <button type="submit" className="btn-save-list">
-                Save
-              </button>
-              <button
-                type="button"
-                className="btn-cancel-list"
-                onClick={handleCancel}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
+        );
+    };
 
 export default AddListModal;

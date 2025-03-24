@@ -5,7 +5,7 @@
     position: fixed;
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #bac6f1 0%, #d1cbed 100%); 
+    background: linear-gradient(135deg, #bac6f1 0%, #d1cbed 100%);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     top: 0;
     left: 0;
@@ -13,9 +13,9 @@
     box-sizing: border-box;
     z-index: 1000;
     border: 3px solid #bac6f1;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
+    display: flex ;
+    justify-content: space-between ;
+    align-items: center ;
     height: 80px;
     padding-left: 50px;
     padding-right: 50px;
@@ -29,14 +29,14 @@
     margin: 0;
     line-height: 1.2;
     letter-spacing: 1px;
-    text-shadow: 
+    text-shadow:
         0 0 2px rgba(255, 255, 255, 0.8),
         0 0 8px rgba(186, 198, 241, 0.6),
         0 0 12px rgba(186, 198, 241, 0.4),
         0 1px 2px rgba(0, 0, 0, 0.3);
-    margin-left: 0 !important; 
-    margin-right: auto !important; 
-    order: 0 !important; 
+    margin-left: 0 ;
+    margin-right: auto ;
+    order: 0 ;
 }
 
 .gs-heading2 {
@@ -44,31 +44,31 @@
     font-size: 24px;
     font-weight: 400;
     color: white;
-    margin: 0 !important;
+    margin: 0 ;
     letter-spacing: 0.5px;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     position: relative;
     display: inline-block;
-    padding-bottom: 12px; 
-    margin-right: 10px !important;
-    margin: 0 !important;
+    padding-bottom: 12px;
+    margin-right: 10px ;
+    margin: 0 ;
     white-space: nowrap;
 }
 
 .gs-heading2::after {
     content: '';
     position: absolute;
-    bottom: 8px; 
+    bottom: 8px;
     left: 0;
     right: 0;
     height: 1px;
     background: linear-gradient(
-        to right, 
-        rgba(255, 255, 255, 0.7) 0%, 
-        rgba(255, 255, 255, 0.7) 42%, 
-        transparent 42%, 
-        transparent 58%, 
-        rgba(255, 255, 255, 0.7) 58%, 
+        to right,
+        rgba(255, 255, 255, 0.7) 0%,
+        rgba(255, 255, 255, 0.7) 42%,
+        transparent 42%,
+        transparent 58%,
+        rgba(255, 255, 255, 0.7) 58%,
         rgba(255, 255, 255, 0.7) 100%
     );
     box-shadow: 0 0 5px rgba(186, 198, 241, 0.5);
@@ -82,14 +82,14 @@
     transform: translateX(-50%) rotate(45deg);
     font-size: 16px;
     color: white;
-    text-shadow: 
+    text-shadow:
         0 0 3px white,
         0 0 5px rgba(186, 198, 241, 1),
         0 0 8px rgba(209, 203, 237, 1);
     z-index: 2;
 }
 
-.user-list-container h2, 
+.user-list-container h2,
 .user-list-container h3,
 .room-code-display:not(.gs-heading2) {
     display: none;
@@ -98,36 +98,56 @@
 .groupStudyRoom-container {
     margin: 0;
     display: flex;
-    flex-wrap: nowrap;
-    min-width: 1500px;
+    flex-wrap: nowrap; /* Prevent wrapping */
     width: 100%;
     height: 100vh;
-    background-color: #f8f7fa !important; 
+    background-color: #f8f7fa;
     box-sizing: border-box;
-    overflow-y: hidden !important;
-    overflow-x: visible !important;
-    padding-top: 100px; 
+    overflow-y: auto;
+    padding-top: 100px; /* Account for fixed header */
 }
 
-.column {
-    flex: 1;
+/* Left and right columns (fixed at 1/4 of the screen each) */
+.column:first-child,
+.column:last-child {
+    flex: 0 0 25%; /* Fixed width (1/4 of the screen) */
+    max-width: 25%; /* Ensure they don't exceed 1/4 of the screen */
     margin: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    max-height: calc(100vh - 120px); 
-    box-sizing: border-box;
-    margin-left: 0;
+    max-height: calc(100vh - 120px); /* Account for header */
 }
 
+/* Middle column (resizable) */
+.column:nth-child(2) {
+    flex: 1; /* Takes up remaining space */
+    min-width: 0; /* Allow shrinking below 50% if necessary */
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    max-height: calc(100vh - 120px); /* Account for header */
+}
+
+/* Constrain components inside columns */
+.column > * {
+    max-width: 100%; /* Ensure components don't exceed column width */
+}
+
+
+/* Standard container styling for different widgets */
 .todo-list-container, .sharedMaterials-container, .motivationMessage-container, .timer-container, .chatBox-container {
     width: 100%;
     padding: 20px;
     margin-bottom: 20px;
     background-color: #FFFFFF;
+    flex: 1;
 }
 
+/* To-do list widget base styling */
 .todo-list-container {
     display: flex;
     align-items: flex-start;
@@ -135,49 +155,54 @@
     flex-direction: column;
     height: 500px;
     max-height: 500px;
-    width: 320px;
+    flex-grow: 1;
     border-radius: 40px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     overflow-y: auto;
     background-color: #FFFFFF;
 }
 
+/* Hide scrollbar track */
 .todo-list-container::-webkit-scrollbar {
-    width: 10px; 
+    width: 10px;
 }
 
+/* Style scrollbar thumb */
 .todo-list-container::-webkit-scrollbar-thumb {
-    border-radius: 40px; 
-    opacity: 0; 
-    transition: opacity 0.2s; 
+    border-radius: 40px;
+    opacity: 0;
+    transition: opacity 0.2s;
 }
 
+/* Show scrollbar only on hover or when active */
 .todo-list-container:hover::-webkit-scrollbar-thumb,
 .todo-list-container:active::-webkit-scrollbar-thumb {
-    background-color: #96d8c8; 
+    background-color: #96d8c8;
 }
 
+/* Scrollbar thumb hover state */
 .todo-list-container::-webkit-scrollbar-thumb:hover {
-    background-color: #96d8c8; 
+    background-color: #96d8c8;
 }
 
+/* Section heading styling for all widgets */
 .todo-heading,
 .sharedMaterials-container h3,
 .sharedMaterials-heading,
 .todo-list-container h3,
 .section-heading {
     /* Match the study room header text font */
-    font-family: 'Orbitron', sans-serif !important;
-    font-size: 22px !important;
-    font-weight: 600 !important;
-    letter-spacing: 1px !important;
-    color: rgba(186, 198, 241, 0.95) !important;
-    
-    text-shadow: 
+    font-family: 'Orbitron', sans-serif ;
+    font-size: 22px ;
+    font-weight: 600 ;
+    letter-spacing: 1px ;
+    color: rgba(186, 198, 241, 0.95) ;
+
+    text-shadow:
         0 0 1px rgba(255, 255, 255, 0.7),
         0 0 4px rgba(186, 198, 241, 0.5),
-        0 0 8px rgba(186, 198, 241, 0.3) !important;
-        
+        0 0 8px rgba(186, 198, 241, 0.3) ;
+
     width: 100%;
     margin-bottom: 10px;
     display: flex;
@@ -185,6 +210,7 @@
     justify-content: flex-start;
 }
 
+/* Icon spacing in headings */
 .todo-heading i,
 .sharedMaterials-container h3 i,
 .sharedMaterials-heading i,
@@ -193,12 +219,13 @@
     margin-right: 8px;
 }
 
+/* Individual task item styling */
 .todo-item {
     display: flex;
-    align-items: center; 
+    align-items: center;
     justify-content: space-between;
     width: 100%;
-    min-height: 60px; 
+    min-height: 60px;
     margin: 10px 0;
     background: linear-gradient(135deg, #b0adfc 0%, #e6fdfe 50%, #c4d7fe 100%);
     border-radius: 40px;
@@ -209,18 +236,21 @@
     border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
+/* Remove pseudo-element */
 .todo-item::before {
     content: none;
 }
 
+/* Checkbox container spacing */
 .checkbox-wrapper-28 {
     display: flex;
-    align-items: center; 
+    align-items: center;
     flex: 1;
     min-width: 0;
     padding-left: 15px;
 }
 
+/* Custom checkbox appearance */
 .checkbox {
     appearance: none;
     -webkit-appearance: none;
@@ -231,19 +261,21 @@
     border-radius: 5px;
     position: relative;
     cursor: pointer;
-    margin-right: 10px; /* Reduced gap between checkbox and text */
+    margin-right: 10px; /* Space between checkbox and text */
     flex-shrink: 0;
     margin-top: 0; /* Remove top margin */
 }
 
+/* Checked state background */
 .checkbox:checked {
     background-color: #FFFFFF;
     border: 2px solid white;
 }
 
+/* Checkbox checkmark */
 .checkbox:checked::after {
-    content: '✔'; /* Unicode character for check mark */
-    font-size: 16px; /* Adjust size to fit inside the checkbox */
+    content: '✔'; /* Checkmark symbol */
+    font-size: 16px; /* Size for checkmark */
     position: absolute;
     top: 50%;
     left: 50%;
@@ -251,27 +283,30 @@
     color:  #BAF2E9;
 }
 
+/* Task text styling */
 .todo-label {
-    font-family: 'Inter', sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 900 !important;
-    color: #F0F3FC !important;
+    font-family: 'Inter', sans-serif ;
+    font-size: 14px ;
+    font-weight: 900 ;
+    color: #F0F3FC ;
     cursor: pointer;
-    letter-spacing: 0.5px !important;
-    text-transform: uppercase !important;
-    white-space: normal !important; 
-    word-break: break-word !important; 
+    letter-spacing: 0.5px ;
+    text-transform: uppercase ;
+    white-space: normal ;
+    word-break: break-word ;
     flex: 1;
     padding-right: 10px;
-    line-height: 1.3 !important;
-    overflow: visible !important; 
+    line-height: 1.3 ;
+    overflow: visible ;
 }
 
+/* Completed task styling */
 .checkbox:checked + .todo-label {
     text-decoration: line-through;
-    opacity: 0.7; 
+    opacity: 0.7;
 }
 
+/* Delete task button */
 .delete-button {
     margin-right: 15px;
     font-size: 20px;
@@ -294,11 +329,13 @@
     margin-top: 0;
 }
 
+/* Delete button hover effect */
 .delete-button:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 12px rgba(0,0,0,0.3);
 }
 
+/* Toggle checkbox container */
 .checkbox-wrapper-5{
     display: flex;
     justify-content: flex-end;
@@ -306,6 +343,7 @@
     margin-left: 10px;
 }
 
+/* Toggle switch base styling */
 .checkbox-wrapper-5 .check {
     --size: 40px;
     position: relative;
@@ -313,13 +351,14 @@
     line-height: 0;
     perspective: 400px;
     font-size: var(--size);
-  }
+}
 
-  .checkbox-wrapper-5 .check input[type="checkbox"],
-  .checkbox-wrapper-5 .check label,
-  .checkbox-wrapper-5 .check label::before,
-  .checkbox-wrapper-5 .check label::after,
-  .checkbox-wrapper-5 .check {
+/* Common styling for toggle switch parts */
+.checkbox-wrapper-5 .check input[type="checkbox"],
+.checkbox-wrapper-5 .check label,
+.checkbox-wrapper-5 .check label::before,
+.checkbox-wrapper-5 .check label::after,
+.checkbox-wrapper-5 .check {
     appearance: none;
     display: inline-block;
     border-radius: var(--size);
@@ -327,16 +366,18 @@
     transition: .35s ease-in-out;
     box-sizing: border-box;
     cursor: pointer;
-  }
+}
 
-  .checkbox-wrapper-5 .check label {
+/* Toggle track styling */
+.checkbox-wrapper-5 .check label {
     width: calc(2.2 * var(--size));
     height: var(--size);
     background: #d7d7d7;
     overflow: hidden;
-  }
+}
 
-  .checkbox-wrapper-5 .check input[type="checkbox"] {
+/* Toggle knob styling */
+.checkbox-wrapper-5 .check input[type="checkbox"] {
     position: absolute;
     z-index: 1;
     width: calc(.8 * var(--size));
@@ -347,18 +388,21 @@
     box-shadow: 0 6px 7px rgba(0,0,0,0.3);
     outline: none;
     margin: 0;
-  }
+}
 
-  .checkbox-wrapper-5 .check input[type="checkbox"]:checked {
+/* Checked position for toggle knob */
+.checkbox-wrapper-5 .check input[type="checkbox"]:checked {
     left: calc(1.3 * var(--size));
-  }
+}
 
-  .checkbox-wrapper-5 .check input[type="checkbox"]:checked + label {
+/* Checked state for toggle track */
+.checkbox-wrapper-5 .check input[type="checkbox"]:checked + label {
     background: transparent;
-  }
+}
 
-  .checkbox-wrapper-5 .check label::before,
-  .checkbox-wrapper-5 .check label::after {
+/* Dots on toggle track */
+.checkbox-wrapper-5 .check label::before,
+.checkbox-wrapper-5 .check label::after {
     content: "· ·";
     position: absolute;
     overflow: hidden;
@@ -374,9 +418,10 @@
     border-radius: 0;
     transform-origin: 0 0 calc(-0.5 * var(--size));
     backface-visibility: hidden;
-  }
+}
 
-  .checkbox-wrapper-5 .check label::after {
+/* Additional toggle track decoration */
+.checkbox-wrapper-5 .check label::after {
     content: "●";
     top: calc(.65 * var(--size));
     left: calc(.2 * var(--size));
@@ -384,32 +429,35 @@
     width: calc(.35 * var(--size));
     font-size: calc(.2 * var(--size));
     transform-origin: 0 0 calc(-0.4 * var(--size));
-  }
+}
 
-  .checkbox-wrapper-5 .check input[type="checkbox"]:checked + label::before,
-  .checkbox-wrapper-5 .check input[type="checkbox"]:checked + label::after {
+/* Transform for toggle track elements when checked */
+.checkbox-wrapper-5 .check input[type="checkbox"]:checked + label::before,
+.checkbox-wrapper-5 .check input[type="checkbox"]:checked + label::after {
     left: calc(1.55 * var(--size));
     top: calc(.4 * var(--size));
     line-height: calc(.1 * var(--size));
     transform: rotateY(360deg);
-  }
+}
 
-  .checkbox-wrapper-5 .check input[type="checkbox"]:checked + label::after {
+/* Additional transforms for checked state */
+.checkbox-wrapper-5 .check input[type="checkbox"]:checked + label::after {
     height: calc(.16 * var(--size));
     top: calc(.55 * var(--size));
     left: calc(1.6 * var(--size));
     font-size: calc(.6 * var(--size));
     line-height: 0;
-  }
+}
 
+/* Add task button styling */
 .add-more-button {
     min-width: 0;
     margin: 10px auto;
     display: block;
     padding: 15px 40px;
-    font-size: 16px !important;
-    font-family: 'Press Start 2P', monospace !important;
-    font-weight: 400 !important;
+    font-size: 16px ;
+    font-family: 'Press Start 2P', monospace ;
+    font-weight: 400 ;
     color: #FFFFFF;
     background: linear-gradient(to right, #b0adfc 0%, #e6fdfe 50%, #c4d7fe 100%);
     border: none;
@@ -418,19 +466,22 @@
     outline: none;
     box-shadow: none;
     transition: transform 0.1s;
-    letter-spacing: 0px !important;
-    line-height: 1.2 !important;
+    letter-spacing: 0px ;
+    line-height: 1.2 ;
 }
 
+/* Remove default pseudo-element */
 .add-more-button::after {
     content: none;
 }
 
-.add-more-button.active { /*changing the button's appearance when being clicked on*/
+/* Add button clicked state */
+.add-more-button.active {
     transform: scale(0.95);
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
+/* Shared materials container dimensions */
 .sharedMaterials-container{
     height: 277px;
     width: 320px;
@@ -440,6 +491,7 @@
     margin-bottom: 10%;
 }
 
+/* User list container grid layout */
 .user-list-container{
     display: grid;
     grid-template-areas:
@@ -447,29 +499,32 @@
         "code"
         "users";
     grid-template-rows: auto auto 1fr;
-    height: 690px;
-    width: 600px;
+    height: 60vh;
+    width: 40hw;
     align-items: start;
 }
 
+/* Main utility bar at the top */
 .utility-bar {
     display: flex;
     align-items: center;
     gap: 20px;
-    position: static !important;
+    position: static ;
     z-index: 1001;
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    margin-right: 25px !important;
+    background-color: transparent ;
+    border: none ;
+    box-shadow: none ;
+    margin-right: 25px ;
 }
 
+/* Secondary utility bar styling */
 .utility-bar-2 {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+    background-color: transparent ;
+    border: none ;
+    box-shadow: none ;
 }
 
+/* Grid area for displaying participant thumbnails */
 .users {
     display: flex;
     flex-wrap: wrap;
@@ -480,6 +535,7 @@
     gap: 5px;
 }
 
+/* Individual user container with image and name */
 .user-circle {
     display: flex;
     flex-direction: column;
@@ -490,6 +546,7 @@
     text-align: center;
 }
 
+/* Circular container for user profile image or initial */
 .user-image {
     width: 100px;
     height: 100px;
@@ -503,6 +560,7 @@
     font-weight: bold;
 }
 
+/* User name display below profile picture */
 .user-name {
     margin-top: 8px;
     font-size: 16px;
@@ -510,34 +568,38 @@
     font-weight: 500;
 }
 
+/* Container for motivation message with fixed width */
 .motivationMessage-container {
     width: 600px;
     margin-bottom: 10%;
 }
 
+/* Fixed position timer widget */
 .timer-container{
-    position: fixed !important;
-    top: 85px !important;
-    right: 20px !important;
-    z-index: 9999 !important;
-    width: 320px !important;
-    height: 500px !important;
-    border-radius: 40px !important;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
-    background-color: #FFFFFF !important;
+    position: fixed ;
+    top: 85px ;
+    right: 20px ;
+    z-index: 9999 ;
+    width: 320px ;
+    height: 500px ;
+    border-radius: 40px ;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1) ;
+    background-color: #FFFFFF ;
 }
 
+/* Reset positioning for timer container children */
 .timer-container * {
-    position: relative !important; 
-    left: auto !important; 
-    right: auto !important;
-    top: auto !important;
-    bottom: auto !important;
-    margin: initial !important;
-    padding: initial !important; 
-    transform: none !important; 
+    position: relative ;
+    left: auto ;
+    right: auto ;
+    top: auto ;
+    bottom: auto ;
+    margin: initial ;
+    padding: initial ;
+    transform: none ;
 }
 
+/* Chat box styling */
 .chatBox-container{
     margin: auto;
     height: 300px;
@@ -547,72 +609,85 @@
     margin-bottom: 10%;
 }
 
-.music-button, 
+/* Common styles for utility buttons */
+.music-button,
 .customisation-button,
 .copy-button,
 .exit-button {
-    position: static !important;
+    position: static ;
     width: 30px;
     height: 30px;
-    background-color: transparent !important;
+    background-color: transparent ;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: none !important;
-    box-shadow: none !important;
+    border: none ;
+    box-shadow: none ;
     padding: 0;
-    margin: 0 !important;
+    margin: 0 ;
     transition: transform 0.2s ease;
 }
 
+/* Position for music button */
 .music-button {
-    right: 260px !important; 
+    right: 260px ;
 }
 
+/* Position for customization button */
 .customisation-button {
-    right: 310px !important;
+    right: 310px ;
 }
 
+/* Position for copy link button */
 .copy-button {
-    right: 360px !important; 
+    right: 360px ;
 }
 
+/* Position for exit room button */
 .exit-button {
-    right: 410px !important; 
+    right: 410px ;
 }
 
-.gs-heading2, 
+/* Right margin for heading and room code */
+.gs-heading2,
 .room-code-display {
-    margin-right: 10px !important;
+    margin-right: 10px ;
 }
 
-.music-button.active { 
+/* Active state for music button */
+.music-button.active {
     transform: scale(0.9);
 }
 
-.customisation-button.active { 
+/* Active state for customization button */
+.customisation-button.active {
     transform: scale(0.9);
 }
 
-.copy-button.active { 
+/* Active state for copy link button */
+.copy-button.active {
     transform: scale(0.9);
 }
 
-.exit-button.active { 
+/* Active state for exit button */
+.exit-button.active {
     transform: scale(0.9);
 }
 
+/* Hover effect for utility buttons */
 .music-button:hover, .customisation-button:hover, .copy-button:hover, .exit-button:hover {
     transform: scale(1.15);
 }
 
-.music-button:hover img, 
+/* Hover effect for button icons - makes them brighter */
+.music-button:hover img,
 .customisation-button:hover img,
 .copy-button:hover img,
 .exit-button:hover img {
     filter: brightness(0) invert(1) drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
 }
 
+/* Common image styling for utility buttons */
 .exit-button img,  .copy-button img, .customisation-button img, .music-button img{
     max-width: none;
     width: 28px;
@@ -622,8 +697,9 @@
     opacity: 0.85;
 }
 
+/* Tooltip for music button */
 .music-button::after {
-    content: "Play Music"; 
+    content: "Play Music";
     visibility: hidden;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
@@ -644,9 +720,9 @@
     transition: opacity 0.2s ease-in-out;
 }
 
-/* Tooltip styling using ::after */
+/* Tooltip for customization button */
 .customisation-button::after {
-    content: "Customise";  /* The tooltip text */
+    content: "Customise";
     visibility: hidden;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
@@ -667,9 +743,9 @@
     transition: opacity 0.2s ease-in-out;
 }
 
-/* Tooltip styling using ::after */
+/* Tooltip for copy link button */
 .copy-button::after {
-    content: "Copy Code";  /* The tooltip text */
+    content: "Copy Code";
     visibility: hidden;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
@@ -690,8 +766,9 @@
     transition: opacity 0.2s ease-in-out;
 }
 
+/* Tooltip for exit button */
 .exit-button::after {
-    content: "Exit";  /* The tooltip text */
+    content: "Exit";
     visibility: hidden;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
@@ -712,28 +789,28 @@
     transition: opacity 0.2s ease-in-out;
 }
 
-
-/* Show tooltip when hovering */
+/* Show tooltips on hover */
 .music-button:hover::after, .customisation-button:hover::after, .copy-button:hover::after, .exit-button:hover::after{
     visibility: visible;
     opacity: 1;
 }
 
+/* Top navigation bar with fixed position */
 .dashboard-heading {
     position: fixed;
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #bad7f2 0%, #d1cbed 100%); 
+    background: linear-gradient(135deg, #bad7f2 0%, #d1cbed 100%);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     top: 0;
     left: 0;
     margin: 0;
     box-sizing: border-box;
     z-index: 1000;
-    border: 3px solid #cfc9f5; 
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
+    border: 3px solid #cfc9f5;
+    display: flex ;
+    justify-content: space-between ;
+    align-items: center ;
     height: 80px;
     padding-left: 50px;
     padding-right: 50px;
@@ -743,93 +820,64 @@
     font-size: 32px;
     font-weight: 600;
     letter-spacing: 1px;
-    text-shadow: 
+    text-shadow:
         0 0 2px rgba(255, 255, 255, 0.8),
         0 0 8px rgba(236, 213, 229, 0.6),
         0 0 12px rgba(236, 213, 229, 0.4),
         0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Fix extra space in html/body */
-html, body {
-    margin: 0;
-    padding: 0;
+
+/* Make root container fill the viewport but allow vertical scroll */
+#groupStudyPage {
     height: 100%;
-    overflow-y: hidden; /* Prevent vertical scrolling */
-    overflow-x: auto; /* Allow horizontal scrolling */
-    width: auto !important; /* Ensure width isn't constrained */
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-/* Make app container exactly fill viewport but allow horizontal scrolling */
-#root {
-    height: 100%;
-    overflow-y: hidden;
-    overflow-x: auto;
-}
 
-.app-container {
-    height: 100%;
-    overflow-y: hidden;
-    overflow-x: auto;
-}
-
-html, body, #root, .groupStudyRoom-container {
-    overflow-y: hidden !important; 
-    overflow-x: auto !important; /* Allow horizontal scrolling */
-}
-
-.app, #app, main, .main-container, .app-container {
-    overflow-y: hidden !important;
-    overflow-x: auto !important; /* Allow horizontal scrolling */
-}
-
-/* Force scrollbar to always show for better UX */
+/* Show horizontal scrollbar for better usability */
 body::-webkit-scrollbar {
     height: 12px;
     display: block;
 }
 
+/* Style the scrollbar thumb */
 body::-webkit-scrollbar-thumb {
     background-color: #96d8c8;
     border-radius: 6px;
 }
 
-/* Make sure all parent containers allow scrolling */
-#root, .app, #app, main, .main-container, .app-container {
-    height: 100%;
-    overflow-y: hidden !important;
-    overflow-x: auto !important;
-    min-width: fit-content !important; /* Ensures all content is accounted for */
-    width: auto !important;
-}
 
-/* Add these new styles to fix the header layout */
+
+/* Right section of header with controls */
 .header-right-section {
     display: flex;
     align-items: center;
     gap: 25px;
 }
 
+/* Transparent styling for header elements */
 .header-right-section,
 .header-right-section > * {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+    background-color: transparent ;
+    border: none ;
+    box-shadow: none ;
 }
 
-/* Make button icons larger and more visible */
-.music-button img, 
+/* Button icon sizing and visibility */
+.music-button img,
 .customisation-button img,
 .copy-button img,
 .exit-button img {
     width: 24px;
     height: 24px;
-    filter: brightness(0) invert(1); /* Make icons white for better visibility */
+    filter: brightness(0) invert(1); /* White icons for visibility */
     display: block;
 }
 
-/* Button hover effect */
-.music-button:hover, 
+/* Hover effect with scaling and background */
+.music-button:hover,
 .customisation-button:hover,
 .copy-button:hover,
 .exit-button:hover {
@@ -837,8 +885,8 @@ body::-webkit-scrollbar-thumb {
     background-color: #9aabf0;
 }
 
-/* Active state for buttons */
-.music-button.active, 
+/* Pressed state for buttons */
+.music-button.active,
 .customisation-button.active,
 .copy-button.active,
 .exit-button.active {
@@ -846,7 +894,8 @@ body::-webkit-scrollbar-thumb {
     background-color: #8796da;
 }
 
+/* Prevent heading text wrapping */
 .gs-heading2 {
-    margin: 0 !important;
+    margin: 0 ;
     white-space: nowrap;
 }

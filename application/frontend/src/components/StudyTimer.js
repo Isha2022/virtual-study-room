@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'tailwindcss';
 import '@fontsource/vt323';
 import '@fontsource/press-start-2p';
+import blueberryImg from '../assets/blueberry.jpeg';
 
 // Study Timer in the Group Study Room
 const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
@@ -213,6 +214,9 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     }
   `;
 
+  // a CSS class for minimised state
+  const timerWrapperClass = isMinimized ? "study-timer-wrapper minimized" : "study-timer-wrapper";
+
   return (
     <div className="study-timer-container">
       <style>
@@ -220,89 +224,123 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
           ${errorMessageAnimation}
           
           .study-timer-container {
-            width: 100% !important;
-            height: 100% !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
+            width: 100% ;
+            height: 100% ;
+            display: flex ;
+            justify-content: center ;
+            align-items: center ;
           }
           
           .study-timer-wrapper {
-            background-color: #F0F3FC !important;
-            border: 4px solid #E2E8FF !important;
-            padding: 20px !important;
-            border-radius: 30px !important;
-            box-shadow: 0 0 10px #E2E8FF, inset 0 0 10px #E2E8FF, 0 0 20px rgba(226, 232, 255, 0.4), 0 0 30px rgba(186, 198, 241, 0.2) !important;
-            filter: blur(0.3px) !important;
-            outline: 4px solid rgba(186, 198, 241, 0.3) !important;
-            outline-offset: 4px !important;
-            -webkit-filter: drop-shadow(0 0 40px rgba(186, 198, 241, 0.4)) !important;
-            z-index: 1000 !important;
-            width: 315px !important;
-            height: 370px !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            margin: 0 auto !important;
+            background-color: #F0F3FC ;
+            border: 4px solid #E2E8FF ;
+            padding: 20px ;
+            border-radius: 30px ;
+            box-shadow: 0 0 10px #E2E8FF, inset 0 0 10px #E2E8FF, 0 0 20px rgba(226, 232, 255, 0.4), 0 0 30px rgba(186, 198, 241, 0.2) ;
+            filter: blur(0.3px) ;
+            outline: 4px solid rgba(186, 198, 241, 0.3) ;
+            outline-offset: 4px ;
+            -webkit-filter: drop-shadow(0 0 40px rgba(186, 198, 241, 0.4)) ;
+            z-index: 900 ;
+            width: 315px ;
+            height: 370px ;
+            display: flex ;
+            flex-direction: column ;
+            align-items: center ;
+            margin: 0 auto ;
+            overflow: hidden ; /* Prevent content from spilling out */
+            transition: all 0.3s ease ;
+          }
+          
+          /* Minimized state styles */
+          .study-timer-wrapper.minimized {
+            height: 50px ;
+            width: 250px ;
+            padding: 10px ;
+            transform: translateY(-10px) ;
+            cursor: pointer ;
+          }
+          
+          /* Hide content in minimized state except for the mini-header */
+          .study-timer-wrapper.minimized .timer-content {
+            display: none ;
+          }
+          
+          /* Mini header for minimized state */
+          .mini-header {
+            display: none ;
+            width: 100% ;
+            text-align: center ;
+            color: #bac6f1 ;
+            font-family: "Press Start 2P", monospace ;
+            font-size: 14px ;
+            white-space: nowrap ;
+          }
+          
+          .study-timer-wrapper.minimized .mini-header {
+            display: flex ;
+            align-items: center ;
+            justify-content: center ;
+            height: 100% ;
           }
 
           .study-timer-wrapper .vt323 {
-            font-family: "VT323", monospace !important;
+            font-family: "VT323", monospace ;
           }
 
           .study-timer-wrapper .press-start {
-            font-family: "Press Start 2P", monospace !important;
+            font-family: "Press Start 2P", monospace ;
           }
 
           .study-timer-wrapper input[type="number"] {
-            width: 3rem !important;
-            height: 2.5rem !important;
-            text-align: center !important;
-            border: 2px solid #d1cbed !important;
-            border-radius: 8px !important;
-            background-color: transparent !important;
-            color: #b2b2b2 !important;
-            font-family: "Press Start 2P", monospace !important;
-            font-size: 0.875rem !important;
-            margin: 0 0.5rem !important;
-            outline: none !important;
+            width: 3rem ;
+            height: 2.5rem ;
+            text-align: center ;
+            border: 2px solid #d1cbed ;
+            border-radius: 8px ;
+            background-color: transparent ;
+            color: #b2b2b2 ;
+            font-family: "Press Start 2P", monospace ;
+            font-size: 0.875rem ;
+            margin: 0 0.5rem ;
+            outline: none ;
           }
 
           .study-timer-wrapper input[type="number"]:focus {
-            border-color: #bac6f1 !important;
+            border-color: #bac6f1 ;
           }
 
           .study-timer-wrapper .input-label {
-            font-family: "VT323", monospace !important;
-            color: #d1cbed !important;
+            font-family: "VT323", monospace ;
+            color: #d1cbed ;
           }
 
           .study-timer-wrapper .start-timer-button {
-            font-family: "Press Start 2P", monospace !important;
-            background-color: #d1cbed !important;
-            color: white !important;
-            width: 80% !important;
-            padding: 0.5rem !important;
-            border-radius: 0.5rem !important;
-            font-size: 0.875rem !important;
-            margin-top: 1rem !important;
-            text-align: center !important;
-            transition: background-color 0.3s, transform 0.3s !important;
+            font-family: "Press Start 2P", monospace ;
+            background-color: #d1cbed ;
+            color: white ;
+            width: 80% ;
+            padding: 0.5rem ;
+            border-radius: 0.5rem ;
+            font-size: 0.875rem ;
+            margin-top: 1rem ;
+            text-align: center ;
+            transition: background-color 0.3s, transform 0.3s ;
           }
 
           .study-timer-wrapper .start-timer-button:hover {
-            background-color: #8e99e3 !important;
-            transform: scale(1.05) !important;
+            background-color: #8e99e3 ;
+            transform: scale(1.05) ;
           }
 
           .study-timer-wrapper .timer-title {
-            font-family: "VT323", monospace !important;
-            color: #b2b2b2 !important;
+            font-family: "VT323", monospace ;
+            color: #b2b2b2 ;
           }
 
           .study-timer-wrapper .timer-subtitle {
-            font-family: "Press Start 2P", monospace !important;
-            color: #bac6f1 !important;
+            font-family: "Press Start 2P", monospace ;
+            color: #bac6f1 ;
           }
         `}
       </style>
@@ -336,20 +374,42 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
           </span>
         </div>
       )}
-
-      {/* Timer UI */}
-      <div className="study-timer-wrapper">
+      
+      <div className={timerWrapperClass} onClick={isMinimized ? handleRestore : null}>
+        {/* Mini header for minimized state */}
+        <div className="mini-header">
+          {isRunning ? 
+            `${isBreak ? 'Break' : 'Focus'} - ${formatTime(timeLeft)}` : 
+            'Study Timer'}
+        </div>
+        
         <div className="timer-content">
           {currentPage === 'completed' ? (
             <div className="p-4 w-80 flex flex-col bg-[#F0F3FC] timer-handle" style={{ height: "350px", position: "relative" }}>
-              <div className="text-2xl mt-8 text-center" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+              <div className="mt-8 text-center" style={{ 
+                color: '#bac6f1', 
+                fontFamily: '"Press Start 2P", monospace',
+                fontSize: '15px'
+              }}>
                 Well done!
                 <br />
                 Here, have a blueberry
               </div>
-
-              <div style={{
-                position: "absolute",
+              
+              <img 
+                src={blueberryImg} 
+                alt="Blueberry"
+                style={{
+                  display: 'block',
+                  width: '160px',
+                  margin: '20px auto 15px auto',
+                  background: 'none',
+                  backgroundColor: 'transparent'
+                }}
+              />
+              
+              <div style={{ 
+                position: "absolute", 
                 bottom: "10px",
                 left: "0",
                 width: "100%",
