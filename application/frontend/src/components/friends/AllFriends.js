@@ -3,14 +3,18 @@ import { FriendsContext } from "./FriendsContext";
 import "../../styles/friends/Friends.css";
 import  FriendsProfile from "./FriendsProfile";
 
+// Component to display the list of all friends
 const AllFriends = () => {
     const { onReject, friends, loading } = useContext(FriendsContext);
 
+    // States for handling the modal window and selected user for profile viewing
     const [addUserWindow, setAddUserWindow] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
+    // If data is loading, show a loading message
     if (loading) return <div className="loading">Loading Friends List...</div>;
 
+    // Function to handle opening a friend's profile modal
     const handleOpenProfile = (listId) => {
         setSelectedUser(listId);
         setAddUserWindow(true);

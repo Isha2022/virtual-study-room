@@ -1,5 +1,6 @@
 import React from 'react';
 
+// TaskItem component displays an individual task with its details
 const TaskItem = ({ task, toggleTaskCompletion, handleDeleteTask, toggleTaskDetails, expandedTasks }) => {
     return (
         <li key={task.id} className="task">
