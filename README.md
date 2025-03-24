@@ -21,7 +21,7 @@ The deployed version of the application can be found at [*virtual-study-room-phi
 - _Alice Smith_
 	- Email: alice@exmaple.com
    	- Password: Password123
-- _Bob _
+- _Bob Johnson_
 	- Email: bob@exmaple.com
    	- Password: Password123
 - _John Doe_
@@ -35,7 +35,7 @@ The deployed version of the application can be found at [*virtual-study-room-phi
 The project consists of the following components:
 - **Frontend:** React.js
 - **Backend:** Django with REST API integration
-- **Database:** Primarily Django Models, as well as Firebase for storage of shared materials
+- **Database:** Primarily Django Models, as well as Firebase for storage of multimedia
 
 ## Installation instructions
 To install the software and use it in your local development environment, you must first set up and activate a local development environment.  Follow these steps. 
