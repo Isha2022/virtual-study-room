@@ -136,7 +136,7 @@ class Command(BaseCommand):
             print(f"Failed to create user: {e}")
 
     def create_user(self, data):
-        User.objects.create_user(firstname = data['firstName'], lastname = data['lastName'], email = data['email'], username = data['username'], password = self.DEFAULT_PASSWORD, hours_studied = data['hoursStudied'], streaks = data['streaks'], description = data['description'], total_sessions = data['totalSessions'])
+        User.objects.create_user(firstname = data['firstName'], lastname = data['lastName'], email = data['email'], username = data['username'], password = self.DEFAULT_PASSWORD, hours_studied = data['hoursStudied'], last_study_date = data['lastStudyDate'], streaks = data['streaks'], description = data['description'], total_sessions = data['totalSessions'])
 
     def generate_random_user(self):
         firstName = self.faker.first_name()
