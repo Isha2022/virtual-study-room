@@ -27,8 +27,15 @@ const CalendarPage = () => {
   const location = useLocation();
   const userId = location.state?.userId;
 
-  const goToDashboard = () => {
-    navigate("/dashboard");
+  const goToDashboard = async () => {
+    try {
+      const response = await getAuthenticatedRequest("/profile/", "GET");
+      navigate(`/dashboard/${response.username}`, {
+        state: { userName: response.username }
+      });
+    } catch (error) {
+      navigate("/dashboard"); // Fallback without username
+    }
   };
 
   if (!userId) {
