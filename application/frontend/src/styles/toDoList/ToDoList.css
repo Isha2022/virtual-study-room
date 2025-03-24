@@ -269,7 +269,7 @@ button[aria-label="Add Task"]:hover::after {
 /* Lists container */
 .todo-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjust minmax values as needed */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 15px;
     padding: 12px;
     background: white;
@@ -279,7 +279,9 @@ button[aria-label="Add Task"]:hover::after {
     border: 1px solid rgba(186, 198, 241, 0.4);
     background-color: rgba(255, 255, 255, 0.8);
     flex-grow: 1;
-    max-height: calc(100% - 20px);
+    max-height: calc(100% - 70px);
+    height: 100%;
+    margin-bottom: 20px;
 }
 
 /* Individual list card */
@@ -297,6 +299,7 @@ button[aria-label="Add Task"]:hover::after {
     margin: 0 auto 18px auto;
     box-shadow: 2px 2px 5px rgba(209, 203, 237, 0.2);
     min-height: 250px;
+    height: 100%;
 }
 
 /* Smaller cards for group study */
@@ -310,7 +313,7 @@ button[aria-label="Add Task"]:hover::after {
 .todo-card-header {
     font-weight: 600;
     padding: 8px 10px;
-    margin: -10px -10px 10px -10px;
+    margin: -10px -10px 15px -10px;
     background: rgba(186, 215, 245, 0.3);
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -333,7 +336,7 @@ button[aria-label="Add Task"]:hover::after {
     margin-right: auto !important;
 }
 
-/* Tasks list */
+/* Tasks list - make it fill the available space */
 .todo-card ul {
     list-style: none;
     padding: 0 8px;
@@ -341,16 +344,19 @@ button[aria-label="Add Task"]:hover::after {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    height: 220px;
+    height: calc(100% - 40px);
+    min-height: 220px;
     overflow-y: auto;
     scrollbar-width: thin;
     background-image: 
         url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 3h1v1H1V3zm2-2h1v1H3V1z' fill='rgba(142, 153, 227, 0.1)' fill-rule='evenodd'/%3E%3C/svg%3E");
+    padding-bottom: 20px;
 }
 
 /* Smaller task list for group study */
 .groupStudyRoom-container .todo-card ul {
-    height: 130px;
+    height: calc(100% - 30px);
+    min-height: 130px;
     gap: 8px;
 }
 
@@ -469,12 +475,18 @@ button[aria-label="Add Task"]:hover::after {
     font-weight: 600;
 }
 
-/* Custom scrollbar track */
+/* Custom scrollbar track - ensure it spans the full height */
 .todo-card ul::-webkit-scrollbar,
 .todo-list::-webkit-scrollbar {
     width: 10px;
     background-color: white;
     border: 1px solid #8e99e3;
+    border-radius: 10px;
+    height: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
 }
 
 /* Custom scrollbar thumb */

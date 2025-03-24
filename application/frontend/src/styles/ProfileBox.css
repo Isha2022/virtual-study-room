@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 .profile-container {
   overflow: hidden;
   display: flex;
@@ -47,14 +50,42 @@
   margin: 0 10px;
 }
 
-.profile-title,
-.profile-username {
-  color: black;
-  font-weight: 900;
-  font-family: "Inter", sans-serif;
-  font-weight: 600;
-  font-size: 25px;
+.profile-title {
+  color: #bac6f1 !important;
+  text-shadow: 
+      0 0 2px rgba(186, 198, 241, 0.3),
+      0 0 4px rgba(186, 198, 241, 0.2),
+      0 0 6px rgba(186, 198, 241, 0.1),
+      0 0 8px rgba(255, 255, 255, 0.5),
+      1px 1px 0px rgba(209, 203, 237, 0.5) !important;
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  font-size: 1.2em !important;
   margin: 10px 0px;
+}
+
+.profile-username {
+  color: #bac6f1 !important;
+  text-shadow: 
+      0 0 2px rgba(186, 198, 241, 0.3),
+      0 0 4px rgba(186, 198, 241, 0.2),
+      0 0 6px rgba(186, 198, 241, 0.1),
+      0 0 8px rgba(255, 255, 255, 0.5),
+      1px 1px 0px rgba(209, 203, 237, 0.5) !important;
+  font-weight: bold !important;
+  letter-spacing: 1px !important;
+  font-size: 1.2em !important;
+  margin: 10px 0px;
+}
+
+/* Add star decorations around profile title only */
+.profile-title::before,
+.profile-title::after {
+  content: '★';
+  display: inline-block;
+  margin: 0 5px;
+  color: #bac6f1;
 }
 
 .container1 {
@@ -145,29 +176,115 @@
 }
 
 .logoff-button {
-  border-radius: 20px;
-  border: none;
-  background-color: #baf2e9;
-  padding: 5px 20px;
-  text-align: center;
-  color: white;
-  cursor: pointer;
-  font-weight: 600;
-  font-family: "Inter", sans-serif;
-  font-size: 15px;
+  border-radius: 40px !important;
+  border: none !important;
+  padding: 8px 20px !important;
+  text-align: center !important;
+  color: white !important;
+  cursor: pointer !important;
+  font-weight: 700 !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  text-transform: uppercase !important;
+  background-color: #f4bdd0 !important;
+  background-image: 
+      radial-gradient(circle at center, #f8cad9 20%, transparent 70%),
+      radial-gradient(circle at 30% 30%, #fde1e9 15%, transparent 50%),
+      radial-gradient(circle at 70% 70%, #f0b4c7 15%, transparent 50%) !important;
+  text-shadow: 1px 1px 2px #b2b2b2 !important;
+  box-shadow: 
+      inset 0px 2px 4px rgba(255, 255, 255, 0.7),
+      inset 0px -2px 4px rgba(244, 189, 208, 0.2),
+      0 2px 8px rgba(244, 189, 208, 0.4) !important;
+  position: relative !important;
+  transition: all 0.2s ease !important;
+}
+
+.logoff-button::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 25% !important;
+  left: 15% !important;
+  width: 5px !important;
+  height: 5px !important;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%) !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+}
+
+.logoff-button:hover {
+  transform: scale(1.05) !important;
+  background-image: 
+      radial-gradient(circle at center, #fbd3df 20%, transparent 70%),
+      radial-gradient(circle at 30% 30%, #ffe9ef 15%, transparent 50%),
+      radial-gradient(circle at 70% 70%, #f3bdcd 15%, transparent 50%) !important;
+  box-shadow: 
+      inset 0px 2px 4px rgba(255, 255, 255, 0.9),
+      inset 0px -2px 4px rgba(244, 189, 208, 0.3),
+      0 4px 12px rgba(244, 189, 208, 0.6) !important;
+}
+
+.logoff-button:active {
+  transform: scale(0.95) !important;
+  box-shadow: 
+      inset 1px 1px 3px rgba(255, 255, 255, 0.5),
+      inset -1px -1px 3px rgba(0, 0, 0, 0.2) !important;
 }
 
 .profile-edit-button {
-  border-radius: 20px;
-  border: none;
-  background-color: #baf2e9;
-  padding: 5px 20px;
-  text-align: center;
-  color: white;
-  cursor: pointer;
-  font-weight: 600;
-  font-family: "Inter", sans-serif;
-  font-size: 15px;
+  border-radius: 40px !important;
+  border: none !important;
+  padding: 8px 20px !important;
+  text-align: center !important;
+  color: white !important;
+  cursor: pointer !important;
+  font-weight: 700 !important;
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  text-transform: uppercase !important;
+  background-color: #f4bdd0 !important;
+  background-image: 
+      radial-gradient(circle at center, #f8cad9 20%, transparent 70%),
+      radial-gradient(circle at 30% 30%, #fde1e9 15%, transparent 50%),
+      radial-gradient(circle at 70% 70%, #f0b4c7 15%, transparent 50%) !important;
+  text-shadow: 1px 1px 2px #b2b2b2 !important;
+  box-shadow: 
+      inset 0px 2px 4px rgba(255, 255, 255, 0.7),
+      inset 0px -2px 4px rgba(244, 189, 208, 0.2),
+      0 2px 8px rgba(244, 189, 208, 0.4) !important;
+  position: relative !important;
+  transition: all 0.2s ease !important;
+}
+
+.profile-edit-button::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 25% !important;
+  left: 15% !important;
+  width: 5px !important;
+  height: 5px !important;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 70%) !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+}
+
+.profile-edit-button:hover {
+  transform: scale(1.05) !important;
+  background-image: 
+      radial-gradient(circle at center, #fbd3df 20%, transparent 70%),
+      radial-gradient(circle at 30% 30%, #ffe9ef 15%, transparent 50%),
+      radial-gradient(circle at 70% 70%, #f3bdcd 15%, transparent 50%) !important;
+  box-shadow: 
+      inset 0px 2px 4px rgba(255, 255, 255, 0.9),
+      inset 0px -2px 4px rgba(244, 189, 208, 0.3),
+      0 4px 12px rgba(244, 189, 208, 0.6) !important;
+}
+
+.profile-edit-button:active {
+  transform: scale(0.95) !important;
+  box-shadow: 
+      inset 1px 1px 3px rgba(255, 255, 255, 0.5),
+      inset -1px -1px 3px rgba(0, 0, 0, 0.2) !important;
 }
 
 .modal-profile,

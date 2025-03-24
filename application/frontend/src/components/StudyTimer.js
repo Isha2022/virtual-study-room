@@ -4,6 +4,7 @@ import { database } from '../firebase-config';
 import 'tailwindcss';
 import '@fontsource/vt323';
 import '@fontsource/press-start-2p';
+import blueberryImg from '../assets/blueberry.jpeg';
 
 const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
   const [studyLength, setStudyLength] = useState(25);
@@ -198,6 +199,9 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     }
   `;
 
+  // a CSS class for minimised state
+  const timerWrapperClass = isMinimized ? "study-timer-wrapper minimized" : "study-timer-wrapper";
+
   return (
     <div className="study-timer-container">
       <style>
@@ -229,6 +233,40 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
             flex-direction: column ;
             align-items: center ;
             margin: 0 auto ;
+            overflow: hidden ; /* Prevent content from spilling out */
+            transition: all 0.3s ease ;
+          }
+          
+          /* Minimized state styles */
+          .study-timer-wrapper.minimized {
+            height: 50px ;
+            width: 250px ;
+            padding: 10px ;
+            transform: translateY(-10px) ;
+            cursor: pointer ;
+          }
+          
+          /* Hide content in minimized state except for the mini-header */
+          .study-timer-wrapper.minimized .timer-content {
+            display: none ;
+          }
+          
+          /* Mini header for minimized state */
+          .mini-header {
+            display: none ;
+            width: 100% ;
+            text-align: center ;
+            color: #bac6f1 ;
+            font-family: "Press Start 2P", monospace ;
+            font-size: 14px ;
+            white-space: nowrap ;
+          }
+          
+          .study-timer-wrapper.minimized .mini-header {
+            display: flex ;
+            align-items: center ;
+            justify-content: center ;
+            height: 100% ;
           }
 
           .study-timer-wrapper .vt323 {
@@ -321,15 +359,38 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
         </div>
       )}
       
-      <div className="study-timer-wrapper">
+      <div className={timerWrapperClass} onClick={isMinimized ? handleRestore : null}>
+        {/* Mini header for minimized state */}
+        <div className="mini-header">
+          {isRunning ? 
+            `${isBreak ? 'Break' : 'Focus'} - ${formatTime(timeLeft)}` : 
+            'Study Timer'}
+        </div>
+        
         <div className="timer-content">
           {currentPage === 'completed' ? (
             <div className="p-4 w-80 flex flex-col bg-[#F0F3FC] timer-handle" style={{ height: "350px", position: "relative" }}>
-              <div className="text-2xl mt-8 text-center" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+              <div className="mt-8 text-center" style={{ 
+                color: '#bac6f1', 
+                fontFamily: '"Press Start 2P", monospace',
+                fontSize: '15px'
+              }}>
                 Well done!
                 <br />
                 Here, have a blueberry
               </div>
+              
+              <img 
+                src={blueberryImg} 
+                alt="Blueberry"
+                style={{
+                  display: 'block',
+                  width: '160px',
+                  margin: '20px auto 15px auto',
+                  background: 'none',
+                  backgroundColor: 'transparent'
+                }}
+              />
               
               <div style={{ 
                 position: "absolute", 
@@ -347,8 +408,8 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                     setIsRunning(false);
                   }}
                   className="w-full text-white rounded-lg"
-                  style={{ 
-                    backgroundColor: '#d1cbed', 
+                  style={{
+                    backgroundColor: '#d1cbed',
                     fontFamily: '"Press Start 2P", monospace',
                     transition: 'background-color 0.3s, transform 0.3s',
                     color: 'white',

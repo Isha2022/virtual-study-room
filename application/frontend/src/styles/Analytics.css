@@ -50,62 +50,75 @@
     position: relative;
     overflow: hidden;
     
-    /* Yellow color matching the delete button in todo list */
-    background-color: #ffeebb !important;
-    background-image: 
-        radial-gradient(circle at center, rgba(255, 247, 205, 0.9) 20%, transparent 70%),
-        radial-gradient(circle at 30% 30%, rgba(255, 250, 220, 0.8) 15%, transparent 50%),
-        radial-gradient(circle at 70% 70%, rgba(255, 238, 187, 0.8) 15%, transparent 50%) !important;
+    /* Soft pastel pearlescent background */
+    background: linear-gradient(135deg, 
+        rgba(255, 226, 247, 0.9) 0%, 
+        rgba(202, 232, 255, 0.9) 35%, 
+        rgba(224, 244, 227, 0.9) 65%,
+        rgba(255, 242, 209, 0.9) 100%);
     
-    /* Glass-like border */
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    /* Pearly border with subtle rainbow hue */
+    border: 2px solid rgba(255, 255, 255, 0.8);
     
-    /* Softer shadow for depth */
-    box-shadow: 0 0 15px rgba(255, 238, 187, 0.5),
-                inset 0 0 8px rgba(255, 255, 255, 0.5);
+    /* Dreamy glow effect */
+    box-shadow: 
+        0 0 15px rgba(255, 214, 247, 0.4),
+        0 0 25px rgba(203, 232, 255, 0.3),
+        inset 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
-/* Light reflection */
+/* Main iridescent highlight */
 .circle::after {
     content: "";
     position: absolute;
-    width: 40%; 
-    height: 40%;
-    top: 15%;
-    left: 15%;
-    border-radius: 50%;
-    background: linear-gradient(135deg,
-                rgba(255, 255, 255, 0.9) 0%,
-                rgba(255, 255, 255, 0) 70%);
-    opacity: 0.6;
+    width: 120%; 
+    height: 120%;
+    top: -30%;
+    left: -30%;
+    border-radius: 100%;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(255, 255, 255, 0.8) 0%,
+        rgba(255, 255, 255, 0.3) 30%,
+        rgba(252, 224, 255, 0.1) 60%,
+        rgba(203, 232, 255, 0) 100%
+    );
+    transform: rotate(-30deg);
+    opacity: 0.7;
 }
 
-/* Small star-like highlights */
+/* Subtle pearl texture */
 .circle::before {
     content: "";
     position: absolute;
     width: 100%;
     height: 100%;
-    background-image: 
-        radial-gradient(circle at 25% 25%, white 0%, transparent 2%),
-        radial-gradient(circle at 75% 75%, white 0%, transparent 2%),
-        radial-gradient(circle at 40% 80%, white 0%, transparent 2%);
-    opacity: 0.8;
+    background: radial-gradient(
+        circle at 70% 70%, 
+        rgba(255, 255, 255, 0.6) 0%, 
+        transparent 20%
+    );
+    opacity: 0.6;
+    z-index: 1;
 }
 
-/* Keep number easily readable */
+/* Number styling for better contrast on pearly background */
 .number {
     position: relative;
     z-index: 3;
     font-size: 1.5rem;
     font-weight: bold;
-    color: rgba(60, 30, 0, 0.8); /* Darker, semi-transparent text */
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+    color: rgba(90, 60, 120, 0.8); /* Soft purple shade */
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.6),
+        0 0 4px rgba(255, 255, 255, 0.4);
+    font-family: 'Inter', sans-serif;
 }
 
+/* Stat labels with a bit of kawaii styling */
 .stat p {
     font-size: 1rem;
-    color: #666;
+    color: #9e8fa6; /* Soft lavender */
     font-weight: 500;
     margin-top: 0.5rem;
 }

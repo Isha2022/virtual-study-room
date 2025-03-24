@@ -1,14 +1,11 @@
-/* Import fonts */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* Main container for the login page */
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
-    /* Glossy pink gradient with subtle yellow accents */
     background: linear-gradient(135deg, 
         #ffcce0 0%, 
         #ffdfeb 25%, 
@@ -19,10 +16,9 @@
     width: 100vw; 
     flex-direction: column;
     position: relative;
-    overflow: auto;
+    overflow: hidden;
 }
 
-/* Shimmering water effect overlay */
 .login-container::before {
     content: "";
     position: absolute;
@@ -40,7 +36,6 @@
     opacity: 0.7;
 }
 
-/* Subtle color diffusion with yellow accents */
 .login-container::after {
     content: "";
     position: absolute;
@@ -56,7 +51,6 @@
     filter: blur(50px);
 }
 
-/* Shimmer wave animation */
 @keyframes shimmer-wave {
     0% {
         background-position: 0px 0px;
@@ -71,7 +65,6 @@
     }
 }
 
-/* Keep existing animations */
 @keyframes shimmer {
     0% {
         background-position: 0% 0%;
@@ -90,7 +83,6 @@
     }
 }
 
-/* Header styling for the login page - combining signup and login colors */
 .login-heading1 {
     position: fixed;
     width: 100%;
@@ -103,10 +95,10 @@
     margin: 0;
     box-sizing: border-box;
     z-index: 1000;
-    border: 3px solid #f79cac ;
-    display: flex ;
-    justify-content: space-between ;
-    align-items: center ;
+    border: 3px solid #f79cac;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     height: 80px;
     padding-left: 50px;
     padding-right: 50px;
@@ -123,11 +115,10 @@
         0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Main form container with matching border and corner radius to signup */
 .login-form {
     width: 480px;
-    border: 5px solid #f79cac ; /* Match login title shadow color with signup thickness */
-    border-radius: 50px ; /* Match signup border radius exactly */
+    border: 5px solid #f79cac;
+    border-radius: 50px;
     background: linear-gradient(135deg, #fff2e6 0%, #ffd6d1 40%, #fec5d1 70%, #fff6f2 100%);
     display: flex;
     flex-direction: column;
@@ -142,7 +133,6 @@
     z-index: 1;
 }
 
-/* Enhanced matte effect like signup form - adjusted border radius */
 .login-form::before {
     content: "";
     position: absolute;
@@ -156,10 +146,9 @@
     opacity: 0.6;
     z-index: -1;
     pointer-events: none;
-    border-radius: 45px; /* Adjusted to account for thicker border */
+    border-radius: 45px; 
 }
 
-/* Add subtle texture overlay for matte finish - adjusted border radius */
 .login-form::after {
     content: "";
     position: absolute;
@@ -171,10 +160,9 @@
     opacity: 0.1;
     pointer-events: none;
     z-index: -1;
-    border-radius: 45px; /* Adjusted to account for thicker border */
+    border-radius: 45px; 
 }
 
-/* Form title styling - matching Welcome page heading */
 .login-heading2 {
     font-family: 'Orbitron', sans-serif;
     font-size: 42px;
@@ -200,7 +188,6 @@
     width: 100%;
 }
 
-/* Label styling */
 .username-text, .password-text {
     width: 80%;
     text-align: left;
@@ -213,7 +200,6 @@
     letter-spacing: 0.5px;
 }
 
-/* Input fields with exactly matching border radius to signup */
 .username-field, .password-field {
     width: 80%;
     margin-top: 10px;
@@ -233,7 +219,6 @@
     font-size: 15px;
 }
 
-/* Focused input fields - match signup behavior */
 .username-field:focus, .password-field:focus {
     border-color: rgba(246, 156, 151, 0.5);
     box-shadow: inset 0 2px 5px rgba(247, 156, 172, 0.3),
@@ -242,14 +227,13 @@
     background-color: rgba(255, 255, 255, 0.85);
 }
 
-/* Login button with more subtle shine effect for better readability */
 .login-submit-button {
   padding: 15px 20px;
-  width: 200px ;
-  height: 50px ;
+  width: 200px;
+  height: 50px;
   background-color: #f69c97;
   background-image: 
-      radial-gradient(circle at center, rgba(254, 197, 209, 0.4) 15%, transparent 60%), /* reduced opacity from 0.7 to 0.4 */
+      radial-gradient(circle at center, rgba(254, 197, 209, 0.4) 15%, transparent 60%),
       radial-gradient(circle at 30% 30%, #fec5d1 15%, transparent 50%),
       radial-gradient(circle at 70% 70%, #f79cac 15%, transparent 50%);
   color: white;
@@ -257,30 +241,29 @@
   border-radius: 40px;
   cursor: pointer;
   text-align: center;
-  font-family: 'Inter', sans-serif ;
-  font-weight: 700 ;
-  font-size: 18px ;
-  text-transform: uppercase ;
-  letter-spacing: 1px ;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   transition: all 0.2s ease;
   text-shadow: 
-      0 1px 1px rgba(0, 0, 0, 0.4); /* simplified shadow for better readability */
+      0 1px 1px rgba(0, 0, 0, 0.4);
   box-shadow: 
-      inset 0px 2px 4px rgba(255, 255, 255, 0.5), /* reduced opacity from 0.7 to 0.5 */
+      inset 0px 2px 4px rgba(255, 255, 255, 0.5), 
       inset 0px -2px 4px rgba(246, 156, 151, 0.2),
       0 2px 8px rgba(246, 156, 151, 0.4);
   position: relative;
-  margin-top: 30px ;
-  display: flex ;
-  justify-content: center ;
-  align-items: center ;
-  padding: 0 20px ;
-  line-height: 50px ;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  line-height: 50px;
   z-index: 5;
   min-height: 50px;
 }
 
-/* Button highlight effect - same as signup */
 .login-submit-button::before {
   content: '';
   position: absolute;
@@ -293,7 +276,6 @@
   pointer-events: none;
 }
 
-/* Button hover state - keeping login colors */
 .login-submit-button:hover {
   transform: scale(1.05);
   background-image: 
@@ -306,7 +288,6 @@
       0 4px 12px rgba(246, 156, 151, 0.6);
 }
 
-/* Button active/pressed state - same as signup */
 .login-submit-button:active {
   transform: scale(0.95);
   box-shadow: 
