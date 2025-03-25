@@ -9,7 +9,9 @@ import json
 
 class EventViewSetTests(APITestCase):
     def setUp(self):
+        """Initialize test data and authenticate test client"""
         self.factory = APIRequestFactory()
+        # Create test user with all required fields
         self.user = User.objects.create_user(
             username='testuser',
             email='test@example.com',
@@ -19,6 +21,7 @@ class EventViewSetTests(APITestCase):
             description='Test user'
         )
         self.current_time = datetime.now()
+        # Create initial test appointment
         self.appointment = Appointments.objects.create(
             user=self.user,
             name='Doctor Appointment',
@@ -26,55 +29,59 @@ class EventViewSetTests(APITestCase):
             end_date=self.current_time + timedelta(hours=1),
             comments='Annual checkup with Dr. Smith'
         )
+        # Authenticate all test requests
         self.client.force_authenticate(user=self.user)
 
     def test_perform_create_integration(self):
-        """Test appointment creation through API with serializer field mappings"""
+        """Test creating appointment through API with field mappings (title->name, etc.)"""
         data = {
-            'title': 'New Appointment',
-            'start': self.current_time.isoformat(),
+            'title': 'New Appointment',  # Using serializer field name
+            'start': self.current_time.isoformat(),  # Serializer mapped field
             'end': (self.current_time + timedelta(hours=1)).isoformat(),
-            'description': 'Test description'
+            'description': 'Test description'  # Maps to comments field
         }
         response = self.client.post('/api/events/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
+        # Verify data was saved correctly with proper user assignment
         appointment = Appointments.objects.latest('id')
         self.assertEqual(appointment.user, self.user)
-        self.assertEqual(appointment.name, 'New Appointment')
+        self.assertEqual(appointment.name, 'New Appointment')  # Check model field
         self.assertEqual(appointment.comments, 'Test description')
 
-    
     def test_read_only_user_field(self):
-        """Verify user cannot be set via API"""
+        """Verify that user field is read-only and can't be overridden"""
+        # Create second test user
         another_user = User.objects.create_user(
             firstname='another',
             lastname='useranother',
-            username='anotheruser_unique',
+            username='anotheruser_unique',  # Must be unique
             email='another@example.com',
             password='testpass123',
             description='not known'
         )
         
+        # Try to assign different user in request
         data = {
             'title': 'User Test',
             'start': self.current_time.isoformat(),
             'end': (self.current_time + timedelta(hours=1)).isoformat(),
-            'user': another_user.id
+            'user': another_user.id  # Should be ignored
         }
         
         response = self.client.post('/api/events/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
+        # Verify appointment was assigned to authenticated user, not the one in request
         appointment = Appointments.objects.latest('id')
         self.assertEqual(appointment.user, self.user)
         self.assertNotEqual(appointment.user, another_user)
 
-
     def test_appointment_creation(self):
-        '''Test basic appointment creation'''
-        self.assertEqual(Appointments.objects.count(), 1)
+        '''Verify initial test appointment was created correctly in setUp()'''
+        self.assertEqual(Appointments.objects.count(), 1)  # Check only one exists
         appointment = Appointments.objects.first()
+        # Verify all fields were saved correctly
         self.assertEqual(appointment.name, 'Doctor Appointment')
         self.assertEqual(appointment.comments, 'Annual checkup with Dr. Smith')
         self.assertEqual(appointment.user, self.user)
@@ -88,10 +95,9 @@ class EventViewSetTests(APITestCase):
             (self.current_time + timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S")
         )
 
-
     def test_create_appointment_unauthenticated(self):
-        # Test that unauthenticated users cannot create appointments
-        self.client.logout()
+        """Verify authentication is required to create appointments"""
+        self.client.logout()  # Remove authentication
         data = {
             "name": "Unauthorized Appointment",
             "start_date": self.current_time.isoformat(),
@@ -99,47 +105,21 @@ class EventViewSetTests(APITestCase):
         }
         response = self.client.post("/api/events/", data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertEqual(Appointments.objects.count(), 1)
+        self.assertEqual(Appointments.objects.count(), 1)  # No new appointment created
 
     def test_delete_appointment(self):
-        # Test deleting an appointment
+        """Test successful deletion of an appointment"""
         url = f"/api/events/{self.appointment.id}/"
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(Appointments.objects.count(), 0)
+        self.assertEqual(Appointments.objects.count(), 0)  # Verify deletion
 
     def test_create_appointment_invalid_data(self):
-        """Test creation with invalid data"""
+        """Test validation with invalid data (empty name)"""
         invalid_data = {
-            "name": "",  # Empty name should be invalid
+            "name": "",  # Empty name should fail validation
             "start_date": self.current_time.isoformat(),
             "end_date": (self.current_time + timedelta(hours=1)).isoformat()
         }
         response = self.client.post("/api/events/", invalid_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-    
-    # def test_perform_create_directly(self):
-    #     """Directly test perform_create with serializer field mappings"""
-    #     from api.views.calendar import EventViewSet
-    #     from rest_framework.request import Request
-        
-    #     request = self.factory.post('/api/events/', {
-    #         'title': 'Direct Test',
-    #         'start': self.current_time.isoformat(),
-    #         'end': (self.current_time + timedelta(hours=1)).isoformat()
-    #     }, format='json')
-    #     request.user = self.user
-        
-    #     drf_request = Request(request)
-    #     view = EventViewSet()
-    #     view.request = drf_request
-    #     view.action = 'create'
-        
-    #     serializer = view.get_serializer(data=drf_request.data)
-    #     self.assertTrue(serializer.is_valid(), serializer.errors)
-        
-    #     view.perform_create(serializer)
-        
-    #     appointment = Appointments.objects.latest('id')
-    #     self.assertEqual(appointment.user, self.user)
-    #     self.assertEqual(appointment.name, 'Direct Test')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)  # Should fail
