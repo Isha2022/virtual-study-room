@@ -80,7 +80,7 @@ function GroupStudyPage() {
 
   //handle open for spotify button
   const handleClickOpen = () => {
-    setOpen(true);
+    setOpen(prevState => !prevState);
   };
 
   //handle close for spotify button
@@ -597,7 +597,7 @@ function GroupStudyPage() {
                   </div>
                 );
               })}
-              {typingUser && typingUser !== username && (
+              {typingUser && (
                 <p className="typing-indicator">
                   {" "}
                   <strong>{typingUser}</strong> is typing...
