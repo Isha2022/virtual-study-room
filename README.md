@@ -102,8 +102,9 @@ $(venv) python3 manage.py test
 ```
 
 #### Unseeding the Database
+```
 $ python3 manage.py unseed
-
+```
 
 ## Sources
 - All dependencies are listed in 'requirements.txt'
