@@ -19,7 +19,7 @@ The deployed version of the application can be found at [*virtual-study-room-phi
 
 ## Default Logins for Testing
 * Please note that in order to log in as multiple users you must use a new incognito window for each additional member, as only one user can be logged in at a time per browser.
-* If you have forgotten to log out before closing the tab please refresh the login page to auto log out of all logged in accounts
+* If you have forgotten to log out before closing the tab please refresh the login page to auto log out of all logged in accounts.
 
 - _Alice Smith_
 	- Email: alice@example.com
