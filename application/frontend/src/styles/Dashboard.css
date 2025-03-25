@@ -90,11 +90,13 @@
 /* First panel in main section - for quick stats */
 .dashboard-main-panel .dashboard-panel:first-child {
     height: 250px;
+    min-width: 700px;
 }
 
 /* Second panel in main section - for primary content */
 .dashboard-main-panel .dashboard-panel:last-child {
     height: 65vh; 
+    min-height: 500px;
 }
 
 /* Bottom panel in right section */
