@@ -64,54 +64,40 @@ const AddTaskModal = ({ addTaskWindow, setAddTaskWindow, listId, setLists, isSha
         }
     };
 
-    // Handle cancel action by resetting form data and closing the modal
     const handleCancel = () => {
         setFormData({ taskTitle: "", taskContent: "" });
         setAddTaskWindow(false);
     };
 
-    // Return null if the modal is not open
     if (!addTaskWindow) return null;
-
+    
     return (
-        <div role="dialog" className="modal-overlay-task">
-        <div className="modal-content-task">
-            <h2>Add Task</h2>
-            <div className="form-class-task">
-            <form onSubmit={handleSubmit}>
-                <div className="form-group-task">
-                <input
-                    type="text"
-                    name="taskTitle"
-                    value={formData.taskTitle}
-                    onChange={handleChange}
-                    placeholder="Enter task title"
-                    required
-                />
-                <textarea
-                    name="taskContent"
-                    value={formData.taskContent}
-                    onChange={handleChange}
-                    placeholder="Enter task content"
-                    required
-                    rows="4"
-                ></textarea>
-                </div>
-                <div className="button-group-task">
-                <button type="submit" className="btn-save-task">
-                    Save
-                </button>
-                <button
-                    type="button"
-                    className="btn-cancel-task"
-                    onClick={handleCancel}
-                >
-                    Cancel
-                </button>
-                </div>
-            </form>
+        <div role="dialog" className="modal-overlay add-task-modal">
+            <div className="modal-content">
+                <h4>Add Task</h4>
+                <form onSubmit={handleSubmit} className="newTask">
+                    <input
+                        type="text"
+                        name="taskTitle"
+                        value={formData.taskTitle}
+                        onChange={handleChange}
+                        placeholder="Enter task title"
+                        required
+                    />
+                    <textarea
+                        name="taskContent" 
+                        value={formData.taskContent}
+                        onChange={handleChange}
+                        placeholder="Enter task content"
+                        required
+                        rows="4"
+                    ></textarea>
+                    <div>
+                        <button type="submit" className="btn btn-primary">Save</button>
+                        <button type="button" className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
+                    </div>
+                </form>
             </div>
-        </div>
         </div>
     );
 };

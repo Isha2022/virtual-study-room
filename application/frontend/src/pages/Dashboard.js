@@ -22,7 +22,7 @@ function Dashboard() {
 
             {/* This is where all the main components will go*/}
             {/* Left panel - main panel - right panel*/}
-            <div className = "dashboard-content">
+            <div className = "dashboard-content" data-testid="dashboard-content-test">
                 <div className = "dashboard-left-panel" data-testid="left-panel">
                     <div className="dashboard-panel"><ProfileBox /></div>
                     <Analytics />

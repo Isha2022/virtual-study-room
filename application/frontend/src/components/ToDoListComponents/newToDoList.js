@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+    import React, { useState } from 'react';
 import { getAuthenticatedRequest } from "../../utils/authService";
 import "../../styles/toDoList/ToDoList.css";
 import AddTaskModal from "./CreateNewTask";
@@ -118,27 +118,25 @@ const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }
     return (
         <div className={isFullScreen ? "todo-container full-screen" : "todo-container"}>
             <div className="todo-header">
+                <h3>To-Do Lists</h3>
                 {!isShared ? (
-                    <>
-                        <h3>To-Do Lists</h3>
-                        <div className="header-buttons">
-                            <button onClick={handleAddList} className="btn btn-success btn-sm" aria-label="Add List">
-                                <i className="bi bi-plus-circle"></i>
-                            </button>
-                            <button onClick={toggleFullScreen} className="full-screen-btn">
-                                {isFullScreen ? (
-                                    <>
-                                        <i className="bi bi-box-arrow-in-down"></i> Exit View
-                                    </>
-                                ) : (
-                                    <>
-                                        <i className="bi bi-arrows-fullscreen">View All</i>
-                                    </>
-                                )}
-                            </button>
-                        </div>
-                    </>) : (<></>)
-                }
+                    <div className="header-buttons">
+                        <button onClick={handleAddList} className="btn btn-success btn-sm" aria-label="Add List">
+                            <i className="bi bi-plus-circle"></i>
+                        </button>
+                        <button onClick={toggleFullScreen} className="full-screen-btn">
+                            {isFullScreen ? (
+                                <>
+                                    <i className="bi bi-box-arrow-in-down"></i> Exit View
+                                </>
+                            ) : (
+                                <>
+                                    <i className="bi bi-arrows-fullscreen">View All</i>
+                                </>
+                            )}
+                        </button>
+                    </div>
+                ) : null}
             </div>
             <div className="todo-list">
             {lists.map((list) => (

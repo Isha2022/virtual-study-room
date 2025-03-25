@@ -1,129 +1,110 @@
-/* Modal Overlay */
-.modal-overlay-new-list {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; /* Ensure it's on top of other elements */
+/* Styling for TaskTrack: Study Edition text */
+.todo-card h4[class*="task-track"],
+.todo-card h4:contains("TaskTrack"),
+h4.task-track-title {
+    color: #b2b2b2 !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    text-align: center !important;
+    margin: 12px 0 !important;
+    padding: 5px 0 !important;
+    font-size: 14px !important;
+    border-bottom: 1px solid rgba(178, 178, 178, 0.3) !important;
+    border-top: 1px solid rgba(178, 178, 178, 0.3) !important;
+    position: relative !important;
 }
 
-/* Modal Content */
-.modal-content-new-list {
-  margin: auto;
-  padding: 20px;
-  border: 5px solid #f2bac9;
-  background-color: white;
-  width: 50%;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  z-index: 2001; /*ensures it is on top of dashboard heading*/
+/* Add subtle decoration */
+.todo-card h4[class*="task-track"]::before,
+.todo-card h4:contains("TaskTrack")::before,
+h4.task-track-title::before,
+.todo-card h4[class*="task-track"]::after,
+.todo-card h4:contains("TaskTrack")::after,
+h4.task-track-title::after {
+    content: "•" !important;
+    display: inline-block !important;
+    margin: 0 6px !important;
+    opacity: 0.6 !important;
 }
 
-/* Modal Title */
-.modal-content-new-list h2 {
-  font-family: "Inter", sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  color: black;
-  margin-bottom: 10px;
-  width: 100%; /* Ensure title spans the modal */
-  text-align: center; /* Center the title */
+/* Modal overlay */
+.modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 1000 !important;
 }
 
-.form-class-list {
-  width: 100%;
-  margin-bottom: 20px;
-  margin-left: 30px;
-  margin-right: 30px;
+/* Modal content box */
+.modal-content {
+    width: 350px !important;
+    background-color: white !important;
+    border-radius: 10px !important;
+    padding: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Form Group */
-.form-group-list {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  padding-inline: 20px;
-  padding-bottom: 10px;
-  gap: 5px; /* Space between label and input */
+/* Title styling - it's an h4, not h2 */
+.modal-content h4 {
+    margin-top: 5px !important;
+    margin-bottom: 25px !important;
+    color: #f2bac9 !important;
+    text-align: center !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
 }
 
-.form-group-list label {
-  font-family: "Inter", sans-serif;
-  font-size: 20px;
-  font-weight: 600;
-  color: #333;
-  margin-left: 10px;
+/* Form layout */
+.modal-content form {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
 }
 
-.form-group-list input {
-  background-color: antiquewhite;
-  padding: 10px;
-  border-radius: 20px;
-  border: none;
-  text-align: left;
-  resize: none;
-  width: 100%;
-  min-height: 60px;
-  color: black;
-  font-weight: 600;
-  font-family: "Inter", sans-serif;
+/* Input styling */
+.modal-content input[type="text"] {
+    height: 45px !important;
+    border: 2px solid #bad7f5 !important;
+    border-radius: 8px !important;
+    padding: 8px 15px !important;
+    font-size: 16px !important;
+    margin-bottom: 30px !important;
 }
 
-.form-group-list input:focus {
-  border-color: #f2bac9; /* Match calendar modal focus color */
-  outline: none;
+/* Button container */
+.modal-content form > div {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 15px !important;
+    margin-top: auto !important;
 }
 
-/* Button Group */
-.button-group-list {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px; /* Space between buttons */
-  margin-top: 15px;
-  padding-right: 20px;
+/* Button styling */
+.modal-content .btn {
+    min-width: 100px !important;
+    height: 38px !important;
+    border-radius: 6px !important;
+    border: none !important;
+    cursor: pointer !important;
 }
 
-/* Save Button */
-.btn-save-list {
-  background-color: #f2bac9; /* Match calendar modal button color */
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+/* Save button */
+.modal-content .btn-primary {
+    background-color: #bad7f5 !important;
+    color: white !important;
 }
 
-.btn-save-list:hover {
-  background-color: #d89aa9; /* Darker shade on hover */
-}
-
-/* Cancel Button */
-.btn-cancel-list {
-  background-color: #bad7f2; /* Match calendar modal button color */
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.btn-cancel-list:hover {
-  background-color: #9ab7d8; /* Darker shade on hover */
+/* Cancel button */
+.modal-content .btn-secondary {
+    background-color: #f0f0f0 !important;
+    color: #888 !important;
 }
