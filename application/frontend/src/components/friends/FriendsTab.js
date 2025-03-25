@@ -4,15 +4,18 @@ import PendingRequests from "./PendingRequests";
 import FriendsRequested from "./FriendsRequested";
 import SearchFriends from "./SearchFriends";
 import "../../styles/friends/FriendsTab.css";
+import "../../styles/Dashboard.css";
 
+ // Importing the FriendsProvider to wrap the component with the context provider
 import { FriendsProvider } from './FriendsContext';
 
 const FriendsTab = () => {
+    // State to manage which tab is currently active, default is "all" friends
     const [activeTab, setActiveTab] = useState("all");
 
     return (
         <FriendsProvider>
-            <div className="friends-tabs-container">
+            <div className="dashboard-panel friends-tab">
             {/* Tab Navigation */}
             <div className="tabs">
                 <button className={activeTab === "all" ? "active" : ""} onClick={() => setActiveTab("all")}>

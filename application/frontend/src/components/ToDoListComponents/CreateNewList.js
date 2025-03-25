@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import "../../styles/toDoList/CreateNewList.css";
-
 import { getAuthenticatedRequest } from "../../utils/authService";
 
+// AddListModal is a modal component for adding a new to-do list
 const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
+  // Local state to store form data for the new list (name and shared status)
   const [formData, setFormData] = useState({ name: "", isShared: false });
 
-  // Handle form submission
+  // Handle form submission, saves the list and resets the form
   const handleSubmit = (e) => {
     e.preventDefault();
     handleSaveList(formData);
     setFormData({ name: "", isShared: false });
   };
 
+  // Handle input changes in the form
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -21,6 +23,7 @@ const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
     });
   };
 
+  // Function to handle saving the new to-do list via an API request and locally
   const handleSaveList = async (newList) => {
     console.log("Saving list with data:", newList);
     try {
@@ -28,12 +31,12 @@ const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
         name: newList.name,
         is_shared: newList.isShared,
       });
-      // Add the new list, including an empty 'tasks' array
+      
       const newListWithTasks = {
-        id: response.listId, // Use the returned listId
-        name: response.name, // Use the returned name
-        is_shared: response.isShared, // Use the returned isShared
-        tasks: [], // Initialize tasks as an empty array
+        id: response.listId,
+        name: response.name, 
+        is_shared: response.isShared, 
+        tasks: [],
       };
 
       setLists((prevLists) => [...prevLists, newListWithTasks]);
@@ -48,46 +51,35 @@ const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
     }
   };
 
+  // Handle cancel action by resetting form data and closing the modal
   const handleCancel = () => {
     setFormData({ name: "", isShared: false });
     setAddListWindow(false);
   };
 
-  if (!addListWindow) return null;
-  return (
-    <div role="dialog" className="modal-overlay-new-list">
-      <div className="modal-content-new-list">
-        <h2>Add List</h2>
-        <div className="form-class-list">
-          <form onSubmit={handleSubmit}>
-            <div className="form-group-list">
-              <label>List Name:</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Enter list name"
-                required
-              />
+        if (!addListWindow) return null;
+        return (
+            <div role="dialog" className="modal-overlay add-list-modal">
+                <div className="modal-content">
+                    <h4>Add List</h4>
+                    <form onSubmit={handleSubmit}>
+                        <input
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            placeholder="Enter list title"
+                            required
+                        />
+
+                        <div>
+                            <button type="submit" className="btn btn-primary">Save</button>
+                            <button type="button" className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div className="button-group-list">
-              <button type="submit" className="btn-save-list">
-                Save
-              </button>
-              <button
-                type="button"
-                className="btn-cancel-list"
-                onClick={handleCancel}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
+        );
+    };
 
 export default AddListModal;

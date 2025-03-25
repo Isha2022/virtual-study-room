@@ -4,31 +4,32 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.utils.timezone import now
+from datetime import timedelta
 
 from api.models import StudySession, SessionUser, User
 from api.views import create_room, join_room, get_room_details, leave_room, notify_participants
 
-
+"""
+Tests for the Group Study room view functions
+"""
 class GroupStudyRoomViewsTests(TestCase):
     fixtures = ['api/tests/fixtures/default_user.json']
 
     def setUp(self):
         """Set up the test data"""
-        self.url = '/api/login/'  # Adjust to the correct URL for login view
+        self.url = '/api/login/' 
         self.user_data = {
             'email': 'alice@example.com',
             'password': 'Password123',
         }
-        # Create a user for testing
+
         self.user = User.objects.get(username='@alice123')
 
-        # Create a test study session
         self.study_session = StudySession.objects.create(createdBy=self.user, sessionName="Test Room")
 
-        # Set up API client
         self.client = APIClient()
 
-        # Force authentication for testing purposes
         self.client.force_authenticate(user=self.user)
 
     def test_create_room(self):
@@ -115,7 +116,8 @@ class GroupStudyRoomViewsTests(TestCase):
         self.assertEqual(response.data["message"], "Left successfully!")
 
         # Verify the user was removed from the room
-        self.study_session.refresh_from_db()
+        with self.assertRaises(StudySession.DoesNotExist):
+            self.study_session.refresh_from_db()
         self.assertNotIn(self.user, self.study_session.participants.all())
 
     def test_leave_room_not_found(self):
@@ -128,6 +130,53 @@ class GroupStudyRoomViewsTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.data["error"], "Room not found")
 
+    def test_create_room_updates_study_streak(self):
+        """
+        Test that creating a room updates the user's study streak.
+        """
+        self.user.last_study_date = now().date() - timedelta(days=1)    # When last joined yesterday
+        self.user.streaks = 5
+        self.user.save()
+
+        data = {"sessionName": "New Study Room"}
+        response = self.client.post("/api/create-room/", data, format="json")
+        
+        self.user.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.user.streaks, 6)  # Streak should increase
+
+    def test_join_room_updates_study_streak(self):
+        """
+        Test that joining a room updates the user's study streak.
+        """
+        self.user.last_study_date = now().date() - timedelta(days=1)
+        self.user.streaks = 3
+        self.user.save()
+
+        data = {"roomCode": self.study_session.roomCode}
+        response = self.client.post("/api/join-room/", data, format="json")
+        
+        self.user.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.user.streaks, 4)  # Streak should increase
+    
+    def test_leave_room_does_not_update_study_streak(self):
+        """
+        Test that leaving a room does not affect the study streak.
+        """
+        self.user.last_study_date = now().date()
+        self.user.streaks = 7
+        self.user.save()
+        
+        self.study_session.participants.add(self.user)
+        SessionUser.objects.create(user=self.user, session=self.study_session)
+        
+        data = {"roomCode": self.study_session.roomCode}
+        response = self.client.post("/api/leave-room/", data, format="json")
+        
+        self.user.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.user.streaks, 7)  # Streak should remain unchanged
 
     # def test_notify_participants(self):
     #     """

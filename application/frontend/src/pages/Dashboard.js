@@ -8,7 +8,7 @@ import CalendarPage from './Calendar';
 import ToDoList from '../components/ToDoListComponents/newToDoList';
 import StudyRoomComponent from '../components/StudyRoomComponent';
 import Analytics from './Analytics';
-import  FriendsTab  from '../components/friends/FriendsTab';
+import FriendsTab  from '../components/friends/FriendsTab';
 
 import ProfileBox from './ProfileBox';
 
@@ -22,17 +22,17 @@ function Dashboard() {
 
             {/* This is where all the main components will go*/}
             {/* Left panel - main panel - right panel*/}
-            <div className = "dashboard-content">
+            <div className = "dashboard-content" data-testid="dashboard-content-test">
                 <div className = "dashboard-left-panel" data-testid="left-panel">
                     <div className="dashboard-panel"><ProfileBox /></div>
                     <Analytics />
                 </div>
                 <div className = "dashboard-main-panel" data-testid="main-panel">
                     <StudyRoomComponent />
-                    <div className="dashboard-panel"><FriendsTab /></div>
+                    <FriendsTab />
                 </div>
                 <div className = "dashboard-right-panel" data-testid="right-panel">
-                    <div><ToDoList
+                    <div className = "to-do-list" ><ToDoList
                         isShared={false}
                         listData={[]}
                     />

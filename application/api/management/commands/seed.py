@@ -136,7 +136,7 @@ class Command(BaseCommand):
             print(f"Failed to create user: {e}")
 
     def create_user(self, data):
-        User.objects.create_user(firstname = data['firstName'], lastname = data['lastName'], email = data['email'], username = data['username'], password = self.DEFAULT_PASSWORD, hours_studied = data['hoursStudied'], streaks = data['streaks'], description = data['description'], total_sessions = data['totalSessions'])
+        User.objects.create_user(firstname = data['firstName'], lastname = data['lastName'], email = data['email'], username = data['username'], password = self.DEFAULT_PASSWORD, hours_studied = data['hoursStudied'], last_study_date = data['lastStudyDate'], streaks = data['streaks'], description = data['description'], total_sessions = data['totalSessions'])
 
     def generate_random_user(self):
         firstName = self.faker.first_name()
@@ -144,11 +144,12 @@ class Command(BaseCommand):
         email = self.create_email(firstName, lastName)
         username = self.create_username(firstName, lastName)
         hoursStudied = randint(0, 8760)     # assuming that the hoursStudied reset every year
+        lastStudyDate = date.today() - timedelta(days=1)
         streaks = randint(0, 365)            # assuming the streaks reset every year
         description = Faker().text(max_nb_chars=200)
         totalSessions = randint(1, 100)
 
-        self.try_create_user({'firstName': firstName, 'lastName' : lastName, 'email': email, 'username': username, 'hoursStudied': hoursStudied, 'streaks': streaks, 'description': description, 'totalSessions': totalSessions})
+        self.try_create_user({'firstName': firstName, 'lastName' : lastName, 'email': email, 'username': username, 'hoursStudied': hoursStudied,'lastStudyDate': lastStudyDate, 'streaks': streaks, 'description': description, 'totalSessions': totalSessions})
 
     def generating_rewards(self):
         for x in range(self.REWARDS_COUNT):
@@ -300,7 +301,6 @@ class Command(BaseCommand):
                     start_date=start_date,
                     end_date=end_date,
                     comments=f"Sample comment for event {i + 1}",
-                    status=random.choice(['Pending', 'Confirmed', 'Cancelled']),
                 )
         self.stdout.write(self.style.SUCCESS('Successfully seeded events for all users.'))
         

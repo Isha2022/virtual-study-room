@@ -7,6 +7,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLocation } from "react-router-dom";
 import "../styles/calendar.css";
+import { useNavigate } from "react-router-dom";
+import returnHomeLogo from "../assets/return_home.png";
 
 console.log(require.resolve("@fullcalendar/react"));
 
@@ -20,9 +22,21 @@ const CalendarPage = () => {
   const [eventEnd, setEventEnd] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const navigate = useNavigate();
 
   const location = useLocation();
   const userId = location.state?.userId;
+
+  const goToDashboard = async () => {
+    try {
+      const response = await getAuthenticatedRequest("/profile/", "GET");
+      navigate(`/dashboard/${response.username}`, {
+        state: { userName: response.username }
+      });
+    } catch (error) {
+      navigate("/dashboard"); // Fallback without username
+    }
+  };
 
   if (!userId) {
     console.error("User ID is undefined. Redirecting or handling error...");
@@ -68,15 +82,15 @@ const CalendarPage = () => {
       );
 
       if (response) {
-        toast.success("Event added successfully");
-        closeAddEventPopup();
-        fetchEvents(); // Fetch events again to reload the calendar
+        toast.success("Event added successfully"); 
+        closeAddEventPopup(); 
+        fetchEvents(); // Fetch events again to reload the calendar 
       } else {
         toast.error("Error saving event.");
       }
     } catch (error) {
-      console.error("Error saving event:", error);
-      toast.error("Error connecting to backend.");
+      console.error("Error saving event:", error); 
+      toast.error("Error connecting to backend."); 
     }
   };
 
@@ -87,7 +101,7 @@ const CalendarPage = () => {
   };
 
   const closeAddEventPopup = () => {
-    setShowPopup(false);
+    setShowPopup(false); 
   };
 
   const handleEventClick = (info) => {
@@ -123,29 +137,35 @@ const CalendarPage = () => {
 
   return (
     <div className="Page">
-      <h1 className="Header">My Calendar</h1>
+      <h1 className="Header">
+        My Calendar
+        <div className="top-bar">
+          <button onClick={goToDashboard} className="dashboard-button">
+            <img src={returnHomeLogo} alt="return" />
+          </button>
+        </div>
+      </h1>
       <ToastContainer position="top-center" />
       <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin]}
-        initialView="timeGridWeek"
-        events={processedEvents}
-        headerToolbar={{
-          left: "prev,today,next",
-          center: "title",
-          right: "addEventButton,timeGridWeek,dayGridMonth,dayGridYear",
-        }}
-        customButtons={{
-          addEventButton: {
-            text: "Add Event",
-            // Debugging
-            click: () => {
-              console.log("Add Event button clicked");
-              openAddEventPopup(); // Ensure this is correctly defined
+          plugins={[dayGridPlugin, timeGridPlugin]}
+          initialView="timeGridWeek"
+          events={processedEvents}
+          headerToolbar={{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'addEventButton,dayGridMonth,timeGridWeek,dayGridYear'
+          }}
+          customButtons={{
+            addEventButton: {
+              text: "Add Event",
+              click: () => {
+                console.log("Add Event button clicked");
+                openAddEventPopup();
+              },
             },
-          },
-        }}
-        eventClick={handleEventClick}
-      />
+          }}
+          eventClick={handleEventClick}
+        />
 
       {showPopup && (
         <div className="event-popup">
@@ -153,8 +173,9 @@ const CalendarPage = () => {
             <h2>Add Event</h2>
             <form onSubmit={handleSubmit}>
               <div>
-                <label>Title:</label>
+                <label htmlFor="eventTitle">Title:</label>
                 <input
+                  id="eventTitle"
                   type="text"
                   value={eventTitle}
                   onChange={(e) => setEventTitle(e.target.value)}
@@ -162,15 +183,17 @@ const CalendarPage = () => {
                 />
               </div>
               <div>
-                <label>Description:</label>
+                <label htmlFor="eventDescription">Description:</label>
                 <textarea
+                  id="eventDescription"
                   value={eventDescription}
                   onChange={(e) => setEventDescription(e.target.value)}
                 />
               </div>
               <div>
-                <label>Start:</label>
+                <label htmlFor="eventStart">Start:</label>
                 <input
+                  id="eventStart"
                   type="datetime-local"
                   value={eventStart}
                   onChange={(e) => setEventStart(e.target.value)}
@@ -178,8 +201,9 @@ const CalendarPage = () => {
                 />
               </div>
               <div>
-                <label>End:</label>
+                <label htmlFor="eventEnd">End:</label>
                 <input
+                  id="eventEnd"
                   type="datetime-local"
                   value={eventEnd}
                   onChange={(e) => setEventEnd(e.target.value)}

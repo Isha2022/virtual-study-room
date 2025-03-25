@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import { getAuthenticatedRequest } from '../utils/authService';
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import defaultAvatar from '../assets/avatars/avatar_2.png';
 
@@ -23,12 +24,31 @@ jest.mock('react-toastify', () => {
   };
 }); 
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(),
+}));
+
 
 describe('ProfileBox', () => {
+    let navigateMock;
     beforeEach(() => {
       getAuthenticatedRequest.mockResolvedValue({
           username: 'testuser',
           description: 'Test Description',
+      });
+
+      navigateMock = jest.fn();
+      useNavigate.mockReturnValue(navigateMock);
+
+      Object.defineProperty(window, 'localStorage', {
+        value: {
+          getItem: jest.fn((key) => (key === 'user_id' ? '123' : null)),
+          setItem: jest.fn(),
+          removeItem: jest.fn(),
+          clear: jest.fn(),
+        },
+        writable: true,
       });
 
       getDownloadURL.mockResolvedValue('https://example.com/avatar.png');
@@ -40,7 +60,6 @@ describe('ProfileBox', () => {
           })
       );
 
-      jest.spyOn(Storage.prototype, 'removeItem');
     });
 
     test('renders ProfileBox component', async () => {
@@ -97,7 +116,7 @@ describe('ProfileBox', () => {
           fireEvent.click(uploadLabel); 
       });
       //find the hidden file input and simulate file selection
-      const input = screen.getByTestId('file-input'); // Change this to match your input's label
+      const input = screen.getByTestId('file-input');
       await act(async () => {
           fireEvent.change(input, { target: { files: [file] } }); // Simulate file selection
       });
@@ -157,7 +176,7 @@ describe('ProfileBox', () => {
         </Router>
       );
 
-      const logoffButton = screen.getByText('LOG OFF');
+      const logoffButton = screen.getByText('Logout');
       fireEvent.click(logoffButton);
 
       await waitFor(() => expect(localStorage.removeItem).toHaveBeenCalledWith('access_token'));
@@ -324,6 +343,44 @@ describe('ProfileBox', () => {
       fireEvent.click(screen.getByText("×"));
       expect(screen.queryByText("Your Badge Collection")).not.toBeInTheDocument();
       
+    });
+
+    test('navigates to calendar with user_id from localStorage', () => {
+      render(
+        <Router>
+          <ProfileBox />
+        </Router>
+      );
+  
+      // Simulate clicking a button that triggers gotoCalendar
+      const calendarButton = screen.getByTestId('calendar-button-profile'); // Adjust this to match your button's test ID
+      fireEvent.click(calendarButton);
+  
+      // Verify localStorage.getItem was called
+      expect(localStorage.getItem).toHaveBeenCalledWith('user_id');
+  
+      // Verify navigate was called with the correct arguments
+      expect(navigateMock).toHaveBeenCalledWith('/calendar/', {
+        state: { userId: '123' },
+      });
+    });
+
+
+    test('fetches profile picture and uses default avatar if not found', async () => {
+      render(
+        <Router>
+          <ProfileBox />
+        </Router>
+      );
+    
+      // Mock getDownloadURL to reject with an error (simulate image not found)
+      getDownloadURL.mockRejectedValueOnce(new Error('Image not found'));
+    
+      // Wait for the component to fall back to the default avatar
+      await waitFor(() => {
+        const profileImage = screen.getByTestId('image-profile-src');
+        expect(profileImage).toHaveAttribute('src', defaultAvatar);
+      });
     });
 
 });
