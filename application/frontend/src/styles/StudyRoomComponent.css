@@ -1,5 +1,5 @@
 .dashboard-panel {
-    padding: 20px;
+    padding: 15px;
 }
 
 .dashboard-panel input {
@@ -8,7 +8,7 @@
     margin-bottom: 20px;
     border: 1px solid rgba(246, 156, 151, 0.3);
     border-radius: 20px;
-    padding: 12px 20px;
+    padding: 12px 15px;
     text-align: left;
     background-color: rgba(255, 255, 255, 0.7);
     outline: none;
