@@ -28,7 +28,7 @@ describe("CreateNewList", () => {
  
 
     const submitForm = () => {
-        const titleInput = screen.getByPlaceholderText("Enter list name");
+        const titleInput = screen.getByPlaceholderText("Enter list title");
         
         fireEvent.change(titleInput, { target: { value: "New List" } });
         
@@ -52,7 +52,7 @@ describe("CreateNewList", () => {
         setup();
 
         expect(screen.getByText("Add List")).toBeInTheDocument();
-        expect(screen.getByPlaceholderText("Enter list name")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText("Enter list title")).toBeInTheDocument();
     });
 
     // Tests the modal does not render when `addListWindow` is false
