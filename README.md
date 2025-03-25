@@ -19,22 +19,22 @@ The deployed version of the application can be found at [*virtual-study-room-phi
 
 ## Default Logins for Testing
 - _Alice Smith_
-	- Email: alice@exmaple.com
+	- Email: alice@example.com
    	- Password: Password123
 - _Bob Johnson_
-	- Email: bob@exmaple.com
+	- Email: bob@example.com
    	- Password: Password123
 - _John Doe_
-	- Email: john@exmaple.com
+	- Email: john@example.com
    	- Password: Password123
 - _Name Surname_
-  	- Email: name@exmaple.com
+  	- Email: name@example.com
   	- Password: Password123
 
 ## Project structure
 The project consists of the following components:
 - **Frontend:** React.js
-- **Backend:** Django with REST API integration
+- **Backend:** Django with REST API integration and Websockets
 - **Database:** Primarily Django Models, as well as Firebase for storage of multimedia
 
 ## Installation instructions
