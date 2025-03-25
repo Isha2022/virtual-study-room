@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+    import React, { useState } from 'react';
 import { getAuthenticatedRequest } from "../../utils/authService";
 import "../../styles/toDoList/ToDoList.css";
 import AddTaskModal from "./CreateNewTask";
@@ -7,7 +7,12 @@ import useWebSocket from './useWebSocket';
 import useToDoList from './useToDoList';
 import TaskItem from './TaskItem';
 
+// The ToDoList component is responsible for rendering and managing to-do lists and tasks.
+// It handles both shared and individual lists, allowing users to add, delete, and toggle task completion.
 const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }) => {
+    
+    // The ToDoList component is responsible for rendering and managing to-do lists and tasks.
+    // It handles both shared and individual lists, allowing users to add, delete, and toggle task completion.
     const { lists, loading, setLists } = useToDoList(isShared, listId);
     const [addTaskWindow, setAddTaskWindow] = useState(false);
     const [selectedListId, setSelectedListId] = useState(null);
@@ -15,9 +20,10 @@ const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [expandedTasks, setExpandedTasks] = useState({});
 
-    // WebSocket Hook
+    // WebSocket integration to allow real-time updates of the to-do list tasks when shared
     useWebSocket(isShared, socket, listId, setLists, roomCode);
 
+    // Functionality to handle toggling task completion, sending updates via WebSocket if shared
     const toggleTaskCompletion = async (taskId) => {
         try {
             const task = await getAuthenticatedRequest(`/update_task/${taskId}/`, "PATCH");
@@ -45,6 +51,7 @@ const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }
         }
     };
 
+    // Handle task deletion, update the list locally and through WebSocket if shared
     const handleDeleteTask = async (taskId) => {
         try {
             const data = await getAuthenticatedRequest(`/delete_task/${taskId}/`, "DELETE");
@@ -69,8 +76,7 @@ const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }
         }
     };
 
-
-
+    // Handle list deletion for non-shared lists
     const handleDeleteList = async (listId) => {
         try {
             const data = await getAuthenticatedRequest(`/delete_list/${listId}/`, "DELETE");
@@ -80,6 +86,7 @@ const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }
         } 
     };
 
+    // Handle adding a task to a specific list
     const handleAddTask = (listId) => {
         setSelectedListId(listId);
         setAddTaskWindow(true);
@@ -90,47 +97,47 @@ const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }
         }
     };
 
+    // Handle adding a new list
     const handleAddList = () => {
         setAddListWindow(true);
     };
 
+    // Toggle full-screen view for displaying the to-do list
     const toggleFullScreen = () => {
         setIsFullScreen(!isFullScreen);
     };
 
+    // Manage task expansion for viewing additional task details
     const toggleTaskDetails = (taskId) => {
         setExpandedTasks((prev) => ({ ...prev, [taskId]: !prev[taskId] }));
     };
 
+    // Loading state for displaying a loading message while fetching the to-do lists
     if (loading) return <div>Loading To-Do Lists...</div>;
 
     return (
         <div className={isFullScreen ? "todo-container full-screen" : "todo-container"}>
-            {/* Header */}
             <div className="todo-header">
+                <h3>To-Do Lists</h3>
                 {!isShared ? (
-                    <>
-                        <h3>To-Do Lists</h3>
-                        <div className="header-buttons">
-                            <button onClick={handleAddList} className="btn btn-success btn-sm" aria-label="Add List">
-                                <i className="bi bi-plus-circle"></i>
-                            </button>
-                            <button onClick={toggleFullScreen} className="full-screen-btn">
-                                {isFullScreen ? (
-                                    <>
-                                        <i className="bi bi-box-arrow-in-down"></i> Exit View
-                                    </>
-                                ) : (
-                                    <>
-                                        <i className="bi bi-arrows-fullscreen">View All</i>
-                                    </>
-                                )}
-                            </button>
-                        </div>
-                    </>) : (<></>)
-                }
+                    <div className="header-buttons">
+                        <button onClick={handleAddList} className="btn btn-success btn-sm" aria-label="Add List">
+                            <i className="bi bi-plus-circle"></i>
+                        </button>
+                        <button onClick={toggleFullScreen} className="full-screen-btn">
+                            {isFullScreen ? (
+                                <>
+                                    <i className="bi bi-box-arrow-in-down"></i> Exit View
+                                </>
+                            ) : (
+                                <>
+                                    <i className="bi bi-arrows-fullscreen">View All</i>
+                                </>
+                            )}
+                        </button>
+                    </div>
+                ) : null}
             </div>
-            {/* Task list rendering */}
             <div className="todo-list">
             {lists.map((list) => (
                 <div className="todo-card" key={list.id}>
@@ -151,7 +158,6 @@ const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }
                         {list.tasks.map((task) => (
                             <TaskItem
                                 key={task.id}
-                                //key={task.id + (task.is_completed ? "_checked" : "_unchecked")}
                                 task={task}
                                 toggleTaskCompletion={toggleTaskCompletion}
                                 handleDeleteTask={handleDeleteTask}
@@ -164,7 +170,6 @@ const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }
             ))}
             </div>
 
-            {/* Add Task Modal */}
             <AddTaskModal
                 addTaskWindow={addTaskWindow}
                 setAddTaskWindow={setAddTaskWindow}
@@ -173,7 +178,6 @@ const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }
                 isShared={isShared}
             />
 
-            {/* Add List Modal */}
             {!isShared && (
                 <AddListModal addListWindow={addListWindow} setAddListWindow={setAddListWindow} setLists={setLists} />
             )}

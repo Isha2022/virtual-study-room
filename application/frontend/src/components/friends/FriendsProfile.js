@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
-import "../../styles/friends/FriendsProfile.css"; // Updated path
+import "../../styles/friends/FriendsProfile.css";
 import { getAuthenticatedRequest } from "../../utils/authService";
 import defaultAvatar from "../../assets/avatars/avatar_2.png";
 import { storage } from "../../firebase-config";
 import { ref, getDownloadURL } from "firebase/storage";
 
 const FriendsProfile = ({ FriendsId, addUserWindow, setAddUserWindow }) => {
+
+  // States for managing the profile data, loading state, and any potential errors
   const [friendsProfile, setFriendsProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // useEffect hook to fetch the friend's profile data whenever the FriendsId changes
   useEffect(() => {
-    if (!FriendsId) return; // Don't fetch if no friend is selected
+    if (!FriendsId) return; 
 
+    // Fetch the friend's profile data from the API
     const fetchUserData = async () => {
       setLoading(true);
       setError(null);
@@ -35,9 +39,10 @@ const FriendsProfile = ({ FriendsId, addUserWindow, setAddUserWindow }) => {
     };
 
     fetchUserData();
-  }, [FriendsId]); // Fetch data when FriendsId changes
+  }, [FriendsId]); 
 
-  if (!addUserWindow) return null; // Don't render if modal is closed
+  // If the modal is not open (addUserWindow is false), don't render the component
+  if (!addUserWindow) return null; 
 
   return (
     <div

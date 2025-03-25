@@ -34,12 +34,13 @@
 
 .Page {
   display: fixed;
-  overflow: auto;
   justify-content: center;
   margin: 0;
   box-sizing: border-box; /* Ensure padding/border don't increase its size */
   background-color: #f6f0f0;
   position: relative;
+  overflow: hidden;
+  height: auto;
 }
 
 button.addEventButton {
@@ -178,7 +179,7 @@ button.addEventButton {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   padding: 15px 50px;
   margin-bottom: 0 !important;
-  text-shadow: 
+  text-shadow:
     0 0 2px rgba(255, 255, 255, 0.8),
     0 0 8px rgba(186, 198, 241, 0.6),
     0 0 12px rgba(186, 198, 241, 0.4),
@@ -194,7 +195,7 @@ button.addEventButton {
   text-transform: capitalize !important;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   transition: background-color 0.3s ease;
-  margin: 10px; 
+  margin: 10px;
 }
 
 .fc-button:hover {
@@ -321,19 +322,29 @@ button.addEventButton {
   filter: brightness(0) invert(1) drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
 }
 
+.fc-timegrid-body{
+    overflow: hidden;
+    height : auto;
+}
+
+.fc-scrollgrid{
+    overflow: hidden;
+    height: auto;
+}
+
 @media (max-width: 768px) {
   .fc-header-toolbar {
     flex-direction: column;
     gap: 10px;
     padding: 10px;
   }
-  
+
   .fc-toolbar-chunk {
     display: flex;
     justify-content: center;
     width: 100%;
   }
-  
+
   .fc-event {
     width: 85% !important;
     font-size: 0.7em;

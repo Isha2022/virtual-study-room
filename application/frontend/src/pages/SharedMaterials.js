@@ -182,11 +182,15 @@ function SharedMaterials({ socket }) {
   const openFileModal = (file) => {
     setSelectedFile(file);
     setFileModalOpen(true);
+    toast.dismiss();
+    toast.clearWaitingQueue();
   };
 
   const closeFileModal = () => {
     setFileModalOpen(false);
     setSelectedFile(null);
+    toast.dismiss();
+    toast.clearWaitingQueue();
   };
 
   return (

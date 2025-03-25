@@ -3,8 +3,10 @@ import { FriendsContext } from "./FriendsContext";
 import "../../styles/friends/PendingFriends.css";
 
 const FriendsRequested = () => {
+    // Accessing the invitationsRequests, onReject function, and loading state from the FriendsContext
     const { invitationsRequests, onReject, loading } = useContext(FriendsContext);
 
+    // Display a loading message while the data is being fetched
     if (loading) return <div className="loading">Loading Friend Requests...</div>;
 
     return (

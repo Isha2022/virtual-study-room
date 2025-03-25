@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.core.validators import RegexValidator
 from django.db.models import Q
+from datetime import timedelta
+from django.utils.timezone import now
 
 '''
 Custom User Model & Manager. Extends AbstractBaseUser to create custom User model
@@ -50,6 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         )])
     created_at = models.DateTimeField(auto_now_add=True)
     hours_studied = models.IntegerField(default=0)
+    last_study_date = models.DateField(null=True, blank=True)   # Last recorded study date - used for analytics
     streaks = models.IntegerField(default=0)
     share_analytics = models.BooleanField(default=False)
     ''' description can be left blank '''
@@ -80,4 +83,21 @@ class User(AbstractBaseUser, PermissionsMixin):
             Q(username__icontains=search_query) |
             Q(firstname__icontains=search_query) |
             Q(lastname__icontains=search_query))
+    
+    def update_study_streak(self):
+        today = now().date()
+
+        if self.last_study_date == today:
+            # User already studied today, no need to update
+            return
+
+        if self.last_study_date == today - timedelta(days=1):
+            # Studied yesterday, increase streak
+            self.streaks += 1
+        else:
+            # Missed a day, reset streak
+            self.streaks = 1
+
+        self.last_study_date = today
+        self.save()
         

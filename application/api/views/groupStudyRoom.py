@@ -56,6 +56,9 @@ def create_room(request):
                 user=user,
                 session=room,
             )
+        # Update user's streak after creating a room
+        user.update_study_streak()
+
         return Response({"roomCode" : room.roomCode,"roomList": room.toDoList.id})
     except Exception as e:
         return Response({"error": f"Failed to create room: {str(e)}"}, status=400)
@@ -103,6 +106,10 @@ def join_room(request):
                 user=user,
                 session=study_session,
             )
+        
+        # Update user's streak after creating a room
+        user.update_study_streak()
+        
         return Response({"message": "Joined successfully!"})
     return Response({"error": "Room not found"}, status=404)
 
@@ -162,7 +169,7 @@ def leave_room(request):
             return Response({"message": "Left successfully!", "username": user.username})
         except SessionUser.DoesNotExist:
             return Response({"error": "User is not in the session"}, status=404)
-        return Response({"error": "Room not found"}, status=404)
+    return Response({"error": "Room not found"}, status=404)
 
 def notify_participants(room_code, participants):
     '''

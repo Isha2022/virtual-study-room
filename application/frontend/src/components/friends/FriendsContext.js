@@ -3,21 +3,26 @@ import { createContext, useState, useEffect } from "react";
 import { getAuthenticatedRequest } from "../../utils/authService";
 import defaultAvatar from '../../assets/avatars/avatar_2.png';
 import { storage } from "../../firebase-config";
-import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { ref, getDownloadURL } from "firebase/storage";
 
+// Creating the FriendsContext for managing and providing friend data to other components
 export const FriendsContext = createContext();
 
+// FriendsProvider component wraps around the app to provide friend-related data and functions
 export const FriendsProvider = ({ children }) => {
+
+    // States to manage invitations, friend requests, list of friends, and loading status
     const [invitationsRequests, setInvitations] = useState([]);
     const [friendRequests, setRequests] = useState([]);
     const [friends, setFriends] = useState([]);
     const [loading, setLoading] = useState(true);
 
-
+    // UseEffect hook to fetch friend-related data when the component mounts
     useEffect(() => {
         fetchData();
     }, []);
 
+    // Function to fetch all relevant friend data (requests, invitations, friends) and associate images from Firebase storage
     const fetchData = async (userId = null) => {
         setLoading(true);
         try {
@@ -27,6 +32,8 @@ export const FriendsProvider = ({ children }) => {
 
             setInvitations(invitationsData);
             setRequests(requestsData);
+
+            // Fetch images for each friend, request, and invitation from Firebase Storage
 
             const friendsWithImages = await Promise.all(
                 friendsData.map(async (friend) => {
@@ -62,7 +69,7 @@ export const FriendsProvider = ({ children }) => {
         }
     };
 
-
+    // Function to manage friend requests and invitations (accept, reject, or create new)
     const manageFriends = async (request, Id, method) => {
         try {
             const response = await getAuthenticatedRequest(`/${request}/${Id}/`, method);
@@ -95,14 +102,17 @@ export const FriendsProvider = ({ children }) => {
         }
     }
 
+    // Function to accept a friend request
     const onAccept = async (requestId, request, method) => {
         manageFriends(request, requestId, method);
     };
 
+    // Function to reject a friend request
     const onReject = async (requestId) => {
         await manageFriends('reject_friend', requestId, "DELETE");
     };
 
+    // Providing the state and functions to children components via context
     return (
         <FriendsContext.Provider value={{ friendRequests, invitationsRequests, friends, onAccept, onReject, loading, manageFriends }}>
             {children}

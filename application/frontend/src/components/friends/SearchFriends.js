@@ -8,16 +8,21 @@ import defaultAvatar from '../../assets/avatars/avatar_2.png';
 import { storage } from "../../firebase-config";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
+// This component allows users to search for friends by name or username and displays relevant actions
+// depending on the current status of the relationship with each user (friend request sent, invitation pending, already friends).
 const SearchFriends = () => {
+    // Extract necessary state and functions from FriendsContext
     const { loading, onAccept, onReject, friendRequests, invitationsRequests, friends  } = useContext(FriendsContext);
 
     const [search, setSearch] = useState("");
     const [result, setResult] = useState([]);
 
+    // Accessing context data related to friend requests and user lists
     const handleChange = (event) => {
         setSearch(event.target.value);
     };
 
+    // Effect hook to trigger search when the search input is updated
     useEffect(() => {
         if (search.length > 2) {
             const fetchData = async () => {
@@ -28,12 +33,12 @@ const SearchFriends = () => {
                     const friendsWithImages = await Promise.all(
                         friendsData.map(async (friend) => {
                             const imageRef = ref(storage, `avatars/${friend.username}`);
-                            const imageUrl = await getDownloadURL(imageRef).catch(() => defaultAvatar); // Default if not found
-                            return { ...friend, image: imageUrl }; // Add profileImage to friend object
+                            const imageUrl = await getDownloadURL(imageRef).catch(() => defaultAvatar);
+                            return { ...friend, image: imageUrl }; 
                         })
                     );
 
-                    setResult(friendsWithImages); // Set state with updated friends
+                    setResult(friendsWithImages);
                 } catch (error) {
                     console.error("Error fetching friends:", error);
                 }
@@ -41,7 +46,7 @@ const SearchFriends = () => {
 
             fetchData();
         } else {
-            setResult([]); // Clear the result if search length is less than or equal to 2
+            setResult([]); 
         }
     }, [search]);
 
@@ -53,11 +58,12 @@ const SearchFriends = () => {
             <ul className="invitations-container invitations-list">
                 {result.map((friend) => (
                     <li key={friend.id} className="invitation-card">
+                        {/* Display friend's image and name */}
                         <img src={friend.image || defaultAvatar} alt="logo" className="small-pic" />
                         <div className="invitation-name">
-                        <span >
-                            {friend.name} {friend.surname} ({friend.username})
-                        </span>
+                        <span>{friend.name} {friend.surname} ({friend.username})</span>
+                        
+                        {/* Conditional rendering of actions based on the friend status */}
                         <div className="invitation-actions">
                             {
                             friendRequests.some(request => request.username === friend.username) ? (

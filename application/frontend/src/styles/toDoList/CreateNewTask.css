@@ -1,139 +1,271 @@
-/* Modal Overlay */
-.modal-overlay-task {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; /* Ensure it's on top of other elements */
+/* Semi-transparent backdrop overlay for modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(186, 215, 245, 0.4);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
 }
 
-.modal-content-task {
-  margin: auto;
-  padding: 20px;
-  border: 5px solid #f2bac9;
-  background-color: white;
-  width: 50%;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  z-index: 2001; /*ensures it is on top of dashboard heading*/
+/* Main modal content box */
+.modal-content {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(233, 233, 255, 0.9));
+    backdrop-filter: blur(8px);
+    padding: 30px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 
+        0 10px 25px rgba(186, 215, 245, 0.3),
+        0 0 30px rgba(186, 215, 245, 0.2),
+        inset 0 0 20px rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    position: relative;
+    overflow: hidden;
 }
 
-.form-class-task {
-  width: 100%;
-  margin-bottom: 20px;
-  margin-left: 5px;
+/* Background gradient effect for modal */
+.modal-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(186, 215, 245, 0.2) 0%, transparent 25%),
+        radial-gradient(circle at 80% 60%, rgba(186, 215, 245, 0.2) 0%, transparent 30%);
+    z-index: -1;
 }
 
-.modal-content-task h2 {
-  font-family: "Inter", sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  color: black;
-  margin-bottom: 30px;
+/* Small character decoration in bottom corner */
+.modal-content::after {
+    content: "✧ ✦ ✧";
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    font-size: 12px;
+    color: rgba(186, 215, 245, 0.6);
+    letter-spacing: 3px;
 }
 
-/* Form Group */
-.form-group-task {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  padding-inline: 20px;
-  padding-bottom: 10px;
-  gap: 5px; /* Space between label and input */
+/* Modal heading style */
+.modal-content h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: #f2bac9;
+    margin-bottom: 25px;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+    position: relative;
+    padding-bottom: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
-.form-group-task label {
-  font-family: "Inter", sans-serif;
-  font-size: 20px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 5px;
+/* Underline for modal heading */
+.modal-content h4::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, rgba(242, 186, 201, 0.6), transparent);
 }
 
-.form-group-task input {
-  background-color: antiquewhite;
-  padding: 10px;
-  border-radius: 20px;
-  border: none;
-  text-align: left;
-  resize: none;
-  width: 100%;
-  min-height: 60px;
-  color: black;
-  font-weight: 600;
-  font-family: "Inter", sans-serif;
+/* Text inputs and textarea fields */
+.newTask input[type="text"],
+.newTask textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(186, 215, 245, 0.6);
+    border-radius: 12px;
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: inset 0 1px 4px rgba(186, 215, 245, 0.2);
+    transition: all 0.3s ease;
 }
 
-.form-group-task input:focus {
-  border-color: #f2bac9; /* Match calendar modal focus color */
-  outline: none;
+/* Focus state for text inputs */
+.newTask input[type="text"]:focus,
+.newTask textarea:focus {
+    border-color: #bad7f5;
+    box-shadow: 0 0 10px rgba(186, 215, 245, 0.3);
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
-.form-group-task textarea {
-  background-color: antiquewhite;
-  padding: 10px;
-  border-radius: 20px;
-  border: none;
-  text-align: left;
-  resize: none;
-  width: 100%;
-  min-height: 60px;
-  color: black;
-  font-weight: 600;
-  font-family: "Inter", sans-serif;
-  margin-top: 5px;
+/* Checkbox styling */
+.newTask input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    accent-color: #bad7f5;
 }
 
-/* Button Group */
-.button-group-task {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px; /* Space between buttons */
-  margin-top: 15px;
-  padding-right: 20px;
+/* Text next to checkboxes */
+task-span {
+    font-size: 14px;
+    margin-left: 10px;
+    color: #7a7a9a;
 }
 
-/* Save Button */
-.btn-save-task {
-  background-color: #f2bac9; /* Match calendar modal button color */
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+/* Base button style */
+.btn {
+    padding: 10px 18px;
+    border-radius: 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    margin: 0 5px;
+    background-color: #f0f0f7;
+    box-shadow: 
+        0 3px 8px rgba(186, 215, 245, 0.3),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.05);
 }
 
-.btn-save-task:hover {
-  background-color: #d89aa9; /* Darker shade on hover */
+/* Primary (blue) button */
+.btn-primary {
+    background: linear-gradient(135deg, #bad7f5 0%, #cfe4fa 100%);
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
-/* Cancel Button */
-.btn-cancel-task {
-  background-color: #bad7f2; /* Match calendar modal button color */
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+/* Hover state for primary button */
+.btn-primary:hover {
+    background: linear-gradient(135deg, #cfe4fa 0%, #bad7f5 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 5px 12px rgba(186, 215, 245, 0.4),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.05);
 }
 
-.btn-cancel-task:hover {
-  background-color: #9ab7d8; /* Darker shade on hover */
+/* Secondary (gray) button */
+.btn-secondary {
+    background: linear-gradient(135deg, #f0f0f7 0%, #e6e6f0 100%);
+    color: #8e8ea9;
+}
+
+/* Hover state for secondary button */
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #e6e6f0 0%, #f0f0f7 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 5px 12px rgba(186, 215, 245, 0.2),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Active (pressed) state for all buttons */
+.btn:active {
+    transform: translateY(1px);
+    box-shadow: 
+        0 2px 5px rgba(186, 215, 245, 0.2),
+        inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Circular delete buttons */
+button[aria-label="Delete Task"],
+button[aria-label="Delete List"],
+.delete-button {
+    height: 35px !important;
+    width: 35px !important;
+    min-width: 35px !important;
+    max-width: 35px !important;
+    min-height: 35px !important;
+    max-height: 35px !important;
+    border-radius: 50% !important;
+    background-color: rgba(186, 215, 245, 0.85) !important;
+    background-image: 
+        radial-gradient(circle at center, rgba(186, 215, 245, 0.9) 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, rgba(186, 215, 245, 0.8) 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(186, 215, 245, 0.8) 15%, transparent 50%) !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: 
+        inset 2px 2px 5px rgba(255, 255, 255, 0.8),
+        inset -2px -2px 5px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(186, 215, 245, 0.6),
+        0 0 15px rgba(186, 215, 245, 0.4) !important;
+    position: relative !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Removes default icons from delete buttons */
+button[aria-label="Delete Task"] i,
+button[aria-label="Delete List"] i,
+.delete-button i {
+    display: none !important;
+}
+
+/* Adds trash bin body to delete buttons */
+button[aria-label="Delete Task"]::before,
+button[aria-label="Delete List"]::before,
+.delete-button::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 12px !important;
+    height: 14px !important;
+    border: 2px solid white !important;
+    border-top: none !important;
+    border-radius: 0 0 2px 2px !important;
+    box-sizing: border-box !important;
+}
+
+/* Adds trash bin lid to delete buttons */
+button[aria-label="Delete Task"]::after,
+button[aria-label="Delete List"]::after,
+.delete-button::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 32% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 16px !important;
+    height: 2px !important;
+    background-color: white !important;
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Hides any leftover icon elements */
+button[aria-label="Delete Task"] .delete-icon-line,
+button[aria-label="Delete List"] .delete-icon-line,
+.delete-button .delete-icon-line {
+    display: none !important;
+}
+
+/* Hover effect for delete buttons */
+button[aria-label="Delete Task"]:hover,
+button[aria-label="Delete List"]:hover,
+.delete-button:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 20px rgba(186, 215, 245, 0.6) !important;
+}
+
+/* Active state for delete buttons */
+button[aria-label="Delete Task"]:active,
+button[aria-label="Delete List"]:active,
+.delete-button:active {
+    transform: scale(0.95) !important;
+    box-shadow: 
+        inset 1px 1px 3px rgba(255, 255, 255, 0.5),
+        inset -1px -1px 3px rgba(0, 0, 0, 0.2),
+        0 2px 6px rgba(186, 215, 245, 0.5) !important;
 }

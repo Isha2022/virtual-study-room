@@ -18,6 +18,7 @@ jest.mock('react-toastify', () => {
       error: jest.fn(),
       success: jest.fn(),
       dismiss: jest.fn(),
+      clearWaitingQueue: jest.fn(),
     },
   };
 });
