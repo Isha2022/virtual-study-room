@@ -1,17 +1,15 @@
-from django.contrib.auth import get_user_model
+from api.models.user import User
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIRequestFactory
 from api.models.events import Appointments
-from api.serializers import AppointmentSerializer  
 from datetime import datetime, timedelta
 import json
 
-User = get_user_model()
 
 class EventViewSetTests(APITestCase):
     def setUp(self):
-        # Create test user
+        self.factory = APIRequestFactory()
         self.user = User.objects.create_user(
             username='testuser',
             email='test@example.com',
@@ -20,11 +18,7 @@ class EventViewSetTests(APITestCase):
             lastname='User',
             description='Test user'
         )
-        
-        # Set current time for consistent testing
         self.current_time = datetime.now()
-        
-        # Create initial appointment
         self.appointment = Appointments.objects.create(
             user=self.user,
             name='Doctor Appointment',
@@ -32,9 +26,50 @@ class EventViewSetTests(APITestCase):
             end_date=self.current_time + timedelta(hours=1),
             comments='Annual checkup with Dr. Smith'
         )
-        
-        # Authenticate the test client
         self.client.force_authenticate(user=self.user)
+
+    def test_perform_create_integration(self):
+        """Test appointment creation through API with serializer field mappings"""
+        data = {
+            'title': 'New Appointment',
+            'start': self.current_time.isoformat(),
+            'end': (self.current_time + timedelta(hours=1)).isoformat(),
+            'description': 'Test description'
+        }
+        response = self.client.post('/api/events/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
+        appointment = Appointments.objects.latest('id')
+        self.assertEqual(appointment.user, self.user)
+        self.assertEqual(appointment.name, 'New Appointment')
+        self.assertEqual(appointment.comments, 'Test description')
+
+    
+    def test_read_only_user_field(self):
+        """Verify user cannot be set via API"""
+        another_user = User.objects.create_user(
+            firstname='another',
+            lastname='useranother',
+            username='anotheruser_unique',
+            email='another@example.com',
+            password='testpass123',
+            description='not known'
+        )
+        
+        data = {
+            'title': 'User Test',
+            'start': self.current_time.isoformat(),
+            'end': (self.current_time + timedelta(hours=1)).isoformat(),
+            'user': another_user.id
+        }
+        
+        response = self.client.post('/api/events/', data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
+        appointment = Appointments.objects.latest('id')
+        self.assertEqual(appointment.user, self.user)
+        self.assertNotEqual(appointment.user, another_user)
+
 
     def test_appointment_creation(self):
         '''Test basic appointment creation'''
@@ -83,3 +118,28 @@ class EventViewSetTests(APITestCase):
         response = self.client.post("/api/events/", invalid_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
+    # def test_perform_create_directly(self):
+    #     """Directly test perform_create with serializer field mappings"""
+    #     from api.views.calendar import EventViewSet
+    #     from rest_framework.request import Request
+        
+    #     request = self.factory.post('/api/events/', {
+    #         'title': 'Direct Test',
+    #         'start': self.current_time.isoformat(),
+    #         'end': (self.current_time + timedelta(hours=1)).isoformat()
+    #     }, format='json')
+    #     request.user = self.user
+        
+    #     drf_request = Request(request)
+    #     view = EventViewSet()
+    #     view.request = drf_request
+    #     view.action = 'create'
+        
+    #     serializer = view.get_serializer(data=drf_request.data)
+    #     self.assertTrue(serializer.is_valid(), serializer.errors)
+        
+    #     view.perform_create(serializer)
+        
+    #     appointment = Appointments.objects.latest('id')
+    #     self.assertEqual(appointment.user, self.user)
+    #     self.assertEqual(appointment.name, 'Direct Test')
