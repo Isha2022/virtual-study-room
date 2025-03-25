@@ -7,7 +7,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { getAuthenticatedRequest, getAccessToken } from "../utils/authService";
 
 function Login() {
-  // TODO: TEST THIS FILE?
 
   const navigate = useNavigate();
 
