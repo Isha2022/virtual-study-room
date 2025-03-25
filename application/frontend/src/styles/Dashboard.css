@@ -118,25 +118,28 @@
     height: 100vh;
 }
 
-/* Match ToDoList title styling for Dashboard section titles */
+/* Updated title styling with ethereal butterfly-inspired aesthetics */
 .dashboard-container h2,
 .profile-section h2,
 .study-room-section h2,
-.statistics-section h2 {
-    color: #bac6f1 !important; 
+.statistics-section h2,
+.profile-title,
+.profile-username {
+    color: #f79cac !important; 
     text-shadow: 
-        0 0 2px rgba(186, 198, 241, 0.3),
-        0 0 4px rgba(186, 198, 241, 0.2),
-        0 0 6px rgba(186, 198, 241, 0.1),
-        0 0 8px rgba(255, 255, 255, 0.5),
-        1px 1px 0px rgba(209, 203, 237, 0.5) !important;
+        0 0 5px rgba(255, 255, 255, 0.8),
+        0 0 10px rgba(247, 156, 172, 0.4),
+        0 0 15px rgba(247, 156, 172, 0.2),
+        0 0 20px rgba(255, 255, 255, 0.3) !important;
     font-weight: bold !important;
     text-transform: uppercase !important;
-    letter-spacing: 1px !important;
+    letter-spacing: 1.2px !important;
     font-size: 1.2em !important;
+    font-family: 'Inter', sans-serif !important;
+    position: relative !important;
 }
 
-/* Add star decorations around headers just like in ToDoList */
+/* Use the same sparkle symbols on both sides for consistency */
 .dashboard-container h2::before,
 .dashboard-container h2::after,
 .profile-section h2::before,
@@ -144,9 +147,14 @@
 .study-room-section h2::before,
 .study-room-section h2::after,
 .statistics-section h2::before,
-.statistics-section h2::after {
-    content: '★';
+.statistics-section h2::after,
+.profile-title::before,
+.profile-title::after,
+.profile-username::before,
+.profile-username::after {
+    content: '✧';
     display: inline-block;
-    margin: 0 5px;
-    color: #bac6f1;
+    margin: 0 7px;
+    color: #f8c1d0;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.9), 0 0 10px rgba(248, 193, 208, 0.6);
 }
