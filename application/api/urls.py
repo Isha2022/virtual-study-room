@@ -10,5 +10,5 @@ router.register(r'events', EventViewSet, basename='event')
 
 urlpatterns = [
     #path('views/login-page', login),
-    #path('', include(router.urls)),
+    path('', include(router.urls)),
 ]
