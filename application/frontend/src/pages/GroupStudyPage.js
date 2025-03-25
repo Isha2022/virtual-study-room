@@ -23,9 +23,13 @@ import {
   deleteObject,
 } from "firebase/storage";
 import SharedMaterials from "./SharedMaterials.js";
+import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
+import SpotifyButton from '../components/SpotifyButton';
+import FloatingMusicPlayer from "../components/FloatingWindow.js";
 
 function GroupStudyPage() {
   const [participants, setParticipants] = useState([]); // State to store participants
+  const [open, setOpen] = useState(false); //open and close states for pop-up window for spotify button
 
   // Location object used for state
   const location = useLocation();
@@ -74,6 +78,23 @@ function GroupStudyPage() {
 
   const [shouldReconnect, setShouldReconnect] = useState(true); // Determines whether or not to auto-reconnect user to websocket server
 
+  //handle open for spotify button
+  const handleClickOpen = () => {
+    setOpen(prevState => !prevState);
+  };
+
+  //handle close for spotify button
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpenMusicButton = () => {
+    // Assuming this should toggle the floating music player visibility
+    setOpenMusicPlayer(true);
+};
+
+  const [openMusicPlayer, setOpenMusicPlayer] = useState(false); //handle open and close for free tracks
+
   const stringToColor = (str) => {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -94,6 +115,7 @@ function GroupStudyPage() {
     }
     scrollToBottom();
   }, [socket, messages]); // This effect runs whenever `socket` changes
+
 
   useEffect(() => {
     // Ensure room code is given
@@ -137,7 +159,7 @@ function GroupStudyPage() {
       return; // Reuse the existing connection
     }
 
-    const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`); 
+    const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
     // const socket = new WebSocket("wss://studyspot.pythonanywhere.com/ws/room/room_code/");  // Production (deployed backend)
 
     //Logs when connection is established
@@ -444,9 +466,21 @@ function GroupStudyPage() {
               onMouseDown={() => handleMouseDown("music")}
               onMouseUp={() => handleMouseUp("music")}
               onMouseLeave={() => handleMouseUp("music")}
+              onClick={handleClickOpen}
             >
               <img src={musicLogo} alt="Music" />
             </button>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>
+                  <div style={{ textAlign: 'center' }}>Spotify Player</div>
+                  <h2 style={{ textAlign: 'center', fontSize: '14px' }} >(playback for premium users only)</h2>
+                </DialogTitle>
+                <DialogContent>
+                    <SpotifyButton />
+                    <Button onClick={handleOpenMusicButton}>Switch to Free Tracks</Button>
+                </DialogContent>
+            </Dialog>
+            <FloatingMusicPlayer isOpen={openMusicPlayer} onClose={() => setOpenMusicPlayer(false)} />
             <button
               type="button"
               className={`customisation-button ${
@@ -554,7 +588,7 @@ function GroupStudyPage() {
                     className={`chat-message ${
                       msg.sender === username ? "current-user" : "other-user"
                     }`}
-                    style={{ 
+                    style={{
                       color: userColor,
                       borderBottom: isSameUserAsPrevious ? "none" : "1px dotted #eee", // Conditionally apply border
                     }}
@@ -563,7 +597,7 @@ function GroupStudyPage() {
                   </div>
                 );
               })}
-              {typingUser && typingUser !== username && (
+              {typingUser && (
                 <p className="typing-indicator">
                   {" "}
                   <strong>{typingUser}</strong> is typing...

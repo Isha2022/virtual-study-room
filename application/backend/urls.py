@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -28,7 +28,8 @@ from api.views.calendar import EventViewSet
 from api.views.shared_materials_view import get_current_session
 
 
-event_list = EventViewSet.as_view({'get': 'list', 'post': 'create'})  
+from api.views.spotify_view import AuthURL, spotify_callback, IsAuthenticated
+event_list = EventViewSet.as_view({'get': 'list', 'post': 'create'})
 event_detail = EventViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})
 
 
@@ -37,6 +38,7 @@ router.register(r'events', EventViewSet, basename='event')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include('api.urls')),
    
     path('', TemplateView.as_view(template_name='index.html')),
     
@@ -46,11 +48,13 @@ urlpatterns = [
     path("api/analytics/", get_analytics, name="analytics"),
     path("api/share_analytics/", update_analytics, name="update_analytics"),
 
+    path('api/login/', views.login, name='login'),
+
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    
+
     path('api/motivational-message/', views.motivationalMessage, name='motivation'),
-    
+
     path('api/create-room/', create_room),
     path('api/join-room/', join_room),
     path('api/get-room-details/', get_room_details),
@@ -77,6 +81,8 @@ urlpatterns = [
     path('api/find_friend/', views.FriendsView.as_view(), name='find_friend'),
     path('api/get_friend_profile/<int:id>/', views.FriendsView.as_view(), name='friends_profile'),
 
+
+    path('api/motivational-message/', views.motivationalMessage, name='motivation'),
     path('api/check-email/', views.checkEmailView, name='check_email'),
     path('api/check-username/', views.checkUsernameView, name='check_username'),
     path('api/profile/', get_logged_in_user, name='get_logged_in_user'),
