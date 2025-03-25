@@ -2,9 +2,15 @@ import React, { useContext } from "react";
 import { FriendsContext } from "./FriendsContext";
 import "../../styles/friends/PendingFriends.css";
 
+//The PendingFriends component is designed to handle and display a list of friend requests that are pending. 
+//It allows users to accept or reject friend requests.
+//This component provides an interactive way for users to manage their incoming friend requests.
 const PendingFriends = () => {
+    
+    // Accessing the state and methods from the FriendsContext
     const { friendRequests, onAccept, onReject, loading } = useContext(FriendsContext);
 
+    // If the data is still loading, show a loading message
     if (loading) return <div className="loading">Loading Friend Requests...</div>;
 
     return (

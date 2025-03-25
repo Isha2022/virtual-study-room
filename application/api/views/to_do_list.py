@@ -208,7 +208,6 @@ class ViewToDoList(APIView):
         except Exception as e:
             return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
     def patch(self, request, task_id):
         '''
         Toggle the completion status of a task and notify participants if the list is shared

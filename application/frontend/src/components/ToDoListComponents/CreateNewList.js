@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import "../../styles/toDoList/CreateNewList.css";
-
 import { getAuthenticatedRequest } from "../../utils/authService";
 
+// AddListModal is a modal component for adding a new to-do list
 const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
+  // Local state to store form data for the new list (name and shared status)
   const [formData, setFormData] = useState({ name: "", isShared: false });
 
-  // Handle form submission
+  // Handle form submission, saves the list and resets the form
   const handleSubmit = (e) => {
     e.preventDefault();
     handleSaveList(formData);
     setFormData({ name: "", isShared: false });
   };
 
+  // Handle input changes in the form
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -21,6 +23,7 @@ const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
     });
   };
 
+  // Function to handle saving the new to-do list via an API request and locally
   const handleSaveList = async (newList) => {
     console.log("Saving list with data:", newList);
     try {
@@ -28,12 +31,12 @@ const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
         name: newList.name,
         is_shared: newList.isShared,
       });
-      // Add the new list, including an empty 'tasks' array
+      
       const newListWithTasks = {
-        id: response.listId, // Use the returned listId
-        name: response.name, // Use the returned name
-        is_shared: response.isShared, // Use the returned isShared
-        tasks: [], // Initialize tasks as an empty array
+        id: response.listId,
+        name: response.name, 
+        is_shared: response.isShared, 
+        tasks: [],
       };
 
       setLists((prevLists) => [...prevLists, newListWithTasks]);
@@ -48,6 +51,7 @@ const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
     }
   };
 
+  // Handle cancel action by resetting form data and closing the modal
   const handleCancel = () => {
     setFormData({ name: "", isShared: false });
     setAddListWindow(false);

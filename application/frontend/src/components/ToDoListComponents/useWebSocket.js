@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+// Custom hook for managing WebSocket connections and handling real-time updates in to-do list
 const useWebSocket = (isShared, socket, listId, setLists, roomCode) => {
     useEffect(() => {
         if (!isShared) return;
@@ -13,11 +14,12 @@ const useWebSocket = (isShared, socket, listId, setLists, roomCode) => {
         wsSocket.close = () => {
             console.log("Disconnected from WebSocket");
         };
-        
 
+        // Handle incoming messages from the WebSocket server
         wsSocket.onmessage = (event) => {
             const data = JSON.parse(event.data);
 
+            // Update the lists based on the received data
             setLists(prevLists => {
                 return prevLists.map(list => {
                     if (list.id !== listId) return list;
@@ -52,11 +54,13 @@ const useWebSocket = (isShared, socket, listId, setLists, roomCode) => {
             });
         };
 
+        // Cleanup function to close the WebSocket connection when the component unmounts or when dependencies change
         return () => {
             wsSocket.close();
         };
     }, [isShared, roomCode, listId, setLists]);
 
+    // Return the WebSocket socket object for further use if needed
     return socket;
 };
 
