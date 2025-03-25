@@ -59,6 +59,9 @@ class Spotify_API():
 		
 	# updating the token or craeting a new token if not found for a session id
 	def update_or_create_user_tokens(self, session_id, access_token, token_type, expires_in, refresh_token=None):
+		if access_token is None:
+			print("Access token is missing, cannot update or create token.")
+			return
 		tokens = self.get_user_tokens(session_id)
 		expires_in = timezone.now() + timedelta(seconds=expires_in)
 		if tokens:
@@ -111,16 +114,16 @@ class Spotify_API():
 		self.update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
 
 	# getting the albums tracks, via token
-	def get_album_tracks(self, album_id, session_id):
-		tokens = self.get_user_tokens(session_id)
-		if not tokens or not tokens.access_token:
-			return {'error': 'No valid token available. User needs to reauthenticate.'}
-		headers = {'Authorization': f'Bearer {tokens.access_token}'}
-		response = request.get(f'https://api.spotify.com/v1/albums/{album_id}/tracks', headers=headers)
-		if response.status_code == 200:
-			return response.json()
-		else:
-			return {'error': 'Failed to fetch data from Spotify', 'status_code': response.status_code}
+	# def get_album_tracks(self, album_id, session_id):
+	# 	tokens = self.get_user_tokens(session_id)
+	# 	if not tokens or not tokens.access_token:
+	# 		return {'error': 'No valid token available. User needs to reauthenticate.'}
+	# 	headers = {'Authorization': f'Bearer {tokens.access_token}'}
+	# 	response = request.get(f'https://api.spotify.com/v1/albums/{album_id}/tracks', headers=headers)
+	# 	if response.status_code == 200:
+	# 		return response.json()
+	# 	else:
+	# 		return {'error': 'Failed to fetch data from Spotify', 'status_code': response.status_code}
 		
 	# executing an api request to either, play, pause or skip songs 
 	def execute_spotify_api_request(self, session_id, endpoint, post_=False, put_=False):

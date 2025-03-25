@@ -61,33 +61,33 @@ class IsAuthenticated(APIView):
         return Response({'status': is_authenticated}, status=status.HTTP_200_OK)
     
 # retrieving album tracks via url
-class GetAlbumTracks(APIView):
-    def post(self, request, *args, **kwargs):
-        album_url = request.data.get('album_url')
-        session_id = request.session.session_key
+# class GetAlbumTracks(APIView):
+#     def post(self, request, *args, **kwargs):
+#         album_url = request.data.get('album_url')
+#         session_id = request.session.session_key
 
-        if not session_id:
-            request.session.create()
-            session_id = request.session.session_key
+#         if not session_id:
+#             request.session.create()
+#             session_id = request.session.session_key
 
-        # Extract Album ID from URL
-        album_id_match = re.search(r'spotify:album:(\w+)', album_url) or re.search(r'album/(\w+)', album_url)
-        if not album_id_match:
-            return Response({"Error": "Invalid Spotify URL"}, status=status.HTTP_400_BAD_REQUEST)
+#         # Extract Album ID from URL
+#         album_id_match = re.search(r'spotify:album:(\w+)', album_url) or re.search(r'album/(\w+)', album_url)
+#         if not album_id_match:
+#             return Response({"Error": "Invalid Spotify URL"}, status=status.HTTP_400_BAD_REQUEST)
 
-        album_id = album_id_match.group(1)
-        spotify_api = Spotify_API()
-        tokens = spotify_api.get_user_tokens(session_id)
-        if not tokens:
-            return Response({"Error": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
+#         album_id = album_id_match.group(1)
+#         spotify_api = Spotify_API()
+#         tokens = spotify_api.get_user_tokens(session_id)
+#         if not tokens:
+#             return Response({"Error": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        headers = {'Authorization': f'Bearer {tokens.access_token}'}
-        response = get(f'https://api.spotify.com/v1/albums/{album_id}/tracks', headers=headers)  # Corrected to use requests.get
+#         headers = {'Authorization': f'Bearer {tokens.access_token}'}
+#         response = get(f'https://api.spotify.com/v1/albums/{album_id}/tracks', headers=headers)  # Corrected to use requests.get
 
-        if response.status_code != 200:
-            return Response({"Error": "Failed to fetch album tracks"}, status=response.status_code)
+#         if response.status_code != 200:
+#             return Response({"Error": "Failed to fetch album tracks"}, status=response.status_code)
 
-        return Response(response.json(), status=status.HTTP_200_OK)
+#         return Response(response.json(), status=status.HTTP_200_OK)
 
 # retrieving spotify token
 class GetSpotifyToken(APIView):
@@ -107,8 +107,12 @@ class GetSpotifyToken(APIView):
 #retriving the current song the user is listening to      
 class CurrentSong(APIView):
     def get(self, request, format=None):
+        print("\n=== CurrentSong View Debug ===")
+        print("Session key:", request.session.session_key)
         endpoint = "player/currently-playing"
         spotify_api = Spotify_API()
+        print("Spotify_API instance:", spotify_api)
+        print("Spotify_API module:", spotify_api.__module__)
         session_id = request.session.session_key
         response = spotify_api.execute_spotify_api_request(session_id, endpoint)
         
