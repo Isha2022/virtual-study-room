@@ -1,7 +1,7 @@
 .friends-container {
     max-width: 100%;
     margin: 20px auto;
-    padding: 20px;
+    padding: 10px;
     border-radius: 20px;
     background: linear-gradient(135deg, rgba(255, 246, 248, 0.9), rgba(249, 249, 255, 0.9), rgba(245, 255, 250, 0.9));
     box-shadow: 0 6px 15px rgba(247, 180, 201, 0.2);
@@ -16,7 +16,6 @@
     position: relative;
 }
 
-/* Magical fairy dust border */
 .friends-container::before {
     content: '';
     position: absolute;
@@ -31,7 +30,6 @@
     filter: blur(6px);
 }
 
-/* Glowing effect */
 .friends-container::after {
     content: '';
     position: absolute;
