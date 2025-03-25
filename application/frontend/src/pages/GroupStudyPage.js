@@ -90,7 +90,7 @@ function GroupStudyPage() {
 
   const handleOpenMusicButton = () => {
     // Assuming this should toggle the floating music player visibility
-    setOpenMusicPlayer(true);
+    setOpenMusicPlayer(prevState => !prevState);
 };
 
   const [openMusicPlayer, setOpenMusicPlayer] = useState(false); //handle open and close for free tracks
