@@ -116,7 +116,7 @@ describe('ProfileBox', () => {
           fireEvent.click(uploadLabel); 
       });
       //find the hidden file input and simulate file selection
-      const input = screen.getByTestId('file-input'); // Change this to match your input's label
+      const input = screen.getByTestId('file-input');
       await act(async () => {
           fireEvent.change(input, { target: { files: [file] } }); // Simulate file selection
       });

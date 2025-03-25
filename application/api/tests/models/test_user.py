@@ -2,6 +2,7 @@ from django.db import IntegrityError
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from api.models import User
+from django.utils.timezone import now, timedelta
 
 """
 Tests for the User model
@@ -43,6 +44,48 @@ class UserModelTest(TestCase):
         email = 'Test@EXAMPLE.com'
         user = User.objects.create_user(description = "", email=email, firstname="Test", lastname="User", username="testuser", password="Password123!")
         self.assertEqual(user.email, "Test@example.com")
+
+    def test_study_streak_increment(self):
+        """
+        Test that the study streak increments when studying on consecutive days
+        """
+        User = get_user_model()
+        user = User.objects.create_user(**self.user_data)
+
+        user.last_study_date = now().date() - timedelta(days=1)  # Yesterday
+        user.streaks = 3
+        user.save()
+        
+        user.update_study_streak()
+        self.assertEqual(user.streaks, 4)
+
+    def test_study_streak_reset(self):
+        """
+        Test that the study streak resets if a day is skipped
+        """
+        User = get_user_model()
+        user = User.objects.create_user(**self.user_data)
+        
+        user.last_study_date = now().date() - timedelta(days=2)  # Two days ago
+        user.streaks = 5
+        user.save()
+        
+        user.update_study_streak()
+        self.assertEqual(user.streaks, 1)
+
+    def test_study_streak_same_day(self):
+        """
+        Test that the study streak remains the same if studying multiple times on the same day
+        """
+        User = get_user_model()
+        user = User.objects.create_user(**self.user_data)
+
+        user.last_study_date = now().date()
+        user.streaks = 3
+        user.save()
+        
+        user.update_study_streak()
+        self.assertEqual(user.streaks, 3)
 
     def test_user_without_email_error(self):
         """
