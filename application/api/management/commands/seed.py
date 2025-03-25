@@ -144,11 +144,12 @@ class Command(BaseCommand):
         email = self.create_email(firstName, lastName)
         username = self.create_username(firstName, lastName)
         hoursStudied = randint(0, 8760)     # assuming that the hoursStudied reset every year
+        lastStudyDate = date.today() - timedelta(days=1)
         streaks = randint(0, 365)            # assuming the streaks reset every year
         description = Faker().text(max_nb_chars=200)
         totalSessions = randint(1, 100)
 
-        self.try_create_user({'firstName': firstName, 'lastName' : lastName, 'email': email, 'username': username, 'hoursStudied': hoursStudied, 'streaks': streaks, 'description': description, 'totalSessions': totalSessions})
+        self.try_create_user({'firstName': firstName, 'lastName' : lastName, 'email': email, 'username': username, 'hoursStudied': hoursStudied,'lastStudyDate': lastStudyDate, 'streaks': streaks, 'description': description, 'totalSessions': totalSessions})
 
     def generating_rewards(self):
         for x in range(self.REWARDS_COUNT):
