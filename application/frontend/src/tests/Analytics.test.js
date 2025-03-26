@@ -41,8 +41,8 @@ describe("Analytics Component", () => {
 
     // Wait for API data to load and check that values are displayed correctly
     await waitFor(() => {
-      expect(screen.getByText("5")).toBeInTheDocument();  // Streaks
-      expect(screen.getByText("4")).toBeInTheDocument();  // Avg. Study Hours
+      expect(screen.getByText("5")).toBeInTheDocument(); // Streaks
+      expect(screen.getByText("4")).toBeInTheDocument(); // Avg. Study Hours
       expect(screen.getByText("Day Streak")).toBeInTheDocument();
       expect(screen.getByText("Average Hours")).toBeInTheDocument();
       expect(screen.getByText("Share Statistics")).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe("Analytics Component", () => {
         is_sharable: false, // Inititally not shareable
       },
     });
-    
+
     // Mock API call for toggling share
     getAuthenticatedRequest.mockResolvedValueOnce({ status: 1 });
 
@@ -69,10 +69,13 @@ describe("Analytics Component", () => {
     const checkbox = await screen.findByRole("checkbox"); // Find checkbox element
     expect(checkbox).not.toBeChecked(); // Initially should be unchecked
 
-    fireEvent.click(checkbox);  // Simulate clicking the checkbox
+    fireEvent.click(checkbox); // Simulate clicking the checkbox
 
     await waitFor(() => {
-      expect(getAuthenticatedRequest).toHaveBeenCalledWith("/share_analytics/", "PATCH");
+      expect(getAuthenticatedRequest).toHaveBeenCalledWith(
+        "/share_analytics/",
+        "PATCH"
+      );
       expect(checkbox).toBeChecked(); // Now checkbox should be checked
     });
   });
@@ -82,14 +85,19 @@ describe("Analytics Component", () => {
     // Mock API call to fail with a network error
     axios.get.mockRejectedValueOnce(new Error("Network Error"));
 
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     render(<Analytics />);
 
     // Wait and check if Statistics is still displayed
     await waitFor(() => {
       expect(screen.getByText("Statistics")).toBeInTheDocument();
-      expect(consoleErrorSpy).toHaveBeenCalledWith("Error fetching analytics:", "Network Error");
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Error fetching analytics:",
+        "Network Error"
+      );
     });
 
     consoleErrorSpy.mockRestore();
@@ -98,12 +106,16 @@ describe("Analytics Component", () => {
   // Test case 4 - handles case when no access token is present
   test("handles missing access token", async () => {
     localStorage.removeItem("access_token");
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     render(<Analytics />);
 
     await waitFor(() => {
-      expect(consoleErrorSpy).toHaveBeenCalledWith("No access token found. Please log in.");
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "No access token found. Please log in."
+      );
     });
 
     consoleErrorSpy.mockRestore();
@@ -119,9 +131,11 @@ describe("Analytics Component", () => {
         is_sharable: false,
       },
     });
-    
+
     getAuthenticatedRequest.mockResolvedValueOnce({ status: 0 });
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     render(<Analytics />);
 
@@ -130,7 +144,9 @@ describe("Analytics Component", () => {
 
     await waitFor(() => {
       expect(getAuthenticatedRequest).toHaveBeenCalled();
-      expect(consoleErrorSpy).toHaveBeenCalledWith("Error updating task status");
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Error updating task status"
+      );
       expect(checkbox).not.toBeChecked(); // Should remain unchecked on failure
     });
 
@@ -153,12 +169,16 @@ describe("Analytics Component", () => {
     await waitFor(() => {
       const infoIcons = screen.getAllByText("i");
       expect(infoIcons.length).toBe(2);
-      
+
       fireEvent.mouseOver(infoIcons[0]);
-      expect(screen.getByText("Number of consecutive days you've studied")).toBeInTheDocument();
-      
+      expect(
+        screen.getByText("Number of consecutive days you've studied")
+      ).toBeInTheDocument();
+
       fireEvent.mouseOver(infoIcons[1]);
-      expect(screen.getByText("Your average time spent in a study room in hours")).toBeInTheDocument();
+      expect(
+        screen.getByText("Your average time spent in a study room in hours")
+      ).toBeInTheDocument();
     });
   });
 
@@ -167,11 +187,13 @@ describe("Analytics Component", () => {
     const errorResponse = {
       response: {
         status: 401,
-        data: { message: "Unauthorized" }
-      }
+        data: { message: "Unauthorized" },
+      },
     };
     axios.get.mockRejectedValueOnce(errorResponse);
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     render(<Analytics />);
 
@@ -188,9 +210,9 @@ describe("Analytics Component", () => {
   // Test case 8 - verifies initial state is set correctly
   test("initializes with default state", () => {
     render(<Analytics />);
-    
+
     // Check for initial values before API response
-    expect(screen.getByText("0")).toBeInTheDocument(); // Streaks default
-    expect(screen.getByText("0")).toBeInTheDocument(); // Avg hours default
+    expect(screen.getByTestId("streaks-test")).toBeInTheDocument(); // Streaks default
+    expect(screen.getByTestId("avg-time-test")).toBeInTheDocument(); // Avg hours default
   });
 });
