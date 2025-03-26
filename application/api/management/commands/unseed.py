@@ -16,7 +16,7 @@ class Command(BaseCommand):
         print(self.style.SUCCESS(f'Successfully deleted {deleted_count} motivational messages.'))
 
         print("Deleting To Do List Items")
-        toDoList.objects.all().delete()
+        Task.objects.all().delete()
 
         print("Deleting all Permission Items")
         Permission.objects.all().delete()

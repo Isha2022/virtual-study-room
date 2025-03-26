@@ -2,7 +2,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from ..models import SessionUser, User, toDoList
+from ..models import SessionUser, User, Task
 from ..models.study_session import StudySession
 from .to_do_list import ViewToDoList
 from channels.layers import get_channel_layer
@@ -59,7 +59,7 @@ def create_room(request):
         # Update user's streak after creating a room
         user.update_study_streak()
 
-        return Response({"roomCode" : room.roomCode,"roomList": room.toDoList.id})
+        return Response({"roomCode" : room.roomCode,"roomList": room.Task.id})
     except Exception as e:
         return Response({"error": f"Failed to create room: {str(e)}"}, status=400)
 
@@ -126,7 +126,7 @@ def get_room_details(request):
         study_session = StudySession.objects.get(roomCode=room_code)
         session_name = study_session.sessionName
         return Response({"sessionName" : session_name,
-                         "roomList": study_session.toDoList.id
+                         "roomList": study_session.Task.id
         })
     except Exception as e:
         return Response({"error": f"Failed to retrieve room details: {str(e)}"}, status=400)
@@ -191,9 +191,9 @@ def destroy_room(request, study_session):
     toDo = ViewToDoList()
 
     # Delete the to-do-list within the room
-    toDoList = study_session.toDoList.pk
-    if toDoList:
-        toDo.delete_list(request = request, list_id = toDoList)
+    Task = study_session.Task.pk
+    if Task:
+        toDo.delete_list(request = request, list_id = Task)
     
     # Delete the Study Session 
     study_session.delete()

@@ -1,8 +1,6 @@
-import React from 'react';
 import "../styles/Welcome.css";
 import { useNavigate } from "react-router-dom";
 import mangoCat from "../assets/mango_cat.png";
-import theStudySpot from "../assets/thestudyspot.jpeg"
 
 
 /*
