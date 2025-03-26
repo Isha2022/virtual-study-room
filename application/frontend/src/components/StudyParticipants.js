@@ -6,6 +6,13 @@ import defaultAvatar from "../assets/avatars/avatar_2.png";
 import { ToastContainer, toast } from "react-toastify";
 import "../styles/StudyParticipants.css";
 
+
+/*
+Study Participants handles displaying the users in the room and dynamically changes the layout
+as users join. Fetches user profile pictures and usernames to display on the page.
+Uses websockets to keep track of which users are currently in the room ( joining and leaving )
+*/
+
 function StudyParticipants({ socket, roomCode }) {
   const [participants, setParticipants] = useState([]);
 
@@ -54,6 +61,9 @@ function StudyParticipants({ socket, roomCode }) {
     };
   }, [roomCode, socket]);
 
+
+  // Method to fetch Username
+  // Defaults to Anonymous user if user is not found
   const fetchUserData = async () => {
     try {
       const data = await getAuthenticatedRequest("/profile/", "GET");
@@ -64,6 +74,7 @@ function StudyParticipants({ socket, roomCode }) {
     }
   };
 
+  // Method to fetch all users in the study room
   const fetchParticipants = async (roomCode) => {
     try {
       const response = await getAuthenticatedRequest(
@@ -71,6 +82,7 @@ function StudyParticipants({ socket, roomCode }) {
         "GET"
       );
 
+      // Fetched the profile pictures of all the users from firebase
       const participantsWithImages = await Promise.all(
         response.participantsList.map(async (participant) => {
           const imageUrl = await fetchParticipantData(participant.username);
@@ -78,6 +90,7 @@ function StudyParticipants({ socket, roomCode }) {
         })
       );
 
+      // Sets the participants usernames and profile pictures on the page
       setParticipants(participantsWithImages);
     } catch (error) {
       console.error("Error fetching participants:", error);
@@ -85,6 +98,8 @@ function StudyParticipants({ socket, roomCode }) {
     }
   };
 
+
+  // Method to fetch image from firebase. Used in fetchParticipants
   const fetchParticipantData = async (username) => {
     if (!username) return defaultAvatar;
 
@@ -99,10 +114,16 @@ function StudyParticipants({ socket, roomCode }) {
 
   return (
     <div className="user-list-container">
+
+     {/* Dynamically displays users as they enter the room */}
       <div className="users">
         {participants.length > 0 ? (
           participants.map((participant, index) => (
+
+            // {/* Displays the users */}
             <div key={`${participant.username}-${index}`} className="user-circle">
+
+              {/* Displays the user profile picture */}
               <div className="user-image">
                 <img
                   src={participant.imageUrl || defaultAvatar}
@@ -113,15 +134,21 @@ function StudyParticipants({ socket, roomCode }) {
                   className="user-image"
                 />
               </div>
+
+              {/* Displays the user's username */}
               <div className="user-name">
                 {participant.username}
               </div>
             </div>
           ))
         ) : (
+
+          // {/* If no participants in the room, message says no participants */}
           <div className="no-participants">No participants in this room</div>
         )}
       </div>
+
+      {/* Sets toast placement */}
       <ToastContainer position="bottom-right" />
     </div>
   );
