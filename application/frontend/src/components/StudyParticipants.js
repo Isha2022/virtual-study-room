@@ -120,7 +120,7 @@ function StudyParticipants({ socket, roomCode }) {
         {participants.length > 0 ? (
           participants.map((participant, index) => (
 
-            {/* Displays the users */}
+            // {/* Displays the users */}
             <div key={`${participant.username}-${index}`} className="user-circle">
 
               {/* Displays the user profile picture */}
@@ -143,7 +143,7 @@ function StudyParticipants({ socket, roomCode }) {
           ))
         ) : (
 
-          {/* If no participants in the room, message says no participants */}
+          // {/* If no participants in the room, message says no participants */}
           <div className="no-participants">No participants in this room</div>
         )}
       </div>

@@ -139,13 +139,12 @@ function ChatBox({ socket, roomCode }) {
           return (
             <div
               key={index}
-
-              {/* Puts the username of the message sender in front of each text */}
+              // Puts the username of the message sender in front of each text
               className={`chat-message ${
                 msg.sender === username ? "current-user" : "other-user"
               }`}
 
-              {/* Chose a different text colour for each user */}
+              // {/* Chose a different text colour for each user */}
               style={{
                 color: userColor,
                 borderBottom: isSameUserAsPrevious ? "none" : "1px dotted #eee",
@@ -173,7 +172,7 @@ function ChatBox({ socket, roomCode }) {
             handleTyping();
           }}
 
-          {/* On pressing enter the message sends, resets the placeholder */}
+          // {/* On pressing enter the message sends, resets the placeholder */}
           onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
           placeholder="Type a message..."
         />
