@@ -1,10 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import "../styles/GroupStudyPage.css";
 import MotivationalMessage from "./Motivation";
-import musicLogo from "../assets/music_logo.png";
-import customLogo from "../assets/customisation_logo.png";
-import copyLogo from "../assets/copy_logo.png";
-import exitLogo from "../assets/exit_logo.png";
 import ToDoList from "../components/ToDoListComponents/newToDoList";
 import StudyTimer from "../components/StudyTimer.js";
 import StudyParticipants from "../components/StudyParticipants.js";
@@ -51,12 +47,17 @@ function GroupStudyPage() {
     }
   };
 
+
+
   const { roomCode, roomName, roomList } = location.state || {
     roomCode: "",
     roomName: "",
     roomList: "",
   };
   // Retrieve roomCode and roomName from state
+  const { roomCode: urlRoomCode } = useParams(); // Get roomCode from URL params
+
+  console.log("The room code is: ", roomCode);
 
   // Retrieve roomCode from state if not in URL
   const stateRoomCode = location.state?.roomCode;
@@ -66,9 +67,6 @@ function GroupStudyPage() {
 
   // for websockets
   const [socket, setSocket] = useState(null);
-  const [messages, setMessages] = useState([]);
-
-  const [username, setUsername] = useState("ANON_USER"); // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
 
   const [shouldReconnect, setShouldReconnect] = useState(true); // Determines whether or not to auto-reconnect user to websocket server
 
@@ -116,7 +114,6 @@ function GroupStudyPage() {
     }
 
     const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
-    // const socket = new WebSocket("wss://studyspot.pythonanywhere.com/ws/room/room_code/");  // Production (deployed backend)
 
     //Logs when connection is established
     ws.onopen = () => {
@@ -137,7 +134,7 @@ function GroupStudyPage() {
   };
 
 
-  // end of websockets stuff
+  const [username, setUsername] = useState("ANON_USER"); // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
 
   //Fetches logged in user's username when component mounts
   //Updates username state with fetched data or defaults to 'anonymous'
@@ -189,7 +186,7 @@ function GroupStudyPage() {
             className="user-list-container"
             data-testid="user-list-container"
           >
-          <StudyParticipants socket={socket} roomCode={roomCode}/>
+          <StudyParticipants socket={socket} roomCode={finalRoomCode}/>
           </div>
           <MotivationalMessage data-testid="motivationalMessage-container" />
         </div>

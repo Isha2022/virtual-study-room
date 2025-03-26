@@ -1,3 +1,10 @@
+import musicLogo from "../assets/music_logo.png";
+import customLogo from "../assets/customisation_logo.png";
+import copyLogo from "../assets/copy_logo.png";
+import exitLogo from "../assets/exit_logo.png";
+
+
+
 
   const handleCopy = () => {
     if (finalRoomCode) {
