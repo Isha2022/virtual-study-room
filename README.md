@@ -18,23 +18,25 @@ The deployed version of the application can be found at [*virtual-study-room-phi
 
 
 ## Default Logins for Testing
+Please note that in order to log in as multiple users you must use a new incognito window for each additional member, as only one user can be logged in at a time per browser. If you have forgotten to log out before closing the tab please refresh the login page to auto log out of all logged in accounts.
+
 - _Alice Smith_
-	- Email: alice@exmaple.com
+	- Email: alice@example.com
    	- Password: Password123
 - _Bob Johnson_
-	- Email: bob@exmaple.com
+	- Email: bob@example.com
    	- Password: Password123
 - _John Doe_
-	- Email: john@exmaple.com
+	- Email: john@example.com
    	- Password: Password123
 - _Name Surname_
-  	- Email: name@exmaple.com
+  	- Email: name@example.com
   	- Password: Password123
 
 ## Project structure
 The project consists of the following components:
 - **Frontend:** React.js
-- **Backend:** Django with REST API integration
+- **Backend:** Django with REST API integration and Websockets
 - **Database:** Primarily Django Models, as well as Firebase for storage of multimedia
 
 ## Installation instructions

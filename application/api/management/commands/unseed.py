@@ -10,19 +10,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """Unseed the database."""
         print("Starting database unseeding...")
-        # Delete in order to respect foreign key constraints
+
         print("Deleting Motivational Message...")
         deleted_count, _ = MotivationalMessage.objects.all().delete()
         print(self.style.SUCCESS(f'Successfully deleted {deleted_count} motivational messages.'))
-
-        # deleted_countevent, _ = Event.objects.all().delete()
-
-        # if deleted_countevent:
-        #     self.stdout.write(self.style.SUCCESS(f'Successfully deleted {deleted_countevent} events'))
-        # else:
-        #     self.stdout.write(self.style.WARNING('No events found to delete'))
-
-        # Delete in order to respect foreign key constraints
 
         print("Deleting To Do List Items")
         toDoList.objects.all().delete()
@@ -32,7 +23,7 @@ class Command(BaseCommand):
 
         List.objects.all().delete()
 
-        print("Deleting Session Users...")  # Add this line
+        print("Deleting Session Users...")  
         SessionUser.objects.all().delete()
 
         print("Deleting Study Sessions...")
@@ -40,7 +31,6 @@ class Command(BaseCommand):
 
         print("Deleting Appointments...")
         Appointments.objects.all().delete()
-
     
         print("Deleting friends...")
         Friends.objects.all().delete()
