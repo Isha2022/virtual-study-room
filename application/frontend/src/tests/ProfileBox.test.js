@@ -165,8 +165,8 @@ describe('ProfileBox', () => {
       fireEvent.click(inventoryButton);
 
       await waitFor(() => expect(screen.getByText('Your Badge Collection')).toBeInTheDocument());
-      expect(screen.getByText('Badge 1')).toBeInTheDocument();
-      expect(screen.getByText('Badge 2')).toBeInTheDocument();
+      expect(screen.getByText('1 Hour')).toBeInTheDocument();
+      expect(screen.getByText('5 Hours')).toBeInTheDocument();
     });
 
     test('logs off user', async () => {
