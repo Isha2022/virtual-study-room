@@ -66,16 +66,10 @@ function GroupStudyPage() {
   // for websockets
   const [socket, setSocket] = useState(null);
 
-  const [shouldReconnect, setShouldReconnect] = useState(true); // Determines whether or not to auto-reconnect user to websocket server
+  // Determines whether or not to auto-reconnect user to websocket server
+  const [shouldReconnect, setShouldReconnect] = useState(true);
 
-  // Updates the websocket saved everytime it changes
-  // useEffect(() => {
-  //   if (socket) {
-  //     console.log("Socket state updated:", socket);
-  //   }
-  //   scrollToBottom();
-  // }, [socket, messages]); // This effect runs whenever `socket` changes
-
+  // Created initial websocket connection and saves it as socket
   useEffect(() => {
     // Ensure room code is given
     if (!finalRoomCode) {
@@ -142,10 +136,10 @@ function GroupStudyPage() {
     }
   };
 
-  //page is designed in columns
-  //First Column: todoList, shared materials
-  //Second Column: users listes, motivational message
-  //Third Column: Timer, customisation, chatbox
+  // This page is designed in columns
+  // First Column: todoList, shared materials
+  // Second Column: users listes, motivational message
+  // Third Column: Timer, customisation, chatbox
 
   return (
     <>
@@ -158,6 +152,7 @@ function GroupStudyPage() {
       >
         {/*1st Column */}
         <div className="column" role="column" data-testid="column-1">
+          {/* To Do List Component */}
           <ToDoList
             isShared={true}
             listId={roomList}
@@ -169,6 +164,7 @@ function GroupStudyPage() {
             className="sharedMaterials-container"
             data-testid="sharedMaterials-container"
           >
+            {/* Shared Materials */}
             <SharedMaterials socket={socket} />
           </div>
         </div>
@@ -179,8 +175,10 @@ function GroupStudyPage() {
             className="user-list-container"
             data-testid="user-list-container"
           >
+            {/* Loads in the users in the room, profile pictures and usernames */}
             <StudyParticipants socket={socket} roomCode={finalRoomCode} />
           </div>
+          {/* Motivational Message Component */}
           <MotivationalMessage data-testid="motivationalMessage-container" />
         </div>
 
@@ -193,9 +191,7 @@ function GroupStudyPage() {
             onClose={() => console.log("Timer closed")}
             data-testid="studyTimer-container"
           />
-          {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
-
-          {/* Need to sort this out*/}
+          {/* Chat Box Component */}
           <ChatBox socket={socket} roomCode={finalRoomCode} />
         </div>
       </div>
