@@ -27,6 +27,11 @@ import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
 import SpotifyButton from '../components/SpotifyButton';
 import FloatingMusicPlayer from "../components/FloatingWindow.js";
 
+/*
+Group Study Page for the website. Imports all components, handles users joining and leaving the room.
+Also handles websockets communications
+*/
+
 function GroupStudyPage() {
   const [participants, setParticipants] = useState([]); // State to store participants
   const [open, setOpen] = useState(false); //open and close states for pop-up window for spotify button
@@ -90,7 +95,7 @@ function GroupStudyPage() {
 
   const handleOpenMusicButton = () => {
     // Assuming this should toggle the floating music player visibility
-    setOpenMusicPlayer(true);
+    setOpenMusicPlayer(prevState => !prevState);
 };
 
   const [openMusicPlayer, setOpenMusicPlayer] = useState(false); //handle open and close for free tracks

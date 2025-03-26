@@ -6,12 +6,10 @@ from .views.calendar import EventViewSet
 from .views.spotify_view import AuthURL, spotify_callback, IsAuthenticated, GetSpotifyToken, CurrentSong, PauseSong, PlaySong, SkipSong
 
 router = DefaultRouter()
-# router.register(r'events', list_events, basename='event')
 router.register(r'events', EventViewSet, basename='event')
 
 
 urlpatterns = [
-    #path('views/login-page', login),
     path('', include(router.urls)),
     path('get-auth-url', AuthURL.as_view(), name='get-auth-url'),
     path('is-authenticated', IsAuthenticated.as_view(), name='is-authenticated'),
@@ -22,6 +20,6 @@ urlpatterns = [
     path('pause', PauseSong.as_view()),
     path('play', PlaySong.as_view()),
     path('skip', SkipSong.as_view()),
-    #path('', include(router.urls)),
+    path('', include(router.urls)),
 
 ]

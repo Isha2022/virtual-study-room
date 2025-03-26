@@ -14,6 +14,7 @@ This utility is useful for dynamically displaying event schedules in a calendar 
 """
 
 from calendar import HTMLCalendar
+from datetime import timedelta
 from urllib import request
 from .models.events import Appointments
 from .models.spotify_token import SpotifyToken
