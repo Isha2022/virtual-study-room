@@ -37,8 +37,6 @@ describe('MusicButton Component', () => {
       render(<MusicButton />);
       expect(screen.getByText(/Currently Playing:/)).toBeInTheDocument();
     });
-  
-    // Add your other tests here
 });
 
 // Mock the Audio class and its methods
@@ -48,10 +46,10 @@ global.Audio = jest.fn().mockImplementation(() => ({
   addEventListener: jest.fn(),
   removeEventListener: jest.fn(),
   currentTime: 0,
-  duration: 180, // 3 minutes for testing
+  duration: 180, 
 }));
 
-// Mock the track files since we can't import actual audio files in tests
+
 jest.mock("../assets/music/Cartoon, Jéja - C U Again ft. Mikk Mäe (Cartoon, Jéja, Futuristik VIP).mp3", () => 'mock-track1');
 jest.mock("../assets/music/Cartoon, Jéja - On & On (feat. Daniel Levi).mp3", () => 'mock-track2');
 jest.mock("../assets/music/Cartoon, Jéja - Why We Lose (feat. Coleman Trapp).mp3", () => 'mock-track3');
@@ -62,7 +60,6 @@ jest.mock("../assets/music/[Gyro Zeppeli] Pokemon X & Y-Bicycle theme [OST].mp3"
 
 describe('MusicButton Component', () => {
   beforeEach(() => {
-    // Clear all mocks before each test
     global.Audio.mockClear();
     jest.clearAllMocks();
   });
@@ -83,12 +80,12 @@ describe('MusicButton Component', () => {
     render(<MusicButton />);
     const playButton = screen.getByRole('button', { name: '▶️' });
     
-    // First click - should play
+   
     fireEvent.click(playButton);
     expect(global.Audio.mock.results[0].value.play).toHaveBeenCalled();
     expect(screen.getByRole('button', { name: '⏸️' })).toBeInTheDocument();
     
-    // Second click - should pause
+    
     fireEvent.click(screen.getByRole('button', { name: '⏸️' }));
     expect(global.Audio.mock.results[0].value.pause).toHaveBeenCalled();
     expect(screen.getByRole('button', { name: '▶️' })).toBeInTheDocument();
@@ -97,10 +94,10 @@ describe('MusicButton Component', () => {
   it('changes track when a track button is clicked', () => {
     render(<MusicButton />);
     
-    // Click on the second track
+   
     fireEvent.click(screen.getByRole('button', { name: 'On & On' }));
     
-    // Verify the audio source was updated
+    
     expect(global.Audio.mock.results[0].value.src).toBe('mock-track2');
     expect(screen.getByText('Currently Playing: On & On')).toBeInTheDocument();
     
@@ -125,13 +122,11 @@ describe('MusicButton Component', () => {
     const { unmount } = render(<MusicButton />);
     const audioInstance = global.Audio.mock.results[0].value;
     
-    // Verify event listener was added
     expect(audioInstance.addEventListener).toHaveBeenCalledWith(
       'timeupdate',
       expect.any(Function)
     );
     
-    // Unmount and verify cleanup
     unmount();
     expect(audioInstance.removeEventListener).toHaveBeenCalledWith(
       'timeupdate',
@@ -141,7 +136,6 @@ describe('MusicButton Component', () => {
   });
 
   it('applies random colors to track items', () => {
-    // Mock querySelectorAll
     const mockItems = Array(7).fill(0).map((_, i) => ({
       style: { backgroundColor: '' },
     }));
@@ -158,19 +152,15 @@ describe('MusicButton Component', () => {
   it('changes track and resets state when a new track is selected', () => {
     render(<MusicButton />);
     
-    // Get the second track button
+    
     const secondTrackButton = screen.getByRole('button', { name: 'On & On' });
     
-    // Click the second track
+    
     fireEvent.click(secondTrackButton);
     
-    // Check if the current track index updated
+    
     expect(screen.getByText('Currently Playing: On & On')).toBeInTheDocument();
     
-    // Verify the audio source was updated (we can't directly check the audio src due to mocking,
-    // but we can verify the state changes)
-    
-    // Verify play state was reset to false
     const playButton = screen.getByRole('button', { name: '▶️' });
     expect(playButton).toBeInTheDocument();
   });
@@ -189,16 +179,16 @@ describe('MusicButton Component', () => {
 
     render(<MusicButton />);
 
-    // Verify initial src
+
     expect(mockAudio.src).toBe('mock-track1');
 
-    // Change track
+
     fireEvent.click(screen.getByText('On & On'));
 
-    // Verify src updated (this is line 67)
+
     expect(mockAudio.src).toBe('mock-track2');
     
-    // Verify other effects
+
     expect(mockAudio.pause).toHaveBeenCalled();
     expect(mockAudio.currentTime).toBe(0);
   });
@@ -214,13 +204,13 @@ describe('Color Randomization (Lines 45-46)', () => {
       const assignedColors = [];
       let usedColors = [];
   
-      // Mock the color assignment logic to match component behavior
+      
       const mockColorAssignment = () => {
         const availableColors = testColors.filter(c => !usedColors.includes(c));
         let color;
         
         if (availableColors.length > 0) {
-          color = availableColors[0]; // Pick first available for testing
+          color = availableColors[0]; 
           usedColors.push(color);
         } else {
           // Reset when all colors are used
@@ -233,7 +223,7 @@ describe('Color Randomization (Lines 45-46)', () => {
       };
   
       // Create mock elements with controlled color assignment
-      const mockItems = Array(testColors.length + 1) // +1 to trigger reset
+      const mockItems = Array(testColors.length + 1)
         .fill()
         .map(() => ({
           style: { backgroundColor: mockColorAssignment() }
@@ -243,12 +233,12 @@ describe('Color Randomization (Lines 45-46)', () => {
   
       render(<MusicButton />);
   
-      // Verify all colors were used at least once
+     
       testColors.forEach(color => {
         expect(assignedColors).toContain(color);
       });
   
-      // Verify reset occurred (first color appears again)
+
       expect(assignedColors[testColors.length]).toBe(testColors[0]);
     });
   });

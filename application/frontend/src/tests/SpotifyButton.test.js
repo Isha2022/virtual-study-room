@@ -20,14 +20,14 @@ describe('SpotifyButton Component', () => {
   let mockFetch;
 
   beforeEach(() => {
-    // Store original fetch
+    
     originalFetch = global.fetch;
     
-    // Create a mock fetch implementation
+    
     mockFetch = jest.fn();
     global.fetch = mockFetch;
     
-    // Clear URL search params
+    
     window.history.pushState({}, '', '/');
   });
 
@@ -39,7 +39,7 @@ describe('SpotifyButton Component', () => {
   });
 
   it('renders without crashing', async () => {
-    // Mock successful authentication check
+    
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve({ status: true }),
@@ -146,7 +146,6 @@ describe('SpotifyButton Component', () => {
           json: () => Promise.resolve({ status: true }),
         });
     
-        // Create a ref to access component instance
         const ref = React.createRef();
         
         await act(async () => {
@@ -156,10 +155,8 @@ describe('SpotifyButton Component', () => {
         // Verify initial authentication check happened
         expect(mockFetch).toHaveBeenCalledTimes(1);
     
-        // Clear mocks to prepare for our test
         mockFetch.mockClear();
     
-        // Set authenticated state directly
         await act(async () => {
           ref.current.setState({ spotifyAuthenticated: true });
         });
@@ -178,7 +175,7 @@ describe('SpotifyButton Component', () => {
     beforeEach(() => {
       jest.useFakeTimers();
       
-      // Mock initial authentication
+      
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({ status: true }),
@@ -203,13 +200,13 @@ describe('SpotifyButton Component', () => {
         render(<SpotifyButton />);
       });
 
-      // First call is authentication check
+      
       expect(mockFetch).toHaveBeenCalledWith(
         'http://localhost:8000/api/is-authenticated',
         { credentials: 'include' }
       );
 
-      // Advance timers to trigger next poll
+      
       await act(async () => {
         jest.advanceTimersByTime(1000);
       });
@@ -237,7 +234,7 @@ describe('SpotifyButton Component', () => {
         render(<SpotifyButton />);
       });
 
-      // Advance timers to trigger next poll
+    
       await act(async () => {
         jest.advanceTimersByTime(1000);
       });
@@ -248,7 +245,7 @@ describe('SpotifyButton Component', () => {
   });
 
   it('clears interval on unmount', async () => {
-    // Mock authentication
+
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve({ status: true }),
