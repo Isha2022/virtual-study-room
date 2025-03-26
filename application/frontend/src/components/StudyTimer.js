@@ -202,8 +202,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     <div className="study-timer-container">
       <ToastContainer position="top-center" />
       
-      <div className={timerWrapperClass} onClick={isMinimized ? handleRestore : null}>
-        {/* Mini header for minimized state */}
+      <div className={timerWrapperClass} data-testid={dataTestId}>
         <div className="mini-header">
           {isRunning ? 
             `${isBreak ? 'Break' : 'Focus'} - ${formatTime(timeLeft)}` : 
