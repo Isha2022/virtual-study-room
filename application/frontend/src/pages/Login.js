@@ -6,6 +6,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getAuthenticatedRequest, getAccessToken } from "../utils/authService";
 
+/*
+This is the login page, handles user authentication and redirects to the user's dashboard
+*/
+
 function Login() {
 
   const navigate = useNavigate();
