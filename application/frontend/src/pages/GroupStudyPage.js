@@ -23,8 +23,8 @@ import {
   deleteObject,
 } from "firebase/storage";
 import SharedMaterials from "./SharedMaterials.js";
-import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
-import SpotifyButton from '../components/SpotifyButton';
+import { Dialog, DialogTitle, DialogContent, Button } from "@mui/material";
+import SpotifyButton from "../components/SpotifyButton";
 import FloatingMusicPlayer from "../components/FloatingWindow.js";
 
 /*
@@ -85,7 +85,7 @@ function GroupStudyPage() {
 
   //handle open for spotify button
   const handleClickOpen = () => {
-    setOpen(prevState => !prevState);
+    setOpen((prevState) => !prevState);
   };
 
   //handle close for spotify button
@@ -95,8 +95,8 @@ function GroupStudyPage() {
 
   const handleOpenMusicButton = () => {
     // Assuming this should toggle the floating music player visibility
-    setOpenMusicPlayer(prevState => !prevState);
-};
+    setOpenMusicPlayer((prevState) => !prevState);
+  };
 
   const [openMusicPlayer, setOpenMusicPlayer] = useState(false); //handle open and close for free tracks
 
@@ -120,7 +120,6 @@ function GroupStudyPage() {
     }
     scrollToBottom();
   }, [socket, messages]); // This effect runs whenever `socket` changes
-
 
   useEffect(() => {
     // Ensure room code is given
@@ -471,16 +470,23 @@ function GroupStudyPage() {
               <img src={musicLogo} alt="Music" />
             </button>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>
-                  <div style={{ textAlign: 'center' }}>Spotify Player</div>
-                  <h2 style={{ textAlign: 'center', fontSize: '14px' }} >(playback for premium users only)</h2>
-                </DialogTitle>
-                <DialogContent>
-                    <SpotifyButton />
-                    <Button onClick={handleOpenMusicButton}>Switch to Free Tracks</Button>
-                </DialogContent>
+              <DialogTitle>
+                <div style={{ textAlign: "center" }}>Spotify Player</div>
+                <h2 style={{ textAlign: "center", fontSize: "14px" }}>
+                  (playback for premium users only)
+                </h2>
+              </DialogTitle>
+              <DialogContent>
+                <SpotifyButton />
+                <Button onClick={handleOpenMusicButton}>
+                  Switch to Free Tracks
+                </Button>
+              </DialogContent>
             </Dialog>
-            <FloatingMusicPlayer isOpen={openMusicPlayer} onClose={() => setOpenMusicPlayer(false)} />
+            <FloatingMusicPlayer
+              isOpen={openMusicPlayer}
+              onClose={() => setOpenMusicPlayer(false)}
+            />
             <button
               type="button"
               className={`customisation-button ${
@@ -509,6 +515,7 @@ function GroupStudyPage() {
               onMouseUp={() => handleMouseUp("exit")}
               onMouseLeave={() => handleMouseUp("exit")}
               onClick={() => leaveRoom()}
+              data-testid="leave-room-button"
             >
               <img src={exitLogo} alt="Exit" />
             </button>
