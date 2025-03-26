@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import StudyParticipants from '../StudyParticipants';
 import { getAuthenticatedRequest } from '../../utils/authService';
@@ -35,30 +35,26 @@ jest.mock('react-toastify', () => {
 describe('StudyParticipants', () => {
   let consoleSpy;
   let mockSocket;
-  const mockNavigate = jest.fn();
   const mockParticipants = [
-    { username: 'user1' },
-    { username: 'user2' }
+    { username: 'user1', imageUrl: 'http://example.com/avatar1.jpg' },
+    { username: 'user2', imageUrl: 'http://example.com/avatar2.jpg' }
   ];
 
   beforeEach(() => {
-    //setup WebSocket mock
     mockSocket = {
-      onmessage: jest.fn(),
-      onerror: jest.fn(),
-      close: jest.fn(),
-      readyState: WebSocket.OPEN
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn()
     };
-    global.WebSocket = jest.fn(() => mockSocket);
 
     consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    useNavigate.mockReturnValue(mockNavigate);
-    useParams.mockReturnValue({ roomCode: 'TEST123' });
     getAuthenticatedRequest
-      .mockResolvedValueOnce({ participantsList: mockParticipants })
-      .mockResolvedValueOnce({});
+      .mockResolvedValueOnce({ username: 'testuser' })
+      .mockResolvedValueOnce({ participantsList: mockParticipants.map(p => ({ username: p.username })) });
 
+    getDownloadURL
+      .mockResolvedValueOnce('http://example.com/avatar1.jpg')
+      .mockResolvedValueOnce('http://example.com/avatar2.jpg');
   });
 
   afterEach(() => {
@@ -67,76 +63,111 @@ describe('StudyParticipants', () => {
   });
 
   test('renders participants with avatars', async () => {
-    render(<StudyParticipants />);
+    render(
+      <StudyParticipants 
+        socket={mockSocket}
+        roomCode="TEST123" 
+      />
+    );
 
     await waitFor(() => {
       expect(screen.getByText('user1')).toBeInTheDocument();
       expect(screen.getByText('user2')).toBeInTheDocument();
-      expect(screen.getAllByAltText('profile')).toHaveLength(2);
+      
+      const avatars = screen.getAllByAltText(/profile$/);
+      expect(avatars).toHaveLength(2);
+      expect(avatars[0]).toHaveAttribute('src', 'http://example.com/avatar1.jpg');
+      expect(avatars[1]).toHaveAttribute('src', 'http://example.com/avatar2.jpg');
     });
   });
 
   test('handles WebSocket participant updates', async () => {
-    render(<StudyParticipants />);
-
-    const newParticipants = [
-      { username: 'user3', imageUrl: 'https://example.com/avatar3.png' },
-      { username: 'user4', imageUrl: 'https://example.com/avatar4.png' }
-    ];
-
+    getAuthenticatedRequest
+      .mockResolvedValueOnce({ username: 'testuser' })
+      .mockResolvedValueOnce({ participantsList: [] });
+  
+    getDownloadURL
+      .mockResolvedValueOnce('https://example.com/avatar3.png')
+      .mockResolvedValueOnce('https://example.com/avatar4.png');
+  
+    render(<StudyParticipants socket={mockSocket} roomCode="TEST123" />);
+  
     await waitFor(() => {
-      mockSocket.onmessage({
+      expect(screen.getByText('No participants in this room')).toBeInTheDocument();
+    });
+
+    const messageHandler = mockSocket.addEventListener.mock.calls
+      .find(call => call[0] === 'message')[1];
+  
+    act(() => {
+      messageHandler({
         data: JSON.stringify({
           type: 'participants_update',
-          participants: newParticipants
+          participants: ['user3', 'user4'] 
         })
       });
-
+    });
+  
+    await waitFor(() => {
       expect(screen.getByText('user3')).toBeInTheDocument();
       expect(screen.getByText('user4')).toBeInTheDocument();
+      
+      const avatars = screen.getAllByAltText(/profile$/);
+      expect(avatars).toHaveLength(2);
+      expect(avatars[0]).toHaveAttribute('src', 'https://example.com/avatar3.png');
+      expect(avatars[1]).toHaveAttribute('src', 'https://example.com/avatar4.png');
     });
   });
 
   test('handles participant data fetch failure', async () => {
-    getAuthenticatedRequest.mockRejectedValueOnce(
-      new Error('Failed to fetch participants')
-    );
+    jest.clearAllMocks();
+
+    getAuthenticatedRequest
+      .mockResolvedValueOnce({ username: 'testuser' })
+      .mockRejectedValueOnce(new Error('Failed to fetch participants'));
   
-    render(<StudyParticipants />);
+    render(<StudyParticipants socket={mockSocket} roomCode="TEST123" />);
   
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith(
-        'error fetching user data'
-      );
+      expect(screen.getByText('No participants in this room')).toBeInTheDocument();
     });
   });
 
   test('logs WebSocket errors to console', async () => {
+    jest.clearAllMocks();
     const mockError = new Error('WebSocket connection failed');
-    global.WebSocket.mockImplementation(() => {
-      const socket = {
-        onmessage: jest.fn(),
-        onerror: jest.fn(),
-        close: jest.fn(),
-        readyState: WebSocket.OPEN
-      };
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      setTimeout(() => {
-        socket.onerror(mockError);
-      }, 10);
-      return socket;
-    });
-
-    render(<StudyParticipants />);
-
+    const mockSocketWithError = {
+      addEventListener: jest.fn((event, handler) => {
+        if (event === 'message') {
+          setTimeout(() => {
+            try {
+              handler({ data: 'invalid json' });
+            } catch (error) {
+              
+            }
+          }, 10);
+        }
+      }),
+      removeEventListener: jest.fn()
+    };
+  
+    render(
+      <StudyParticipants 
+        socket={mockSocketWithError} 
+        roomCode="TEST123" 
+      />
+    );
+  
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(
-        'WebSocket error:',
-        expect.objectContaining({
-          message: 'WebSocket connection failed'
-        })
+        'WebSocket message handling error:',
+        expect.any(Error)
       );
     });
+
+    consoleSpy.mockRestore();
   });
 
   test('handles malformed participant data', async () => {
@@ -151,31 +182,50 @@ describe('StudyParticipants', () => {
       expect(consoleSpy).not.toHaveBeenCalled();
     });
   });
+  
+});
+
+
+describe('StudyParticipants - Avatar Error Handling', () => {
+  let mockSocket;
+
+  beforeEach(() => {
+    mockSocket = {
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn()
+    };
+  });
 
   test('renders default avatar when image fetch fails', async () => {
-    getDownloadURL.mockRejectedValueOnce(new Error('Image not found'));
+    const testUsername = 'avatar_test_user';
 
-    //mock API requests
     getAuthenticatedRequest
-      .mockResolvedValueOnce({ participantsList: [{ username: 'testuser1' }] })
-      .mockResolvedValueOnce({});
+      .mockResolvedValueOnce({ username: 'current_user' })
+      .mockResolvedValueOnce({ 
+        participantsList: [{ username: testUsername }] 
+      });
 
-    render(<StudyParticipants />);
+    getDownloadURL.mockRejectedValue(new Error('Image not found'));
+
+    render(
+      <StudyParticipants 
+        socket={mockSocket} 
+        roomCode="TEST123" 
+      />
+    );
 
     await waitFor(() => {
-        const avatars = screen.getAllByAltText('profile');
-        expect(avatars[0]).toHaveAttribute('src', 'mock-default-avatar.png');
-        
-        avatars.forEach(avatar => {
-          expect(avatar).toHaveAttribute('src', 'mock-default-avatar.png');
-        });
-    });
+      expect(screen.getByText(testUsername)).toBeInTheDocument();
+
+      const avatar = screen.getByAltText(`${testUsername}'s profile`);
+      expect(avatar).toHaveAttribute('src', 'mock-default-avatar.png');
+    }, { timeout: 3000 });
   });
-  
 });
 
 describe('fetchParticipants Error Handling', () => {
     let consoleErrorSpy;
+    let mockSocket;
     const mockParticipants = [
         { username: 'user3', imageUrl: 'https://example.com/avatar3.png' },
         { username: 'user4', imageUrl: 'https://example.com/avatar4.png' }
@@ -184,6 +234,10 @@ describe('fetchParticipants Error Handling', () => {
     beforeEach(() => {
       consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       useParams.mockReturnValue({ roomCode: 'TEST123' });
+      mockSocket = {
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn()
+      };
     });
   
     afterEach(() => {
@@ -192,19 +246,28 @@ describe('fetchParticipants Error Handling', () => {
   
     test('logs error when participant fetch fails', async () => {
       const mockError = new Error('Network error');
-      getAuthenticatedRequest.mockRejectedValueOnce(mockError);
+
+      getAuthenticatedRequest
+        .mockResolvedValueOnce({ username: 'testuser' })
+        .mockRejectedValueOnce(mockError);
   
-      render(<StudyParticipants />);
+      render(
+        <StudyParticipants 
+          socket={mockSocket} 
+          roomCode="TEST123" 
+        />
+      );
   
       await waitFor(() => {
-        expect(consoleErrorSpy).toHaveBeenCalledWith(
-          'Error fetching participants:',
-          mockError
+        const participantErrorCall = consoleErrorSpy.mock.calls.find(
+          call => call[0] === 'Error fetching participants:'
         );
+        
+        expect(participantErrorCall).toBeDefined();
+        expect(participantErrorCall[1]).toEqual(mockError);
       });
   
-      expect(screen.queryByText('user1')).not.toBeInTheDocument();
-      expect(screen.queryByText('user2')).not.toBeInTheDocument();
+      expect(screen.getByText('No participants in this room')).toBeInTheDocument();
     });
   
     test('handles empty participants list', async () => {
@@ -219,4 +282,83 @@ describe('fetchParticipants Error Handling', () => {
       });
     });
 
+});
+
+describe('StudyParticipants - User Data Fetch Error Handling', () => {
+  let consoleErrorSpy;
+  let mockSocket;
+
+  beforeEach(() => {
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    mockSocket = {
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn()
+    };
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+    jest.clearAllMocks();
+  });
+
+  test('logs error and returns "Anonymous" when user data fetch fails', async () => {
+    const mockError = new Error('Network error');
+    
+    getAuthenticatedRequest
+      .mockRejectedValueOnce(mockError);
+
+    render(
+      <StudyParticipants 
+        socket={mockSocket} 
+        roomCode="TEST123" 
+      />
+    );
+
+    await waitFor(() => {
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Error fetching user data',
+        mockError
+      );
+    });
+
+  });
+});
+
+describe('StudyParticipants - fetchParticipantData Error Handling', () => {
+  let consoleErrorSpy;
+  let mockSocket;
+  const testUsername = 'error_test_user';
+
+  beforeEach(() => {
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    mockSocket = {
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn()
+    };
+    jest.clearAllMocks();
+
+    getAuthenticatedRequest
+      .mockResolvedValueOnce({ username: 'testuser' })
+      .mockResolvedValueOnce({ participantsList: [{ username: testUsername }] });
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+  });
+
+  test('logs error when avatar fetch throws an error', async () => {
+    const mockError = new Error('Image not found');
+    getDownloadURL.mockImplementation(() => {
+      throw mockError;
+    });
+
+    render(<StudyParticipants socket={mockSocket} roomCode="TEST123" />);
+
+    await waitFor(() => {
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Error fetching participant image:',
+        mockError
+      );
+    });
+  });
 });
