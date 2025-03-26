@@ -1,9 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { getAuthenticatedRequest } from "../utils/authService";
 import "../styles/ChatBox.css";
-import defaultAvatar from "../assets/avatars/avatar_2.png";
-import { storage } from "../firebase-config";
-import { ref, getDownloadURL } from "firebase/storage";
 
 /*
 This handles the chatbox component. The websocket is passed as 'socket' from the initial connection
@@ -158,7 +155,7 @@ function ChatBox({ socket, roomCode }) {
         {/* User is typing indicator ... */}
         {typingUser && (
           <p className="typing-indicator">
-            <strong>{typingUser}</strong> is typing...
+            {typingUser} is typing...
           </p>
         )}
       </div>
