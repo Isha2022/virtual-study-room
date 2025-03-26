@@ -25,6 +25,8 @@ class GroupStudyRoomViewsTests(TestCase):
         }
 
         self.user = User.objects.get(username='@alice123')
+        self.other_user = User.objects.get(username="@bob456")
+        self.user_3 = User.objects.get(username="@john789")
 
         self.study_session = StudySession.objects.create(createdBy=self.user, sessionName="Test Room")
 
@@ -102,23 +104,65 @@ class GroupStudyRoomViewsTests(TestCase):
         self.assertIn("error", response.data)
 
     def test_leave_room(self):
-        """
-        Test leaving a study room.
-        """
-        # Add the user to the room first
+        """Test leaving a study room successfully"""
+        # Setup - add user to session
         self.study_session.participants.add(self.user)
-        SessionUser.objects.create(user=self.user, session=self.study_session)
-
-        data = {"roomCode": self.study_session.roomCode}
-        response = self.client.post("/api/leave-room/", data, format="json")
-
+        self.study_session.participants.add(self.other_user)
+        session_user = SessionUser.objects.create(
+            user=self.user,
+            session=self.study_session
+        )
+        other_session_user = SessionUser.objects.create(
+            user=self.other_user,
+            session=self.study_session
+        )
+        
+        self.client.force_authenticate(user=self.user)
+        
+        # Action - leave room
+        response = self.client.post(
+            '/api/leave-room/',
+            {'roomCode': self.study_session.roomCode},
+            format='json'
+        )
+        
+        # Assertions
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["message"], "Left successfully!")
+        
+        # Verify user was removed
+        self.assertFalse(self.study_session.participants.filter(id=self.user.id).exists())
+        
+        # Verify session user was deleted
+        with self.assertRaises(SessionUser.DoesNotExist):
+            SessionUser.objects.get(user=self.user, session=self.study_session)
+        
+        # Verify room still exists (only destroyed when last participant leaves)
+        self.assertTrue(StudySession.objects.filter(id=self.study_session.id).exists())
 
-        # Verify the user was removed from the room
+    def test_leave_room_destroys_when_empty(self):
+        """Test room is destroyed when last participant leaves"""
+        # Setup - add user as only participant
+        self.study_session.participants.add(self.user)
+        session_user = SessionUser.objects.create(
+            user=self.user,
+            session=self.study_session
+        )
+        
+        self.client.force_authenticate(user=self.user)
+        
+        # Action - leave room
+        response = self.client.post(
+            '/api/leave-room/',
+            {'roomCode': self.study_session.roomCode},
+            format='json'
+        )
+        
+        # Assertions
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        # Verify room was destroyed
         with self.assertRaises(StudySession.DoesNotExist):
-            self.study_session.refresh_from_db()
-        self.assertNotIn(self.user, self.study_session.participants.all())
+            StudySession.objects.get(id=self.study_session.id)
 
     def test_leave_room_not_found(self):
         """
@@ -177,3 +221,81 @@ class GroupStudyRoomViewsTests(TestCase):
         self.user.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(self.user.streaks, 7)  # Streak should remain unchanged
+
+    def test_create_room_removes_from_existing(self):
+        """Test user is removed from existing sessions when creating new one"""
+        self.client.force_authenticate(user=self.user)
+        # First create initial room
+        self.client.post('/api/create-room/', {'sessionName': 'First Room'}, format='json')
+        # Then create another room
+        response = self.client.post(
+            '/api/create-room/',
+            {'sessionName': 'Second Room'},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(SessionUser.objects.filter(user=self.user).count(), 1)
+
+    def test_join_room_removes_user_from_existing_rooms(self):
+        """Test that joining a room removes user from existing rooms"""
+        room1 = StudySession.objects.create(
+            roomCode="ROOM1",
+            sessionName="Room 1",
+            createdBy=self.user
+        )
+
+        
+        # Create a new room to join
+        room3 = StudySession.objects.create(
+            roomCode="ROOM3",
+            sessionName="Room 3",
+            createdBy=self.other_user
+        )
+
+        
+        response = self.client.post('/api/join-room/', {
+            'roomCode': 'ROOM3'
+        })
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        # User should be removed from previous rooms
+        self.assertEqual(SessionUser.objects.filter(user=self.user).count(), 1)
+        self.assertFalse(SessionUser.objects.filter(user=self.user, session=room1).exists())
+        self.assertTrue(SessionUser.objects.filter(user=self.user, session=room3).exists())
+
+
+    def test_join_room_removes_from_existing(self):
+        """Test user is removed from existing sessions when joining new one"""
+        # Create second session
+
+        other_session = StudySession.objects.create(
+            createdBy=self.other_user,
+            sessionName="Other Session"
+        )
+        other_session.participants.add(self.user)
+        
+        # Create a new room to join
+        room3 = StudySession.objects.create(
+            roomCode="ROOM3",
+            sessionName="Room 3",
+            createdBy=self.user_3
+        )
+        
+        room3.participants.add(self.user)
+        
+        response = self.client.post('/api/join-room/', {
+            'roomCode': 'ROOM3'
+        })
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        # User should be removed from previous rooms
+        self.assertEqual(SessionUser.objects.filter(user=self.user).count(), 1)
+        self.assertFalse(SessionUser.objects.filter(user=self.user, session=other_session).exists())
+        self.assertTrue(SessionUser.objects.filter(user=self.user, session=room3).exists())
+
+
+
+
+   
