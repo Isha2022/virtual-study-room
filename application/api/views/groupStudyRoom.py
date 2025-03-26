@@ -7,6 +7,7 @@ from ..models.study_session import StudySession
 from .to_do_list import ViewToDoList
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from unittest.mock import patch
 
 '''
     API to manage group study rooms, it processes such as: creation, joining and notifications
@@ -184,6 +185,8 @@ def notify_participants(room_code, participants):
         }
     )
 
+
+
 def destroy_room(request, study_session):
     '''
     Destroy study session room and it's to-do-list if no participants remain
@@ -192,10 +195,16 @@ def destroy_room(request, study_session):
 
     # Delete the to-do-list within the room
     Task = study_session.Task.pk
-    if Task:
+    if hasattr(study_session, 'Task') and study_session.Task:
+    # if Task:
         toDo.delete_list(request = request, list_id = Task)
     
     # Delete the Study Session 
     study_session.delete()
+
+
+
+
+    
 
 
