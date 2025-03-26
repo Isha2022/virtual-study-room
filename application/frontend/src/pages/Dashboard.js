@@ -1,12 +1,13 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import "../styles/Dashboard.css";
+import axios from "axios";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import CalendarPage from './Calendar';
 import ToDoList from '../components/ToDoListComponents/newToDoList';
 import StudyRoomComponent from '../components/StudyRoomComponent';
 import Analytics from './Analytics';
 import FriendsTab  from '../components/friends/FriendsTab';
-import { FriendsContext } from '../components/friends/FriendsContext';
 import ProfileBox from './ProfileBox';
 
 /*
@@ -18,7 +19,6 @@ function Dashboard() {
 
     // useNavigate to handle navigation to other pages from the dashboard
     const navigate = useNavigate();
-    const { loading } = useContext(FriendsContext);
 
 
     return (
@@ -39,7 +39,7 @@ function Dashboard() {
                 {/* Middle Panel - Join Study Room & Friends Tab */}
                 <div className = "dashboard-main-panel" data-testid="main-panel">
                     <StudyRoomComponent />
-                    {!loading ? <FriendsTab /> : <p>Loading friends...</p>} {/*Check if loading is true before rendering friends tab*/}
+                    <FriendsTab />
                 </div>
 
                 {/* Right Panel - To Do List */}

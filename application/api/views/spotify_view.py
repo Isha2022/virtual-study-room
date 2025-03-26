@@ -59,35 +59,6 @@ class IsAuthenticated(APIView):
         is_authenticated = spotify_api.is_spotify_authenticated(
             self.request.session.session_key)
         return Response({'status': is_authenticated}, status=status.HTTP_200_OK)
-    
-# retrieving album tracks via url
-# class GetAlbumTracks(APIView):
-#     def post(self, request, *args, **kwargs):
-#         album_url = request.data.get('album_url')
-#         session_id = request.session.session_key
-
-#         if not session_id:
-#             request.session.create()
-#             session_id = request.session.session_key
-
-#         # Extract Album ID from URL
-#         album_id_match = re.search(r'spotify:album:(\w+)', album_url) or re.search(r'album/(\w+)', album_url)
-#         if not album_id_match:
-#             return Response({"Error": "Invalid Spotify URL"}, status=status.HTTP_400_BAD_REQUEST)
-
-#         album_id = album_id_match.group(1)
-#         spotify_api = Spotify_API()
-#         tokens = spotify_api.get_user_tokens(session_id)
-#         if not tokens:
-#             return Response({"Error": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
-
-#         headers = {'Authorization': f'Bearer {tokens.access_token}'}
-#         response = get(f'https://api.spotify.com/v1/albums/{album_id}/tracks', headers=headers)  # Corrected to use requests.get
-
-#         if response.status_code != 200:
-#             return Response({"Error": "Failed to fetch album tracks"}, status=response.status_code)
-
-#         return Response(response.json(), status=status.HTTP_200_OK)
 
 # retrieving spotify token
 class GetSpotifyToken(APIView):

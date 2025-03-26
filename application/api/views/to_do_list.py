@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from api.models import List, toDoList, Permission
+from api.models import List, Task, Permission
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -39,7 +39,7 @@ class ViewToDoList(APIView):
         # Format the response data
         response_data = []
         for todo_list in user_lists:
-            tasks = toDoList.objects.filter(list=todo_list)
+            tasks = Task.objects.filter(list=todo_list)
             response_data.append({
                 "id": todo_list.pk,
                 "name": todo_list.name,
@@ -86,13 +86,13 @@ class ViewToDoList(APIView):
         Delete a specific task and notify WebSocket participants if the list is shared.
         """
         try:
-            if toDoList.objects.filter(pk=task_id).exists():
-                task = toDoList.objects.get(id=task_id)
+            if Task.objects.filter(pk=task_id).exists():
+                task = Task.objects.get(id=task_id)
 
                 # Notify particpants if the list is shared
                 if task.list.is_shared:
                     try:
-                        study_session = StudySession.objects.get(toDoList=task.list)  # ✅ Fix: Use correct variable
+                        study_session = StudySession.objects.get(Task=task.list)  # ✅ Fix: Use correct variable
                         room_code = study_session.roomCode  # Get the correct room code
                     except StudySession.DoesNotExist:
                         return Response({"error": "No study session found for this list"}, status=status.HTTP_400_BAD_REQUEST)
@@ -105,7 +105,7 @@ class ViewToDoList(APIView):
                             "task_id": task_id,
                         }
                     )
-                toDoList.objects.get(pk=task_id).delete()
+                Task.objects.get(pk=task_id).delete()
                 return Response({"data": task_id}, status=status.HTTP_200_OK)
             else:
                 return Response({"error": "Task doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)           
@@ -118,7 +118,7 @@ class ViewToDoList(APIView):
         '''
         try:
             if List.objects.filter(pk=list_id).exists():
-                toDoList.objects.filter(list=list_id).delete()
+                Task.objects.filter(list=list_id).delete()
                 Permission.objects.filter(list_id = list_id).delete()
                 List.objects.get(pk=list_id).delete()
                 return self.get(request)
@@ -139,7 +139,7 @@ class ViewToDoList(APIView):
 
             if List.objects.filter(pk=list_id).exists():
                 list_obj = List.objects.get(pk=list_id)
-                task = toDoList.objects.create(
+                task = Task.objects.create(
                     title=title, content=content, list=list_obj
                 )
                 task.save()
@@ -147,7 +147,7 @@ class ViewToDoList(APIView):
                 # Send WebSocket update if the list is shared
                 if task.list.is_shared:
                     try:
-                        study_session = StudySession.objects.get(toDoList=list_obj)  
+                        study_session = StudySession.objects.get(Task=list_obj)  
                         room_code = study_session.roomCode  # Get the correct room code
                     except StudySession.DoesNotExist:
                         return Response({"error": "No study session found for this list"}, status=status.HTTP_400_BAD_REQUEST)
@@ -214,7 +214,7 @@ class ViewToDoList(APIView):
         '''
         try:
             # This line throws DoesNotExist if not found
-            task = toDoList.objects.get(pk=task_id)
+            task = Task.objects.get(pk=task_id)
             new_task_status = not task.is_completed
             task.is_completed = new_task_status
             task.save()
@@ -222,7 +222,7 @@ class ViewToDoList(APIView):
             # Sends WebSocket Update
             if task.list.is_shared:
                 try:
-                    study_session = StudySession.objects.get(toDoList=task.list)
+                    study_session = StudySession.objects.get(Task=task.list)
                     room_code = study_session.roomCode  # Get the correct room code
                 except StudySession.DoesNotExist:
                     return Response({"error": "No study session found for this list"}, status=status.HTTP_400_BAD_REQUEST)
@@ -238,7 +238,7 @@ class ViewToDoList(APIView):
                 )
 
             return Response({"is_completed": task.is_completed}, status=status.HTTP_200_OK)
-        except toDoList.DoesNotExist:  # Catch the specific exception
+        except Task.DoesNotExist:  # Catch the specific exception
             return Response({"error": "Task not found"}, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:

@@ -1,6 +1,6 @@
 [
     {
-        "model": "api.todolist",
+        "model": "api.task",
         "pk": 1,
         "fields": {
             "list": 1,
@@ -11,7 +11,7 @@
         }
     },
     {
-        "model": "api.todolist",
+        "model": "api.task",
         "pk": 2,
         "fields": {
             "list": 2,
