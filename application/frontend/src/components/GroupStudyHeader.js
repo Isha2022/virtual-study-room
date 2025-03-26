@@ -21,7 +21,6 @@ Displays the room code.
 Buttons : Leave Room, Copy Code, Play Music, **Customise (functionality not in scope of project)
 */
 
-
 function GroupStudyHeader() {
   const navigate = useNavigate();
   // Location object used for state
@@ -44,7 +43,6 @@ function GroupStudyHeader() {
   const [participants, setParticipants] = useState([]); // State to store participants
   const [open, setOpen] = useState(false); //open and close states for pop-up window for spotify button
 
-
   // Method to handle copying the room code
   const handleCopy = () => {
     if (finalRoomCode) {
@@ -65,11 +63,6 @@ function GroupStudyHeader() {
     }
   };
 
-  // On leaving the room, navigate back to the user dashboard
-  const handleExit = () => {
-    navigate("/dashboard");
-  };
-
   // Handle open for music player popup
   const handleClickOpen = () => {
     setOpen((prevState) => !prevState);
@@ -87,9 +80,6 @@ function GroupStudyHeader() {
 
   const [openMusicPlayer, setOpenMusicPlayer] = useState(false); //handle open and close for free tracks
 
-
-  // Keeps track of whether a button is active
-  const [isActiveAddMore, setIsActiveAddMore] = useState(false); //initialise both variables: isActive and setIsActive to false
   const [isActiveMusic, setIsActiveMusic] = useState(false);
   const [isActiveCustom, setIsActiveCustom] = useState(false);
   const [isActiveCopy, setIsActiveCopy] = useState(false);
@@ -140,10 +130,9 @@ function GroupStudyHeader() {
     }
   }, [finalRoomCode, navigate]);
 
-
   // Leave room when you close the tab
   useEffect(() => {
-    const handlePageHide = (event) => {
+    const handlePageHide = () => {
       leaveRoom();
     };
 
@@ -154,7 +143,6 @@ function GroupStudyHeader() {
       window.removeEventListener("pagehide", handlePageHide);
     };
   }, [leaveRoom]);
-
 
   // Method to delete Firebase Files on room being destroyed
   // Room is destroyed when all users leave the room
@@ -182,9 +170,7 @@ function GroupStudyHeader() {
 
   const handleMouseDown = (btnType) => {
     //when the button is pressed then the variable setIsActive is set to True
-    if (btnType === "addMore") {
-      setIsActiveAddMore(true);
-    } else if (btnType === "music") {
+    if (btnType === "music") {
       setIsActiveMusic(true);
     } else if (btnType === "custom") {
       setIsActiveCustom(true);
@@ -197,9 +183,7 @@ function GroupStudyHeader() {
 
   const handleMouseUp = (btnType) => {
     //when the button is released then setIsActive is set to False
-    if (btnType === "addMore") {
-      setIsActiveAddMore(false);
-    } else if (btnType === "music") {
+    if (btnType === "music") {
       setIsActiveMusic(false);
     } else if (btnType === "custom") {
       setIsActiveCustom(false);
@@ -216,10 +200,8 @@ function GroupStudyHeader() {
       {/* Header Component */}
       <h2 className="heading">Study Room: {roomName}</h2>
       <div className="header-right-section">
-
         {/* Utility Bar containing all buttons */}
         <div className="utility-bar">
-
           {/* Music Button - Opens Music Pop Up */}
           <button
             type="button"
@@ -288,7 +270,6 @@ function GroupStudyHeader() {
           >
             <img src={exitLogo} alt="Exit" />
           </button>
-
         </div>
 
         {/* Displays the Room Code */}
