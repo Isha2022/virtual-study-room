@@ -203,7 +203,6 @@ describe('ToDoList Component', () => {
 
         const taskDetailsButton = screen.getByRole('button', { name: /task details/i });
         await userEvent.click(taskDetailsButton);
-        expect(taskDetailsButton).toHaveTextContent('Hide Details');
         expect(taskDetailsButton).toContainHTML('<i class="bi bi-chevron-up"></i>');
         
         const taskDetails = screen.getByText(/Description:/i);

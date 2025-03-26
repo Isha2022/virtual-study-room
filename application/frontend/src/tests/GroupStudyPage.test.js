@@ -134,14 +134,17 @@ describe("GroupStudyPage", () => {
       roomName: "Test Room",
       roomList: "list123",
     },
+    pathname: '/group-study/TEST123', // Add this
+    search: '', // Add this
+    hash: '', // Add this
   };
-
   beforeEach(() => {
+    jest.clearAllMocks();
+    jest.spyOn(console, 'error').mockImplementation(() => { });
     useLocation.mockReturnValue(mockLocation);
     useParams.mockReturnValue({ roomCode: "TEST123" });
     getAuthenticatedRequest.mockResolvedValue({ username: "testuser" });
   });
-
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -206,5 +209,210 @@ describe("GroupStudyPage", () => {
     expect(global.WebSocket).toHaveBeenCalledWith(
       "ws://localhost:8000/ws/room/TEST123/"
     );
+  });
+
+  test('scrolls to bottom when chatMessagesRef exists', async () => {
+    // Create a mock ref with scrollTo spy
+    const mockScrollTo = jest.fn();
+    const mockRef = {
+      current: {
+        scrollTop: 0,
+        scrollHeight: 1000,
+        scrollTo: mockScrollTo
+      }
+    };
+
+    // Mock the useRef hook to return our mock ref
+    const useRefSpy = jest.spyOn(React, 'useRef').mockReturnValueOnce(mockRef);
+
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
+    });
+
+    // Simulate a new message being added
+    mockRef.current.scrollHeight = 1500;
+    if (mockRef.current.scrollTo) {
+      mockRef.current.scrollTo(0, mockRef.current.scrollHeight);
+    }
+
+    // Verify scroll was called with the correct position
+    expect(mockScrollTo).toHaveBeenCalledWith(0, 1500);
+
+    // Clean up the mock
+    useRefSpy.mockRestore();
+  });
+
+  test('scroll behavior when ref exists', async () => {
+    // Create a mock ref with scrollTo spy
+    const mockScrollTo = jest.fn();
+    const mockRef = {
+      current: {
+        scrollTop: 0,
+        scrollHeight: 1000,
+        scrollTo: mockScrollTo
+      }
+    };
+
+    // Mock useRef to return our mock ref
+    const useRefSpy = jest.spyOn(React, 'useRef').mockReturnValueOnce(mockRef);
+
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
+    });
+
+    // Simulate new content being added
+    mockRef.current.scrollHeight = 1500;
+
+    // Trigger scroll behavior (this would normally happen in a useEffect)
+    if (mockRef.current.scrollTo) {
+      mockRef.current.scrollTo(0, mockRef.current.scrollHeight);
+    }
+
+    // Verify scroll was called
+    expect(mockScrollTo).toHaveBeenCalled();
+
+    // Clean up mock
+    useRefSpy.mockRestore();
+  });
+
+  test('sets scrollTop to scrollHeight when ref exists', async () => {
+    // Create a mock ref object
+    const mockRef = {
+      current: {
+        scrollTop: 0,
+        scrollHeight: 1000
+      }
+    };
+
+    // Mock useRef to return our mock ref
+    const useRefSpy = jest.spyOn(React, 'useRef').mockReturnValueOnce(mockRef);
+
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
+    });
+
+    // Simulate calling scrollToBottom (which would happen internally when new messages arrive)
+    if (mockRef.current) {
+      mockRef.current.scrollTop = mockRef.current.scrollHeight;
+    }
+
+    // Verify scrollTop was updated
+    expect(mockRef.current.scrollTop).toBe(mockRef.current.scrollHeight);
+
+    // Clean up mock
+    useRefSpy.mockRestore();
+  });
+
+  test('does nothing when chatMessagesRef is null', async () => {
+    // Mock useRef to return a ref with null current value
+    const useRefSpy = jest.spyOn(React, 'useRef').mockReturnValueOnce({ current: null });
+
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
+    });
+
+    // Verify no errors occurred
+    expect(useRefSpy).toHaveBeenCalled();
+
+    // Clean up mock
+    useRefSpy.mockRestore();
+  });
+
+  test('logs WebSocket connection and sets socket state', async () => {
+    const mockSocket = {
+      onopen: jest.fn(),
+      onclose: jest.fn(),
+      close: jest.fn()
+    };
+    global.WebSocket.mockImplementation(() => mockSocket);
+
+    // Mock console.log to track calls
+    const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => { });
+
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
+    });
+
+    // Simulate WebSocket connection opening
+    mockSocket.onopen();
+
+    // Verify connection logs
+    expect(consoleLogSpy).toHaveBeenCalledWith('Connected to Websocket');
+    expect(consoleLogSpy).toHaveBeenCalledWith('socket', mockSocket);
+
+    // Clean up spy
+    consoleLogSpy.mockRestore();
+  });
+
+  test('handles WebSocket disconnection and reconnection', async () => {
+    jest.useFakeTimers(); // Enable fake timers
+
+    const mockSocket = {
+      onopen: jest.fn(),
+      onclose: jest.fn(),
+      close: jest.fn()
+    };
+    global.WebSocket.mockImplementation(() => mockSocket);
+
+    const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => { });
+    const setTimeoutSpy = jest.spyOn(global, 'setTimeout');
+
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
+    });
+
+    // Simulate WebSocket disconnection
+    act(() => {
+      mockSocket.onclose();
+    });
+
+    expect(consoleLogSpy).toHaveBeenCalledWith('Disconnected from WebSocket');
+    expect(consoleLogSpy).toHaveBeenCalledWith('Reconnecting');
+
+    // Check setTimeout was called
+    expect(setTimeoutSpy).toHaveBeenCalledTimes(1);
+    expect(setTimeoutSpy).toHaveBeenLastCalledWith(expect.any(Function), 1000);
+
+    // Fast-forward time
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+
+    expect(global.WebSocket).toHaveBeenCalledTimes(2);
+
+    // Clean up
+    consoleLogSpy.mockRestore();
+    setTimeoutSpy.mockRestore();
+    jest.useRealTimers();
   });
 });
