@@ -3,6 +3,9 @@ import 'tailwindcss';
 import '@fontsource/vt323';
 import '@fontsource/press-start-2p';
 import blueberryImg from '../assets/blueberry.jpeg';
+import '../styles/StudyTimer.css'; // Import the CSS file
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Study Timer in the Group Study Room
 const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
@@ -23,7 +26,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
   const [errorMessage, setErrorMessage] = useState(''); // Error message for invalid inputs
 
   // Sound effect for timer completion
-  const completionSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+  const completionSound = new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3');
 
   // On component mount, load the saved settings from localStorage
   useEffect(() => {
@@ -43,37 +46,18 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     localStorage.setItem('rounds', rounds);
   };
 
-  // Handle exit button click
-  const handleExit = () => {
-    if (onClose) {
-      onClose();
-    } else {
-      console.error("onClose is not a function");
-    }
-  };
-
-  // Handle minimise button click
-  const handleMinimize = () => {
-    setIsMinimized(true);
-  };
-
-  // Handle restore button click
-  const handleRestore = () => {
-    setIsMinimized(false);
-  };
-
   // Validate time input values
   const validateTimeInput = (time, type) => {
     if (time.hours < 0 || time.hours > 99) {
-      setErrorMessage(`Invalid ${type} hours. Please enter a value between 0 and 99.`);
+      toast.error(`Invalid ${type} hours. Please enter a value between 0 and 99.`);
       return false;
     }
     if (time.minutes < 0 || time.minutes > 59) {
-      setErrorMessage(`Invalid ${type} minutes. Please enter a value between 0 and 59.`);
+      toast.error(`Invalid ${type} minutes. Please enter a value between 0 and 59.`);
       return false;
     }
     if (time.seconds < 0 || time.seconds > 59) {
-      setErrorMessage(`Invalid ${type} seconds. Please enter a value between 0 and 59.`);
+      toast.error(`Invalid ${type} seconds. Please enter a value between 0 and 59.`);
       return false;
     }
     return true;
@@ -86,7 +70,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     }
 
     if (studyTime.hours === 0 && studyTime.minutes === 0 && studyTime.seconds === 0) {
-      setErrorMessage('Focus time input is empty.');
+      toast.error('Focus time input is empty.');
       return;
     }
 
@@ -111,6 +95,9 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     setIsBreak(false);
     setIsRunning(true);
     setCurrentPage('timer');
+    
+    // Save settings
+    saveSettings();
   };
 
   useEffect(() => {
@@ -132,6 +119,12 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                 return 0;
               }
               setIsBreak(true);
+              // Special case: If break length is 0, immediately go to next round
+              if (breakLength === 0) {
+                setCurrentRound(prev => prev + 1);
+                setIsBreak(false);
+                return studyLength;
+              }
               return breakLength;
             } else {
               setCurrentRound(prev => prev + 1);
@@ -184,6 +177,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     setTimeLeft(studyLength * 60);
     setCurrentRound(1);
     setIsBreak(false);
+    setCurrentPage('welcome');
   };
 
   const clearError = () => {
@@ -201,179 +195,12 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     }
   }, [errorMessage]);
 
-  const errorMessageAnimation = `
-    @keyframes dissolveIn {
-      0% {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  `;
-
   // a CSS class for minimised state
   const timerWrapperClass = isMinimized ? "study-timer-wrapper minimized" : "study-timer-wrapper";
 
   return (
     <div className="study-timer-container">
-      <style>
-        {`
-          ${errorMessageAnimation}
-          
-          .study-timer-container {
-            width: 100% ;
-            height: 100% ;
-            display: flex ;
-            justify-content: center ;
-            align-items: center ;
-          }
-          
-          .study-timer-wrapper {
-            background-color: #F0F3FC ;
-            border: 4px solid #E2E8FF ;
-            padding: 20px ;
-            border-radius: 30px ;
-            box-shadow: 0 0 10px #E2E8FF, inset 0 0 10px #E2E8FF, 0 0 20px rgba(226, 232, 255, 0.4), 0 0 30px rgba(186, 198, 241, 0.2) ;
-            filter: blur(0.3px) ;
-            outline: 4px solid rgba(186, 198, 241, 0.3) ;
-            outline-offset: 4px ;
-            -webkit-filter: drop-shadow(0 0 40px rgba(186, 198, 241, 0.4)) ;
-            z-index: 900 ;
-            width: 315px ;
-            height: 370px ;
-            display: flex ;
-            flex-direction: column ;
-            align-items: center ;
-            margin: 0 auto ;
-            overflow: hidden ; /* Prevent content from spilling out */
-            transition: all 0.3s ease ;
-          }
-          
-          /* Minimized state styles */
-          .study-timer-wrapper.minimized {
-            height: 50px ;
-            width: 250px ;
-            padding: 10px ;
-            transform: translateY(-10px) ;
-            cursor: pointer ;
-          }
-          
-          /* Hide content in minimized state except for the mini-header */
-          .study-timer-wrapper.minimized .timer-content {
-            display: none ;
-          }
-          
-          /* Mini header for minimized state */
-          .mini-header {
-            display: none ;
-            width: 100% ;
-            text-align: center ;
-            color: #bac6f1 ;
-            font-family: "Press Start 2P", monospace ;
-            font-size: 14px ;
-            white-space: nowrap ;
-          }
-          
-          .study-timer-wrapper.minimized .mini-header {
-            display: flex ;
-            align-items: center ;
-            justify-content: center ;
-            height: 100% ;
-          }
-
-          .study-timer-wrapper .vt323 {
-            font-family: "VT323", monospace ;
-          }
-
-          .study-timer-wrapper .press-start {
-            font-family: "Press Start 2P", monospace ;
-          }
-
-          .study-timer-wrapper input[type="number"] {
-            width: 3rem ;
-            height: 2.5rem ;
-            text-align: center ;
-            border: 2px solid #d1cbed ;
-            border-radius: 8px ;
-            background-color: transparent ;
-            color: #b2b2b2 ;
-            font-family: "Press Start 2P", monospace ;
-            font-size: 0.875rem ;
-            margin: 0 0.5rem ;
-            outline: none ;
-          }
-
-          .study-timer-wrapper input[type="number"]:focus {
-            border-color: #bac6f1 ;
-          }
-
-          .study-timer-wrapper .input-label {
-            font-family: "VT323", monospace ;
-            color: #d1cbed ;
-          }
-
-          .study-timer-wrapper .start-timer-button {
-            font-family: "Press Start 2P", monospace ;
-            background-color: #d1cbed ;
-            color: white ;
-            width: 80% ;
-            padding: 0.5rem ;
-            border-radius: 0.5rem ;
-            font-size: 0.875rem ;
-            margin-top: 1rem ;
-            text-align: center ;
-            transition: background-color 0.3s, transform 0.3s ;
-          }
-
-          .study-timer-wrapper .start-timer-button:hover {
-            background-color: #8e99e3 ;
-            transform: scale(1.05) ;
-          }
-
-          .study-timer-wrapper .timer-title {
-            font-family: "VT323", monospace ;
-            color: #b2b2b2 ;
-          }
-
-          .study-timer-wrapper .timer-subtitle {
-            font-family: "Press Start 2P", monospace ;
-            color: #bac6f1 ;
-          }
-        `}
-      </style>
-
-      {/* Error message display */}
-      {errorMessage && (
-        <div
-          className="fixed p-3 z-50 flex items-center justify-center"
-          style={{
-            backgroundColor: '#e2e8ff',
-            borderBottom: '2px solid rgba(209, 203, 237, 0.5)',
-            borderRadius: '8px',
-            boxShadow: '0 2px 8px rgba(186, 198, 241, 0.2)',
-            width: '300px',
-            animation: 'dissolveIn 0.3s ease-out forwards',
-            top: '10px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            pointerEvents: 'auto',
-            margin: '0 auto'
-          }}
-        >
-          <span
-            style={{
-              color: '#99a8c7',
-              fontFamily: 'VT323, monospace',
-              fontSize: '18px'
-            }}
-          >
-            {errorMessage}
-          </span>
-        </div>
-      )}
+      <ToastContainer position="top-center" />
       
       <div className={timerWrapperClass} onClick={isMinimized ? handleRestore : null}>
         {/* Mini header for minimized state */}
@@ -632,6 +459,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
               }}>
                 <button
                   onClick={handleBack}
+                  data-testid="back-button"
                   style={{
                     position: 'absolute',
                     left: '0px',
@@ -654,6 +482,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                 >
                   <div
                     className="triangle"
+                    data-testid="triangle"
                     style={{
                       width: 0,
                       height: 0,
