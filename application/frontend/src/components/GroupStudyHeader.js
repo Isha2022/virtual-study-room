@@ -56,10 +56,6 @@ function GroupStudyHeader() {
     }
   };
 
-  const handleExit = () => {
-    navigate("/dashboard");
-  };
-
   //handle open for spotify button
   const handleClickOpen = () => {
     setOpen((prevState) => !prevState);
@@ -77,7 +73,6 @@ function GroupStudyHeader() {
 
   const [openMusicPlayer, setOpenMusicPlayer] = useState(false); //handle open and close for free tracks
 
-  const [isActiveAddMore, setIsActiveAddMore] = useState(false); //initialise both variables: isActive and setIsActive to false
   const [isActiveMusic, setIsActiveMusic] = useState(false);
   const [isActiveCustom, setIsActiveCustom] = useState(false);
   const [isActiveCopy, setIsActiveCopy] = useState(false);
@@ -129,7 +124,7 @@ function GroupStudyHeader() {
   }, [finalRoomCode, navigate]);
 
   useEffect(() => {
-    const handlePageHide = (event) => {
+    const handlePageHide = () => {
       leaveRoom();
     };
 
@@ -163,9 +158,7 @@ function GroupStudyHeader() {
 
   const handleMouseDown = (btnType) => {
     //when the button is pressed then the variable setIsActive is set to True
-    if (btnType === "addMore") {
-      setIsActiveAddMore(true);
-    } else if (btnType === "music") {
+    if (btnType === "music") {
       setIsActiveMusic(true);
     } else if (btnType === "custom") {
       setIsActiveCustom(true);
@@ -178,9 +171,7 @@ function GroupStudyHeader() {
 
   const handleMouseUp = (btnType) => {
     //when the button is released then setIsActive is set to False
-    if (btnType === "addMore") {
-      setIsActiveAddMore(false);
-    } else if (btnType === "music") {
+    if (btnType === "music") {
       setIsActiveMusic(false);
     } else if (btnType === "custom") {
       setIsActiveCustom(false);
