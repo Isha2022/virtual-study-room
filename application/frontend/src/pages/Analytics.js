@@ -90,7 +90,6 @@ const Analytics = () => {
 
     return (
 
-        {/* Dashboard analytics panel */}
         <div className="dashboard-panel analytics">
             <h2>Statistics</h2>
             <div className="stats">
