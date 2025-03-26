@@ -1,6 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
 .profile-container {
   overflow: hidden;
   display: flex;
@@ -85,27 +82,17 @@ h2.username,
   letter-spacing: 0.5px !important;
 }
 
-/* Remove star decorations */
-.username::before,
-.username::after,
-.user-name::before,
-.user-name::after,
-.profile-username::before,
-.profile-username::after,
-.profile-user-name::before,
-.profile-user-name::after,
-.profile-name::before,
-.profile-name::after,
-.profile-user::before,
-.profile-user::after,
+/* Remove star decorations from all username variations */
+[class*="username"]::before,
+[class*="username"]::after,
+[class*="user-name"]::before,
+[class*="user-name"]::after,
+[class*="profile-name"]::before,
+[class*="profile-name"]::after,
 h2.username::before,
-h2.username::after,
-.profile-box .username::before,
-.profile-box .username::after,
-.user-profile-name::before,
-.user-profile-name::after {
-  content: none !important; /* Remove any star content */
-  display: none !important; /* Ensure it's not displayed */
+h2.username::after {
+  content: none !important;
+  display: none !important;
 }
 
 /* Remove star elements if they're actual elements and not pseudo-elements */
@@ -121,26 +108,6 @@ span.star,
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.profile-popup-container {
-  display: flex;
-  flex-direction: column; /* Stack children vertically */
-  align-items: center;
-  gap: 15px; /* Space between buttons and avatar selector */
-  width: 100%;
-}
-
-/* Add specific styling for the button group */
-.avatar-button-group,
-.profile-popup-container > div:has(.upload-button, .default-select-button) {
-  display: flex !important;
-  flex-direction: row !important; /* Place buttons side by side */
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 15px !important; /* Space between buttons */
-  margin: 10px 0 !important;
-  width: 100% !important;
 }
 
 /* Ensure buttons have the same alignment */
@@ -741,7 +708,7 @@ span.star,
   cursor: pointer;
 }
 
-.profile-box button-container {
+.profile-box-button-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -813,6 +780,7 @@ span.star,
   overflow-x: hidden !important;
   display: -webkit-box !important;
   -webkit-box-orient: vertical !important;
+  /*what*/
   -webkit-line-clamp: 3 !important;
   word-wrap: break-word !important;
   white-space: normal !important;

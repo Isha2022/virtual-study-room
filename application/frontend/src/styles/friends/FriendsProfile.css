@@ -4,15 +4,15 @@
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure it's on top of other elements */
+  z-index: 1000;
 }
 
 .profile-section-friends {
-  position: relative; /* Add this line */
+  position: relative;
   margin: auto;
   padding: 20px;
   border: 5px solid #f2bac9;
@@ -24,8 +24,9 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  z-index: 2001; /* Ensures it is on top of dashboard heading */
+  z-index: 2001;
 }
+
 .profile-pic-friends {
   width: 150px;
   height: 150px;
@@ -34,16 +35,13 @@
   object-fit: cover;
   flex-shrink: 0;
   margin-top: 20px;
-  /* Prevent image from resizing */
 }
 
 .profile-details-friends {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  /* Allow text to take available space */
   min-width: 200px;
-  /* Ensure enough space for text */
   text-align: center;
   margin-top: 20px;
 }
@@ -58,9 +56,9 @@
 }
 
 .close-btn-friends {
-  position: absolute; /* Position the button absolutely within its relative parent */
-  top: 10px; /* Adjust the distance from the top */
-  right: 10px; /* Adjust the distance from the right */
+  position: absolute;
+  top: 10px;
+  right: 10px;
   background: none;
   border: none;
   border-radius: 50%;
@@ -68,5 +66,5 @@
   padding: 5px;
   font-size: 30px;
   cursor: pointer;
-  z-index: 1; /* Ensure it's above other content */
+  z-index: 1;
 }

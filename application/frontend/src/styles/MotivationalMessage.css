@@ -1,17 +1,16 @@
 .message-container {
   margin-top: 130px;
   display: flex;
-  justify-content: center; /* center horizontally */
+  justify-content: center;
   align-items: center;
   margin: 0;
   background-color: #f6f0f0;
-  min-height: 100vh; /* Ensures it takes the full viewport height */
-  width: 100vw; /* Ensures it spans the full width */
+  min-height: 100vh;
+  width: 100vw;
   flex-direction: column;
 }
 
 .message-card {
-  /* Base properties */
   width: 700px;
   height: 100px;
   justify-content: center;
@@ -22,21 +21,13 @@
   margin-top: 10px;
   margin-bottom: 70px;
   border-radius: 12px;
-  overflow: hidden; /* Ensures gradient stays within borders */
-  
-  /* Ethereal glass-like effect */
+  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: 
     0 4px 15px rgba(174, 171, 252, 0.4),
     0 0 30px rgba(207, 200, 255, 0.3),
     inset 0 0 20px rgba(255, 255, 255, 0.2);
-    
-  /* Asymmetrical gradient with shifted focus */
-  background: #aeabfc;
-  
-  /* Multiple layered backgrounds for glass-like ethereal effect */
   background: 
-    /* Layer 1: Asymmetrical main gradient shifted to the right */
     linear-gradient(
       115deg, 
       #aeabfc 0%, 
@@ -44,36 +35,26 @@
       rgba(174, 171, 252, 0.8) 65%,
       #aeabfc 100%
     ),
-    
-    /* Layer 2: Concentrated glow spot on the right */
     radial-gradient(
       circle at 75% 40%, 
       rgba(255, 255, 255, 0.6) 0%, 
       transparent 35%
     ),
-    
-    /* Layer 3: Subtle glow spot on the left */
     radial-gradient(
       circle at 25% 60%, 
       rgba(255, 255, 255, 0.4) 0%, 
       transparent 45%
     ),
-    
-    /* Layer 4: Outer glow effect */
     radial-gradient(
       circle at center, 
       rgba(207, 200, 255, 0.8) 0%, 
       rgba(174, 171, 252, 0.6) 65%,
       #aeabfc 100%
     );
-  
-  /* Add subtle shimmer animation */
-  position: relative;
   animation: subtleFlow 15s infinite alternate;
   backdrop-filter: blur(5px);
 }
 
-/* Add sparkle effect */
 .message-card::before {
   content: '';
   position: absolute;
@@ -104,7 +85,6 @@
   50% { opacity: 0.7; }
 }
 
-/* Updated text styling for better contrast against new background */
 .message-card h4 {
   font-family: 'Inter', sans-serif;
   font-weight: 700; /* Bold */

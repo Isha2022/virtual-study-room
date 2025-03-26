@@ -1,8 +1,3 @@
-/* Import Orbitron font for heading */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
-/* Import Inter font for content */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 .welcome-container {
     display: flex;
     justify-content: center;
@@ -13,7 +8,6 @@
     flex-direction: column;
     padding: 20px;
     position: relative;
-    /* Soft, airbrushed gradient background inspired by the diffused peach image */
     background: linear-gradient(135deg, 
         #ffffff 0%, 
         #fff6f5 25%, 
@@ -23,7 +17,6 @@
     overflow: hidden;
 }
 
-/* Replace sparkles with subtle soft color diffusion */
 .welcome-container::before {
     content: "";
     position: absolute;
@@ -39,7 +32,6 @@
     z-index: 0;
 }
 
-/* Soft diffused glow */
 .welcome-container::after {
     content: "";
     position: absolute;
@@ -52,7 +44,6 @@
     z-index: 0;
 }
 
-/* Add header bar to match login/signup */
 .welcome-header {
     position: fixed;
     width: 100%;
@@ -73,12 +64,11 @@
     padding-right: 50px;
 }
 
-/* Add footer bar to match header but with reversed gradient */
 .welcome-footer {
     position: fixed;
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #fbc09b 0%, #fb7766 100%); /* Reversed gradient */
+    background: linear-gradient(135deg, #fbc09b 0%, #fb7766 100%);
     box-shadow: 0 -4px 8px rgba(0,0,0,0.1);
     bottom: 0;
     left: 0;
@@ -94,7 +84,6 @@
     padding-right: 50px;
 }
 
-/* Update content box to include blue vertical stripes */
 .welcome-content {
     background: rgba(255, 255, 255, 0.75);
     border-radius: 40px;
@@ -115,7 +104,6 @@
     z-index: 1;
 }
 
-/* Add back the vertical blue stripes */
 .welcome-content::before {
     content: "";
     position: absolute;
@@ -129,7 +117,6 @@
     z-index: 0;
 }
 
-/* Style for the main title - updated with mango colors */
 .welcome-heading {
     font-family: 'Orbitron', sans-serif;
     font-size: 54px;
@@ -148,7 +135,6 @@
     letter-spacing: 1px;
 }
 
-/* Style for the mango cat image - bigger and without oval */
 .welcome-image {
     width: 300px;
     margin: 10px 0 25px;
@@ -156,7 +142,6 @@
     position: relative;
 }
 
-/* Container for the buttons */
 .button-container {
     display: flex;
     flex-wrap: wrap;
@@ -167,7 +152,6 @@
     position: relative;
 }
 
-/* Match the button styling from shared materials and todo components */
 .login-button, .create-account-button {
     min-width: 180px;
     height: 45px;
@@ -188,9 +172,8 @@
         0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Login button styling */
 .login-button {
-    background-color: #aeabfc; /* Match the purple from other components */
+    background-color: #aeabfc;
     background-image: 
         radial-gradient(circle at center, #c7c5fd 20%, transparent 70%),
         radial-gradient(circle at 30% 30%, #d6d4fe 15%, transparent 50%),
@@ -199,9 +182,8 @@
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Create account button styling - soft peach */
 .create-account-button {
-    background-color: #ffb5b2; /* From the color palette */
+    background-color: #ffb5b2;
     background-image: 
         radial-gradient(circle at center, #ffcaaa 20%, transparent 70%),
         radial-gradient(circle at 30% 30%, #fee09a 15%, transparent 50%),
@@ -210,7 +192,6 @@
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Button hover effect */
 .login-button:hover, .create-account-button:hover {
     transform: scale(1.05);
     box-shadow: 
@@ -219,7 +200,6 @@
         0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Button active effect */
 .login-button:active, .create-account-button:active {
     transform: scale(0.95);
     box-shadow: 
@@ -227,7 +207,6 @@
         inset -1px -1px 3px rgba(0, 0, 0, 0.2);
 }
 
-/* Glass shine effect */
 .login-button::after, .create-account-button::after {
     content: '';
     position: absolute;
@@ -245,12 +224,10 @@
     transition: all 0.5s ease;
 }
 
-/* Shine animation on hover */
 .login-button:hover::after, .create-account-button:hover::after {
     transform: translateX(100%) translateY(-100%) rotate(30deg);
 }
 
-/* Decorative stars to match other components */
 .decorative-stars {
     position: absolute;
     font-size: 20px;
@@ -279,7 +256,6 @@
     right: 30px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .welcome-heading {
         font-size: 42px;
@@ -295,7 +271,6 @@
     }
 }
 
-/* For even smaller screens */
 @media (max-width: 480px) {
     .welcome-heading {
         font-size: 36px;
@@ -310,15 +285,13 @@
     }
 }
 
-/* Emoji mango styling - smaller size */
 .mango-emoji {
     position: absolute;
-    font-size: 30px; /* Reduced from 40px */
+    font-size: 30px;
     z-index: 1;
     filter: drop-shadow(0 3px 5px rgba(255, 165, 120, 0.3));
 }
 
-/* Position each mango in a corner */
 .top-left-mango {
     top: 15px;
     left: 15px;
