@@ -2,7 +2,7 @@ from django.db import models
 from .user import User
 
 """
-Both classes (List and Permission) are used with the toDoList model
+Both classes (List and Permission) are used with the Task model
 """
 
 class List(models.Model):

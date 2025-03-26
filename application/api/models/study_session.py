@@ -19,7 +19,7 @@ class StudySession(models.Model):
     endTime = models.DateTimeField(null=True, blank=True)
     date = models.DateField(default=datetime.date.today)
     ''' The ToDo list associated with this session '''
-    toDoList = models.ForeignKey(List, on_delete=models.CASCADE, null=True, blank=True)
+    Task = models.ForeignKey(List, on_delete=models.CASCADE, null=True, blank=True)
     ''' Storing the users currently in the session '''
     participants = models.ManyToManyField(User, related_name='study_sessions', blank = True)
     
@@ -43,12 +43,12 @@ class StudySession(models.Model):
                     if not StudySession.objects.filter(roomCode=self.roomCode).exists():
                         break 
 
-            if not self.toDoList:
+            if not self.Task:
                 todo_list = List.objects.create(
                     name="TaskTrack: Study Edition",
                     is_shared=True
                 )
-                self.toDoList = todo_list
+                self.Task = todo_list
         super().save(*args, **kwargs)   
 
 

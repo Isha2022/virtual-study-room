@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand, CommandError
 from api.models.motivational_message import MotivationalMessage
 import random
 from django.core.management import call_command
-from api.models import Friends, Appointments, User, Status, toDoList, Permission, MotivationalMessage, Rewards, StudySession, SessionUser, List
+from api.models import Friends, Appointments, User, Status, Task, Permission, MotivationalMessage, Rewards, StudySession, SessionUser, List
 import pytz
 from faker import Faker
 from django.utils.timezone import now, make_aware
@@ -179,13 +179,13 @@ class Command(BaseCommand):
 
     def generate_random_toDoLists(self):
         ''' Generate random todo lists until we reach TODOLIST_COUNT'''
-        toDoList_count = toDoList.objects.count()
+        toDoList_count = Task.objects.count()
         print(f"Initial ToDoList count: {toDoList_count}, Target: {self.TODOLIST_COUNT}")
 
         while toDoList_count < self.TODOLIST_COUNT:
             print(f"Seeding ToDoLists {toDoList_count}/{self.TODOLIST_COUNT}")
             self.generate_toDoLists()
-            toDoList_count = toDoList.objects.count()
+            toDoList_count = Task.objects.count()
         
         print(f"Final ToDoList count: {toDoList_count}, Target: {self.TODOLIST_COUNT}")
         print("ToDoList seeding complete.")
@@ -212,7 +212,7 @@ class Command(BaseCommand):
     def create_toDoLists(self, data):
         ''' Create a todo list with given data'''
         try:
-            toDoLists = toDoList.objects.create(
+            toDoLists = Task.objects.create(
                 list = data["list"],
                 title = data["title"],
                 content = data["content"],
@@ -279,10 +279,10 @@ class Command(BaseCommand):
             
             selected_users = sample(users, 1)
 
-            #print(f"{'Shared' if toDo.is_shared else 'Exclusive'} toDoList {toDo.list_id}: Assigning {num_permissions} permissions.")
+            #print(f"{'Shared' if toDo.is_shared else 'Exclusive'} Task {toDo.list_id}: Assigning {num_permissions} permissions.")
 
             for user in selected_users:
-                #print(f"Assigning {permission_type} permission to user {user.user_id} for toDoList {toDo.list_id}.")
+                #print(f"Assigning {permission_type} permission to user {user.user_id} for Task {toDo.list_id}.")
 
                 self.create_toDoListUser({
                     'user_id': user,
