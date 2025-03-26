@@ -27,6 +27,11 @@ import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
 import SpotifyButton from '../components/SpotifyButton';
 import FloatingMusicPlayer from "../components/FloatingWindow.js";
 
+/*
+Group Study Page for the website. Imports all components, handles users joining and leaving the room.
+Also handles websockets communications
+*/
+
 function GroupStudyPage() {
   const [participants, setParticipants] = useState([]); // State to store participants
   const [open, setOpen] = useState(false); //open and close states for pop-up window for spotify button
