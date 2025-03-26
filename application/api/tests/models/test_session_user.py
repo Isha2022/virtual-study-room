@@ -78,4 +78,62 @@ class SessionUserTest(TestCase):
         self.assertEqual(sessions[0], self.session_user)
         self.assertEqual(sessions[1], other_user)
 
+    def test_rejoin_creates_new_session(self):
+        """Test that rejoin creates a new session entry"""
+        # First join
+        initial_count = SessionUser.objects.count()
+        session_user = SessionUser.objects.create(
+            user=self.user,
+            session=self.session
+        )
+        
+        # Rejoin
+        new_session_user = SessionUser.rejoin_session(self.user, self.session)
+        self.assertEqual(SessionUser.objects.count(), initial_count)
+        self.assertNotEqual(session_user.id, new_session_user.id)
 
+    def test_rejoin_closes_previous_sessions(self):
+        """Test that rejoin closes any active sessions"""
+        # Create active session
+        session_user = SessionUser.objects.create(
+            user=self.user,
+            session=self.session
+        )
+        
+        # Rejoin should close the active session
+        SessionUser.rejoin_session(self.user, self.session)
+        
+        with self.assertRaises(SessionUser.DoesNotExist):
+            SessionUser.objects.get(pk=session_user.id)
+
+    def test_rejoin_adds_to_participants(self):
+        """Test that rejoin adds user to session participants if not already present"""
+        SessionUser.rejoin_session(self.user, self.session)
+        
+        self.assertIn(self.user, self.session.participants.all())
+
+    def test_multiple_rejoins(self):
+        """Test multiple rejoins work correctly"""
+        # First join
+        SessionUser.objects.create(
+            user=self.user,
+            session=self.session
+        )
+        
+        # First rejoin
+        rejoin1 = SessionUser.rejoin_session(self.user, self.session)
+        
+        # Second rejoin
+        rejoin2 = SessionUser.rejoin_session(self.user, self.session)
+        
+        self.assertTrue(SessionUser.objects.filter(pk=rejoin2.id).exists())
+
+    def test_rejoin_with_existing_participant(self):
+        """Test rejoin when user is already a participant"""
+
+        self.session.participants.add(self.user)
+
+        session_user = SessionUser.rejoin_session(self.user, self.session)
+
+        self.assertIn(self.user, self.session.participants.all())
+        self.assertTrue(SessionUser.objects.filter(pk=session_user.id).exists())

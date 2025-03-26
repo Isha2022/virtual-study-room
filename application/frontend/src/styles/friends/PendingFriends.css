@@ -14,7 +14,6 @@
     position: relative;
 }
 
-/* Fairy dust effect around the container */
 .pending-friends::before {
     content: '';
     position: absolute;
@@ -63,8 +62,6 @@
     margin: 10px;
     max-width: 95%;
     align-items: center;
-    white-space: normal;
-    overflow-y: auto;
 }
 
 /* Each request - keeps all elements in one row */
@@ -79,15 +76,12 @@
     border: 2px solid #f8e1eb;
     font-size: 16px;
     width: 100%;
-    white-space: normal;
-    overflow-y: auto;
     box-shadow: 0 3px 8px rgba(249, 193, 206, 0.15);
     transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     position: relative;
     overflow: hidden;
 }
 
-/* Fairy dust hover effect */
 .invitation-card::before {
     content: '';
     position: absolute;
@@ -233,4 +227,9 @@
         0 3px 8px rgba(249, 193, 206, 0.3),
         0 0 12px rgba(255, 231, 243, 0.6);
     transform: scale(1.05);
+}
+
+@keyframes button-sparkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.05); }
 }

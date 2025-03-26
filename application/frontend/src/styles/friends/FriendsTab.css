@@ -10,7 +10,6 @@
     position: relative;
 }
 
-/* Decorative elements inspired by the kawaii aesthetic */
 .tabs::before, .tabs::after {
     content: '';
     position: absolute;
@@ -84,7 +83,6 @@
     border: 2px dashed rgba(255, 214, 223, 0.7);
     position: relative;
 }
-
 /* Grid background pattern inspired by the kawaii image */
 .tab-content::before {
     content: '';

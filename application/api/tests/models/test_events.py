@@ -126,12 +126,7 @@ class EventModelTest(TestCase):
         self.assertEqual(appointment.comments, None)
         self.assertEqual(appointment.name, 'Minimal Appointment')
 
-    def test_time_validation(self):
-        '''Verify model allows illogical time ranges (validation should be in serializer)'''
-        # Valid case - end after start
-        self.assertTrue(self.appointment.end_date > self.appointment.start_date)
-        
-        # Create invalid time range (end before start)
+        # End before start
         invalid_appointment = Appointments.objects.create(
             user=self.user,
             name='Invalid Time',

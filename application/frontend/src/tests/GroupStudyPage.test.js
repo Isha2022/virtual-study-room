@@ -1,23 +1,82 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter, useLocation, useNavigate } from "react-router-dom";
+import { render, screen, waitFor, act } from "@testing-library/react";
+import { MemoryRouter, useLocation, useParams } from "react-router-dom";
 import GroupStudyPage from "../pages/GroupStudyPage";
 import { getAuthenticatedRequest } from "../utils/authService";
+import { ToastContainer } from "react-toastify";
 
+// Mock dependencies
+jest.mock("../utils/authService");
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useLocation: jest.fn(),
-  useNavigate: jest.fn(),
+  useParams: jest.fn(),
+  useNavigate: jest.fn(() => jest.fn()),
 }));
 
-jest.mock("../utils/authService", () => ({
-  getAuthenticatedRequest: jest.fn(),
+jest.mock("@fullcalendar/react", () => (props) => (
+  <div>
+    <button onClick={props.customButtons?.addEventButton?.click}>
+      Add Event
+    </button>
+    {props.events?.map((event) => (
+      <div key={event.id}>{event.title}</div>
+    ))}
+  </div>
+));
+
+jest.mock("@fullcalendar/daygrid", () => () => <div>Mocked DayGridPlugin</div>);
+jest.mock("@fullcalendar/timegrid", () => () => (
+  <div>Mocked TimeGridPlugin</div>
+));
+
+// Mock Firebase storage
+jest.mock("firebase/storage", () => ({
+  ref: jest.fn(),
+  getDownloadURL: jest.fn(),
+  uploadBytes: jest.fn(),
+  listAll: jest.fn(),
+  deleteObject: jest.fn(),
 }));
 
-jest.mock("../assets/blueberry.jpeg", () => "blueberry.jpeg");
-jest.mock("../assets/generate.PNG", () => "generate.PNG");
-jest.mock("../firebase-config.js");
+// Mock Firebase config
+jest.mock("../firebase-config.js", () => ({
+  storage: {
+    ref: jest.fn(),
+    getDownloadURL: jest.fn(),
+    uploadBytes: jest.fn(),
+    listAll: jest.fn(),
+    deleteObject: jest.fn(),
+  },
+  database: {
+    ref: jest.fn(),
+  },
+}));
 
+// Mock child components
+jest.mock("../pages/Motivation", () => () => (
+  <div data-testid="motivational-message">Mocked Motivation</div>
+));
+jest.mock("../components/ToDoListComponents/newToDoList", () => () => (
+  <div data-testid="todo-list">Mocked ToDoList</div>
+));
+jest.mock("../components/StudyTimer", () => () => (
+  <div data-testid="study-timer">Mocked StudyTimer</div>
+));
+jest.mock("../components/StudyParticipants", () => () => (
+  <div data-testid="study-participants">Mocked StudyParticipants</div>
+));
+jest.mock("../pages/SharedMaterials", () => () => (
+  <div data-testid="shared-materials">Mocked SharedMaterials</div>
+));
+jest.mock("../components/ChatBox", () => () => (
+  <div data-testid="chat-box">Mocked ChatBox</div>
+));
+jest.mock("../components/GroupStudyHeader", () => () => (
+  <div data-testid="group-study-header">Mocked GroupStudyHeader</div>
+));
+
+// Mock Material-UI components
 jest.mock("@mui/material", () => ({
   Dialog: ({ children, open }) => (open ? <div>{children}</div> : null),
   DialogTitle: ({ children }) => <h2>{children}</h2>,
@@ -25,11 +84,9 @@ jest.mock("@mui/material", () => ({
   Button: ({ children }) => <button>{children}</button>,
 }));
 
-jest.mock("@mui/icons-material/PlayArrow", () => () => (
-  <div>PlayArrowIcon</div>
-));
-jest.mock("@mui/icons-material/Pause", () => () => <div>PauseIcon</div>);
-jest.mock("@mui/icons-material/SkipNext", () => () => <div>SkipNextIcon</div>);
+jest.mock("@mui/icons-material/PlayArrow", () => "PlayArrowIcon");
+jest.mock("@mui/icons-material/Pause", () => "PauseIcon");
+jest.mock("@mui/icons-material/SkipNext", () => "SkipNextIcon");
 
 jest.mock(
   "../assets/music/Cartoon, Jéja - C U Again ft. Mikk Mäe (Cartoon, Jéja, Futuristik VIP).mp3",
@@ -60,65 +117,94 @@ jest.mock(
   () => "mock-audio-file-7"
 );
 
-jest.mock("../pages/SharedMaterials", () => () => (
-  <div data-testid="shared-materials-mock" />
-));
+// Mock WebSocket
+global.WebSocket = jest.fn(() => ({
+  onopen: jest.fn(),
+  onclose: jest.fn(),
+  close: jest.fn(),
+}));
 
-jest.mock("../components/ToDoListComponents/newToDoList", () => {
-  return function MockToDoList({ lists }) {
-    const safeLists = Array.isArray(lists) ? lists : [];
-    return (
-      <div data-testid="todo-list">
-        {safeLists.map((list) => (
-          <div key={list.id || Math.random()} data-testid="todo-card">
-            {list.name || "Unnamed List"}
-          </div>
-        ))}
-      </div>
-    );
-  };
-});
+// Mock assets if needed
+jest.mock("../assets/avatars/avatar_2.png", () => "avatar_2.png");
 
 describe("GroupStudyPage", () => {
-  const mockNavigate = jest.fn();
   const mockLocation = {
     state: {
       roomCode: "TEST123",
       roomName: "Test Room",
-      roomList: ["user1", "user2"],
-      todoLists: [
-        { id: 1, name: "Study Tasks" },
-        { id: 2, name: "Assignment List" },
-      ],
+      roomList: "list123",
     },
-    pathname: "/group-study/TEST123",
   };
 
   beforeEach(() => {
     useLocation.mockReturnValue(mockLocation);
-    useNavigate.mockReturnValue(mockNavigate);
-    getAuthenticatedRequest.mockClear();
-    mockNavigate.mockClear();
-
-    getAuthenticatedRequest.mockResolvedValue({
-      username: "testuser",
-      profilePicture: "test.jpg",
-    });
+    useParams.mockReturnValue({ roomCode: "TEST123" });
+    getAuthenticatedRequest.mockResolvedValue({ username: "testuser" });
   });
 
-  test("renders main container with room information", async () => {
-    render(
-      <MemoryRouter initialEntries={["/group-study/TEST123"]}>
-        <GroupStudyPage />
-      </MemoryRouter>
-    );
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-    expect(screen.getByTestId("groupStudyRoom-container")).toBeInTheDocument();
-
-    await waitFor(() => {
-      expect(screen.getByText("Study Room: Test Room")).toBeInTheDocument();
+  test("renders the main container", async () => {
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
     });
 
-    expect(screen.getByTestId("shared-materials-mock")).toBeInTheDocument();
+    expect(screen.getByTestId("groupStudyRoom-container")).toBeInTheDocument();
+  });
+
+  test("renders all three columns", async () => {
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
+    });
+
+    expect(screen.getByTestId("column-1")).toBeInTheDocument();
+    expect(screen.getByTestId("column-2")).toBeInTheDocument();
+    expect(screen.getByTestId("column-3")).toBeInTheDocument();
+  });
+
+  test("renders all child components", async () => {
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
+    });
+
+    expect(screen.getByTestId("group-study-header")).toBeInTheDocument();
+    expect(screen.getByTestId("todo-list")).toBeInTheDocument();
+    expect(screen.getByTestId("shared-materials")).toBeInTheDocument();
+    expect(screen.getByTestId("study-participants")).toBeInTheDocument();
+    expect(screen.getByTestId("motivational-message")).toBeInTheDocument();
+    expect(screen.getByTestId("study-timer")).toBeInTheDocument();
+    expect(screen.getByTestId("chat-box")).toBeInTheDocument();
+  });
+
+  test("establishes WebSocket connection with room code", async () => {
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
+    });
+
+    expect(global.WebSocket).toHaveBeenCalledWith(
+      "ws://localhost:8000/ws/room/TEST123/"
+    );
   });
 });

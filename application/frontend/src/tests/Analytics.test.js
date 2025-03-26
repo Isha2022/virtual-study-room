@@ -43,6 +43,9 @@ describe("Analytics Component", () => {
     await waitFor(() => {
       expect(screen.getByText("5")).toBeInTheDocument();  // Streaks
       expect(screen.getByText("4")).toBeInTheDocument();  // Avg. Study Hours
+      expect(screen.getByText("Day Streak")).toBeInTheDocument();
+      expect(screen.getByText("Average Hours")).toBeInTheDocument();
+      expect(screen.getByText("Share Statistics")).toBeInTheDocument();
     });
   });
 
@@ -74,16 +77,120 @@ describe("Analytics Component", () => {
     });
   });
 
-  // Test case 3 -  checks that the component can handle api failures
+  // Test case 3 - checks that the component can handle api failures
   test("handles API failure gracefully", async () => {
-    // Mock APU call to fail with a network error
+    // Mock API call to fail with a network error
     axios.get.mockRejectedValueOnce(new Error("Network Error"));
+
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     render(<Analytics />);
 
     // Wait and check if Statistics is still displayed
     await waitFor(() => {
       expect(screen.getByText("Statistics")).toBeInTheDocument();
+      expect(consoleErrorSpy).toHaveBeenCalledWith("Error fetching analytics:", "Network Error");
     });
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  // Test case 4 - handles case when no access token is present
+  test("handles missing access token", async () => {
+    localStorage.removeItem("access_token");
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(<Analytics />);
+
+    await waitFor(() => {
+      expect(consoleErrorSpy).toHaveBeenCalledWith("No access token found. Please log in.");
+    });
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  // Test case 5 - handles failed share toggle request
+  test("handles failed share toggle request", async () => {
+    axios.get.mockResolvedValueOnce({
+      data: {
+        streaks: 5,
+        total_hours_studied: 20,
+        average_study_hours: 4,
+        is_sharable: false,
+      },
+    });
+    
+    getAuthenticatedRequest.mockResolvedValueOnce({ status: 0 });
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(<Analytics />);
+
+    const checkbox = await screen.findByRole("checkbox");
+    fireEvent.click(checkbox);
+
+    await waitFor(() => {
+      expect(getAuthenticatedRequest).toHaveBeenCalled();
+      expect(consoleErrorSpy).toHaveBeenCalledWith("Error updating task status");
+      expect(checkbox).not.toBeChecked(); // Should remain unchecked on failure
+    });
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  // Test case 6 - verifies tooltips are present
+  test("displays correct tooltips", async () => {
+    axios.get.mockResolvedValueOnce({
+      data: {
+        streaks: 5,
+        total_hours_studied: 20,
+        average_study_hours: 4,
+        is_sharable: false,
+      },
+    });
+
+    render(<Analytics />);
+
+    await waitFor(() => {
+      const infoIcons = screen.getAllByText("i");
+      expect(infoIcons.length).toBe(2);
+      
+      fireEvent.mouseOver(infoIcons[0]);
+      expect(screen.getByText("Number of consecutive days you've studied")).toBeInTheDocument();
+      
+      fireEvent.mouseOver(infoIcons[1]);
+      expect(screen.getByText("Your average time spent in a study room in hours")).toBeInTheDocument();
+    });
+  });
+
+  // Test case 7 - handles error response from analytics API
+  test("handles error response from analytics API", async () => {
+    const errorResponse = {
+      response: {
+        status: 401,
+        data: { message: "Unauthorized" }
+      }
+    };
+    axios.get.mockRejectedValueOnce(errorResponse);
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(<Analytics />);
+
+    await waitFor(() => {
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Error fetching analytics:",
+        401
+      );
+    });
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  // Test case 8 - verifies initial state is set correctly
+  test("initializes with default state", () => {
+    render(<Analytics />);
+    
+    // Check for initial values before API response
+    expect(screen.getByText("0")).toBeInTheDocument(); // Streaks default
+    expect(screen.getByText("0")).toBeInTheDocument(); // Avg hours default
   });
 });

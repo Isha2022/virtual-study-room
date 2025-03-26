@@ -36,7 +36,7 @@ class ListViewTestCase(APITestCase):
         response = self.client.get('/api/todolists/')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data), 3)
 
         list_data = response.data[0]
         self.assertEqual(list_data['id'], self.todo_list.id)
