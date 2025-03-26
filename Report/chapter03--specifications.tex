@@ -34,25 +34,17 @@ Our basic functional specifications are as follows:
 \item Users should be able to create a study room and invite people to it via a code. This will allow users to join a virtual study room and invite their friend easily with a code. Can be found under 'generate study room' on the dashboard page.
 \item Users should be able to communicate with their friends via chat within the study room. Allows users to talk with their friends in breaks or ask questions while studying or working on a project together. Can be found in the 'chat box' within a study room. Click create study room to find this page.
 \item User should be able to share study materials within the study room. Allows users to share notes or homework questions easily within the room itself. Can be found under 'shared materials' in the study room.
-\item Users should be able to share a group to-do list within the study room
-\item Users should have access to a personal pomodoro timer which they can adjust to their liking within the study room
-\item Users should be able to create and store many personal to-do-lists to keep track of their studies
-\item Users should have access to a personal calendar to track their studies and note key events such as exams or deadlines
-\item Users should be able to earn badges and achievements to recognize their effort and motivate them to study more
-\item Users should be able to view their friends badges and statistics, if shared, to create a healthy competition
-\item Users should be able to read motivational messages within the study room to keep their spirits high
+\item Users should be able to share a group to-do list within the study room. This can be found after joining a group study room. Allows users to add tasks and work on them as a group, complete and delete tasks. The to do list updates in real time for all participants. This greatly helps with collaboration by having shared goals for the study session and will motivate users to stay on track.
+\item Users should have access to a personal pomodoro timer which they can adjust to their liking within the study room. It is proven that the pomodoro method helps students stay focused, the exact timings of the study and the break can be adjusted to the users liking. Each user will have their own personal timer to help keep them focused. This can be found within the group study room.
+\item Users should be able to create and store many personal to-do-lists to keep track of their studies. These to do lists can be found on the dashboard and a grid view off all to do lists can be seen by pressing the expand button.
+\item Users should have access to a personal calendar to track their studies and note key events such as exams or deadlines. This can be found under the profile panel by clicking on the calendar icon button.
+\item Users should be able to earn badges and achievements to recognize their effort and motivate them to study more. Users can view their badges by clicking on the badge icon within the profile panel after logging in.
+\item Users should be able to view their friends badges and statistics, if shared, to create a healthy competition. Users can share their analytics by toggling 'share analytics' within the stats panel. Users can view their friends stats by clicking on the green button under each username in the friends tab. The statistics can only be viewed if the user has decided to share them.
+\item Users should be able to read motivational messages within the study room to keep their spirits high. The motivational messages are generated within the group study room and can be seen at the bottom of the screen.
+\item Users should be able to listen to music whilst they study. After joining a group study room, you can click on the music button in the header panel to access your Spotify playlist. Alternatively you can play music from a limited selection by clicking on 'free music' and choosing a song from the list. Listening to music will help users stay focused, and having it integrated within the page itself will hopefully prevent them from navigating to other sites and getting distracted. Music is played seperately for each user in the study room.
+\item User data should be deleted at the end of the study session, including chat history and any uploaded documents, as well as the shared to do list. This will help with user privacy and also greatly reduce the amount of data which needs to be permanently stored in the database which should help reduce the amount of recources needed to host the website.
 \end{itemize}
 
-
-Due to the nature of this project being only a few months long, the above are all features which we prioritized and managed to complete. We did have some features which we intend to add in the future and have left skeleton functionality allowing for them to be added later.
-
-\begin{itemize}
-\item In the future we would like to add functionality for users to see whcih of their friends are currently online and join their study room by clicking on them
-\item We would like to add functionality for users to talk via audio call in addition to the chat box
-\item We would like to add more customization for user avatars, profiles and themes which they can apply to change the colours of the website
-\item We would like to add the ability for users to play music in the study rooms
-\item We would like to add functionality for users to plan study sessions on a shared calendar so they can plan their studies
-\end{itemize}
 
 \section{Non-functional specifications}
 \label{sect:non-functional-specifications}
@@ -63,3 +55,19 @@ We heavily focused on usability and made sure that every icon, text and button w
 
 For our website we focused mainly on desktop / laptop proportions and designed the website around the idea that students would be working on their homework on a computer. In the future we would like to expand this to function well on other screens such as tablets and phones.
 
+We wanted the website to work well with multiple users as this is our core functionality, so we used web sockets to handle real time updates without needing to constantly refresh the page.
+
+In order to add a layer of security to the user logins we have also added authentication tokens which are stored within the user's browser and expire after 30 minutes of inactivity. We have also made it so that only one user can be logged in per browser at any time.
+
+\section{Out of Scope Ideas}
+\label{sect:out-of-scope-ideas}
+
+Due to the nature of this project being only a few months long, the above are all features which we prioritized and managed to complete. We did have some features which we intend to add in the future and have left skeleton functionality allowing for them to be added later.
+
+\begin{itemize}
+\item In the future we would like to add functionality for users to see which of their friends are currently online and join their study room by clicking on them directly.
+\item We would like to add functionality for users to talk via audio call in addition to the chat box to promote collaboration and make it easier to talk to your friends whilst writing or reading something.
+\item We would like to add more customization for user avatars, profiles and themes which they can apply to change the colours of the website. By doing this the users will be able to fully customise their experience and this could be a key selling point for bringing users to our site as it is very popular with a teen audience.
+\item We would like to add the ability for users to synchronise their music with other users, and also the option to share their timers, but we did not have time to add this.
+\item We would like to add functionality for users to plan study sessions on a shared calendar with their friends. This would further increase accountability and have users encourage their friends to study and vice versa.
+\end{itemize}
