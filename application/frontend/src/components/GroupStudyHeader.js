@@ -15,28 +15,37 @@ import SpotifyButton from "../components/SpotifyButton";
 import FloatingMusicPlayer from "../components/FloatingWindow.js";
 import { useNavigate, useLocation } from "react-router-dom";
 
+/*
+This is the header in the group study room.
+Displays the room code.
+Buttons : Leave Room, Copy Code, Play Music, **Customise (functionality not in scope of project)
+*/
+
+
 function GroupStudyHeader() {
   const navigate = useNavigate();
   // Location object used for state
   const location = useLocation();
 
+  // Retrieve roomCode and roomName from state
   const { roomCode, roomName, roomList } = location.state || {
     roomCode: "",
     roomName: "",
     roomList: "",
   };
-  // Retrieve roomCode and roomName from state
 
   // Retrieve roomCode from state if not in URL
   const stateRoomCode = location.state?.roomCode;
   const finalRoomCode = roomCode || stateRoomCode;
   // finalRoomCode is what we should refer to!
 
-  // for websockets
+  // For Websockets
   const [socket, setSocket] = useState(null);
   const [participants, setParticipants] = useState([]); // State to store participants
   const [open, setOpen] = useState(false); //open and close states for pop-up window for spotify button
 
+
+  // Method to handle copying the room code
   const handleCopy = () => {
     if (finalRoomCode) {
       navigator.clipboard
@@ -56,16 +65,17 @@ function GroupStudyHeader() {
     }
   };
 
+  // On leaving the room, navigate back to the user dashboard
   const handleExit = () => {
     navigate("/dashboard");
   };
 
-  //handle open for spotify button
+  // Handle open for music player popup
   const handleClickOpen = () => {
     setOpen((prevState) => !prevState);
   };
 
-  //handle close for spotify button
+  // Handle close for music player popup
   const handleClose = () => {
     setOpen(false);
   };
@@ -77,6 +87,8 @@ function GroupStudyHeader() {
 
   const [openMusicPlayer, setOpenMusicPlayer] = useState(false); //handle open and close for free tracks
 
+
+  // Keeps track of whether a button is active
   const [isActiveAddMore, setIsActiveAddMore] = useState(false); //initialise both variables: isActive and setIsActive to false
   const [isActiveMusic, setIsActiveMusic] = useState(false);
   const [isActiveCustom, setIsActiveCustom] = useState(false);
@@ -128,6 +140,8 @@ function GroupStudyHeader() {
     }
   }, [finalRoomCode, navigate]);
 
+
+  // Leave room when you close the tab
   useEffect(() => {
     const handlePageHide = (event) => {
       leaveRoom();
@@ -141,6 +155,9 @@ function GroupStudyHeader() {
     };
   }, [leaveRoom]);
 
+
+  // Method to delete Firebase Files on room being destroyed
+  // Room is destroyed when all users leave the room
   const deleteFirebaseFiles = async (roomCode) => {
     try {
       const listRef = ref(storage, `shared-materials/${roomCode}/`);
@@ -160,6 +177,8 @@ function GroupStudyHeader() {
       console.log("error deleting files");
     }
   };
+
+  // Tracks state of buttons for button animations
 
   const handleMouseDown = (btnType) => {
     //when the button is pressed then the variable setIsActive is set to True
@@ -194,10 +213,14 @@ function GroupStudyHeader() {
   return (
     <div className="study-room-header">
       {" "}
-      {/* Restructured header */}
+      {/* Header Component */}
       <h2 className="heading">Study Room: {roomName}</h2>
       <div className="header-right-section">
+
+        {/* Utility Bar containing all buttons */}
         <div className="utility-bar">
+
+          {/* Music Button - Opens Music Pop Up */}
           <button
             type="button"
             className={`music-button ${isActiveMusic ? "active" : ""}`}
@@ -208,6 +231,8 @@ function GroupStudyHeader() {
           >
             <img src={musicLogo} alt="Music" />
           </button>
+
+          {/* Music Player Pop Up */}
           <Dialog open={open} onClose={handleClose}>
             <DialogTitle>
               <div style={{ textAlign: "center" }}>Spotify Player</div>
@@ -222,10 +247,14 @@ function GroupStudyHeader() {
               </Button>
             </DialogContent>
           </Dialog>
+
+          {/* Floating Pop Up Component which plays music */}
           <FloatingMusicPlayer
             isOpen={openMusicPlayer}
             onClose={() => setOpenMusicPlayer(false)}
           />
+
+          {/* Customisation Button - for now this button has no functionality when clicked */}
           <button
             type="button"
             className={`customisation-button ${isActiveCustom ? "active" : ""}`}
@@ -235,6 +264,8 @@ function GroupStudyHeader() {
           >
             <img src={customLogo} alt="Customisation" />
           </button>
+
+          {/* Copy Room Code Button */}
           <button
             type="button"
             className={`copy-button ${isActiveCopy ? "active" : ""}`}
@@ -245,6 +276,8 @@ function GroupStudyHeader() {
           >
             <img src={copyLogo} alt="Copy" />
           </button>
+
+          {/* Exit Room Button */}
           <button
             type="button"
             className={`exit-button ${isActiveExit ? "active" : ""}`}
@@ -255,7 +288,10 @@ function GroupStudyHeader() {
           >
             <img src={exitLogo} alt="Exit" />
           </button>
+
         </div>
+
+        {/* Displays the Room Code */}
         <h3 className="gs-heading2">Code: {finalRoomCode}</h3>
       </div>
       {/*End of header */}

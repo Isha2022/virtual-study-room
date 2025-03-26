@@ -1,4 +1,3 @@
-// components/ChatBox.js
 import React, { useRef, useEffect, useState } from "react";
 import { getAuthenticatedRequest } from "../utils/authService";
 import "../styles/ChatBox.css";
@@ -6,15 +5,23 @@ import defaultAvatar from "../assets/avatars/avatar_2.png";
 import { storage } from "../firebase-config";
 import { ref, getDownloadURL } from "firebase/storage";
 
+/*
+This handles the chatbox component. The websocket is passed as 'socket' from the initial connection
+which is set up in GroupStudyPage.js. It also handles receiving the websocket messages.
+*/
+
 function ChatBox({ socket, roomCode }) {
+
+  // Stores data for chatInput, messages and keeps track of when the user is typing
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState([]);
   const chatMessagesRef = useRef(null);
 
   const [isTyping, setIsTyping] = useState(false);
   const [typingUser, setTypingUser] = useState("");
-  const [username, setUsername] = useState("ANON_USER"); // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
 
+  // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
+  const [username, setUsername] = useState("ANON_USER");
 
   // Function to scroll to the bottom of the chat messages container
   const scrollToBottom = () => {
@@ -50,19 +57,21 @@ function ChatBox({ socket, roomCode }) {
     fetchUserData();
   }, []);
 
-  // Set up WebSocket message handling
+  // Set up WebSocket message handling. Receives messages and handles them correctly.
   useEffect(() => {
     if (!socket) return;
 
     socket.onmessage = async (event) => {
       const data = JSON.parse(event.data);
       console.log("Received WebSocket Message:", data);
-      
+
+      // If chat message, updates
       if (data.type === "chat_message") {
         setMessages((prev) => [
           ...prev,
           { sender: data.sender, text: data.message },
         ]);
+      // If typing updates user typing. 'typing...' message times out after 3 seconds
       } else if (data.type === "typing") {
         setTypingUser(data.sender);
         setTimeout(() => {
@@ -77,6 +86,7 @@ function ChatBox({ socket, roomCode }) {
       }
     };
   }, [socket]);
+
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -99,6 +109,8 @@ function ChatBox({ socket, roomCode }) {
     setChatInput("");
   };
 
+
+  // Methods to create a typing... popup when a user is typing.
   let typingTimeout;
   const handleTyping = () => {
     if (!socket || socket.readyState !== WebSocket.OPEN) return;
@@ -127,9 +139,13 @@ function ChatBox({ socket, roomCode }) {
           return (
             <div
               key={index}
+
+              {/* Puts the username of the message sender in front of each text */}
               className={`chat-message ${
                 msg.sender === username ? "current-user" : "other-user"
               }`}
+
+              {/* Chose a different text colour for each user */}
               style={{
                 color: userColor,
                 borderBottom: isSameUserAsPrevious ? "none" : "1px dotted #eee",
@@ -139,6 +155,8 @@ function ChatBox({ socket, roomCode }) {
             </div>
           );
         })}
+
+        {/* User is typing indicator ... */}
         {typingUser && (
           <p className="typing-indicator">
             <strong>{typingUser}</strong> is typing...
@@ -146,7 +164,7 @@ function ChatBox({ socket, roomCode }) {
         )}
       </div>
       
-      {/* Chat Input */}
+      {/* Chat Input - User types their message here */}
       <div className="input-container">
         <input
           value={chatInput}
@@ -154,6 +172,8 @@ function ChatBox({ socket, roomCode }) {
             setChatInput(e.target.value);
             handleTyping();
           }}
+
+          {/* On pressing enter the message sends, resets the placeholder */}
           onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
           placeholder="Type a message..."
         />
