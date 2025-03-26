@@ -76,7 +76,7 @@ describe('TaskItem Component', () => {
 
         expect(screen.getByText(/description:/i)).toBeInTheDocument();
         expect(screen.getByText(task.content)).toBeInTheDocument();
-        expect(screen.getByText(/hide details/i)).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /task details/i })).toBeInTheDocument();
     });
 
     // Test case to check if task details are correctly hidden when the task is collapsed
