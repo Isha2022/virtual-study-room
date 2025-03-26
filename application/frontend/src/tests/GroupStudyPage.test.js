@@ -24,6 +24,9 @@ jest.mock(
         </div>
       )
 );
+jest.mock("firebase/storage");
+jest.mock("../firebase-config.js");
+
 describe("GroupStudyPage", () => {
   beforeEach(() => {
     axios.get.mockResolvedValue({

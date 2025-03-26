@@ -6,7 +6,7 @@ import {
   fireEvent,
   waitFor,
 } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import GroupStudyPage from "../../pages/GroupStudyPage";
 import axios from "axios";
 import {
@@ -16,7 +16,9 @@ import {
   listAll,
   deleteObject,
 } from "firebase/storage";
+import { getAuthenticatedRequest } from "../../utils/authService";
 
+console.log(GroupStudyPage);
 // Mock modules
 jest.mock("axios");
 jest.mock("@fontsource/vt323", () => {});
@@ -78,15 +80,15 @@ describe("GroupStudyPage - leaveRoom Functionality", () => {
 
   const renderComponent = () => {
     return render(
-      <MemoryRouter>
-        <GroupStudyPage
-          socket={mockSocket}
-          setSocket={mockSetSocket}
-          finalRoomCode={mockFinalRoomCode}
-        />
-      </MemoryRouter>
+      <BrowserRouter>
+        <GroupStudyPage socket={mockSocket} />
+      </BrowserRouter>
     );
   };
+
+  test("renders ProfileBox component", async () => {
+    render(<GroupStudyPage />);
+  });
 
   test("should close WebSocket and navigate when leaving room successfully", async () => {
     // Mock API responses
