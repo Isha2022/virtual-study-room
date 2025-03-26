@@ -21,8 +21,6 @@ from .models.spotify_token import SpotifyToken
 from django.utils import timezone
 from api.credentials import CLIENT_ID, CLIENT_SECRET
 from requests import post, get, put
-from datetime import timedelta
-
 
 BASE_URL = "https://api.spotify.com/v1/me/"
 
@@ -33,10 +31,10 @@ class Calendar(HTMLCalendar):
 		super(Calendar, self).__init__()
 
 	def formatday(self, day, events):
-		events_per_day = events.filter(start_time__day=day)
+		events_per_day = events.filter(start_date__day=day)
 		d = ''
 		for event in events_per_day:
-			d += f'<li> {event.title} </li>'
+			d += f'<li> {event.name} </li>'
 
 		if day != 0:
 			return f"<td><span class='date'>{day}</span><ul> {d} </ul></td>"
@@ -49,7 +47,7 @@ class Calendar(HTMLCalendar):
 		return f'<tr> {week} </tr>'
 
 	def formatmonth(self, withyear=True):
-		events = Appointments.objects.filter(start_time__year=self.year, start_time__month=self.month)
+		events = Appointments.objects.filter(start_date__year=self.year, start_date__month=self.month)
 
 		cal = f'<table border="0" cellpadding="0" cellspacing="0" class="calendar">\n'
 		cal += f'{self.formatmonthname(self.year, self.month, withyear=withyear)}\n'
