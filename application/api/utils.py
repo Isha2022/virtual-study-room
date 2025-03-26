@@ -119,8 +119,6 @@ class Spotify_API():
 		access_token = response.get('access_token')
 		token_type = response.get('token_type')
 		expires_in = response.get('expires_in')
-
-
 		self.update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
 		
 	# executing an api request to either, play, pause or skip songs 
