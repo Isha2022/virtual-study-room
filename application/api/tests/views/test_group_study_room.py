@@ -90,7 +90,7 @@ class GroupStudyRoomViewsTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["sessionName"], self.study_session.sessionName)
-        self.assertEqual(response.data["roomList"], self.study_session.toDoList.id)
+        self.assertEqual(response.data["roomList"], self.study_session.Task.id)
 
     def test_get_room_details_not_found(self):
         """
