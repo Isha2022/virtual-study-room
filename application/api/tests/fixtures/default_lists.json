@@ -12,7 +12,7 @@
         "pk": 2,
         "fields": {
             "name": "Shared List1",
-            "is_shared": true
+            "is_shared": false
         }
     },{
         "model": "api.list",
