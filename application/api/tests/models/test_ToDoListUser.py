@@ -1,6 +1,6 @@
 from django.test import TestCase
 from api.models.user import User
-from api.models.todo_list import toDoList
+from api.models.todo_list import Task
 from api.models.todo_list_user import Permission, List 
 
 """

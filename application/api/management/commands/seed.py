@@ -4,10 +4,7 @@ from django.core.management.base import BaseCommand, CommandError
 from api.models.motivational_message import MotivationalMessage
 import random
 from django.core.management import call_command
-
-from api.models import Friends, Appointments, User, Status, toDoList, Permission, MotivationalMessage, Rewards, StudySession, SessionUser, List
-
-
+from api.models import Friends, Appointments, User, Status, Task, Permission, MotivationalMessage, Rewards, StudySession, SessionUser, List
 import pytz
 from faker import Faker
 from django.utils.timezone import now, make_aware
@@ -36,21 +33,24 @@ class Command(BaseCommand):
         self.faker = Faker('en_GB')
 
     def handle(self, *args, **kwargs):
+        '''Main entry point for the command'''
         print("Starting database seeding...")
 
         try:
+            # Load initial data from fixture 
             call_command('loaddata', 'api/tests/fixtures/default_user.json')
             call_command('loaddata', 'api/tests/fixtures/default_friends.json')
-
             call_command('loaddata', 'api/tests/fixtures/default_lists.json')
             call_command('loaddata', 'api/tests/fixtures/default_permissions.json')
             call_command('loaddata', 'api/tests/fixtures/default_list_task.json')
         
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error while seeding database: {e}'))
-      
+        # Seed various data types
         self.seed_motivationalMessage()
         self.generating_users()
+
+        # Create a specific test user
         User.objects.create_user(
             email = "testuser@email.com",
             firstname = "Test",
@@ -59,15 +59,16 @@ class Command(BaseCommand):
             password = "Password123",
             description = "This is a test user"
         )
+        
+        # Generate random relations to the data
         self.generate_random_friends()
-        #self.generating_rewards()
         self.generate_random_Lists()
         self.generate_random_toDoLists()
         self.generate_toDoListUsers()
         self.generate_events()
         
-
     def generate_random_friends(self):
+        '''Generate random friend relationships until we reach FRIENDS_COUNT'''
         friends_count = Friends.objects.count()
         while friends_count < self.FRIENDS_COUNT:
             print(f"Seeding friend {friends_count}/{self.FRIENDS_COUNT}", end='\r')
@@ -76,14 +77,17 @@ class Command(BaseCommand):
         print("Friends seeding complete.")
 
     def generate_friends(self):
+        '''Create a single friend relationship between random users'''
         users = User.objects.all()
         statuses = [c[0] for c in Status.choices]
         created_at = "2025-02-01T12:00:00Z"
 
+        # Select two different users
         user1 = choice(users)
         user2 = choice(users)
         status = choice(statuses)
 
+        # Ensure we're not creating a self-friendship and they aren't already friends
         if not user1 == user2 and not Friends.are_friends(user1, user2):
             self.create_friends({
                 'user1': user1,
@@ -94,6 +98,7 @@ class Command(BaseCommand):
             })
 
     def create_friends(self, data):
+        '''Create a friend relationship with the given data'''
         try:
             friends = Friends.objects.create(
                 user1=data["user1"],
@@ -104,10 +109,11 @@ class Command(BaseCommand):
             )
             return friends
         except:
-            pass
+            pass # Handles duplicates or other errors
 
 
     def seed_motivationalMessage(self):
+        ''' Seed the database with motivational messages'''
         messages = [
             "Believe in yourself and all that you are.",
             "Hard work beats talent when talent doesn’t work hard.",
@@ -118,6 +124,7 @@ class Command(BaseCommand):
             "You don’t have to be great to start, but you have to start to be great.",
         ]
 
+        # Create messages that dont already exist
         for msg in messages:
             MotivationalMessage.objects.get_or_create(text=msg)
 
@@ -125,57 +132,66 @@ class Command(BaseCommand):
 
 
     def generating_users(self):
+        ''' Generate the specified number of random users'''
         for x in range(self.USER_COUNT):
             print(f"Seeding user {x+1}/{self.USER_COUNT}", end='\r')
             self.generate_random_user()
 
     def try_create_user(self, data):
+        ''' Attempt to create a user, handling any exceptions'''
         try:
             self.create_user(data)
         except Exception as e:
             print(f"Failed to create user: {e}")
 
     def create_user(self, data):
+        ''' Create a user with the given data'''
         User.objects.create_user(firstname = data['firstName'], lastname = data['lastName'], email = data['email'], username = data['username'], password = self.DEFAULT_PASSWORD, hours_studied = data['hoursStudied'], last_study_date = data['lastStudyDate'], streaks = data['streaks'], description = data['description'], total_sessions = data['totalSessions'])
 
     def generate_random_user(self):
+        ''' Generate random data for a new user'''
         firstName = self.faker.first_name()
         lastName = self.faker.last_name()
         email = self.create_email(firstName, lastName)
         username = self.create_username(firstName, lastName)
-        hoursStudied = randint(0, 8760)     # assuming that the hoursStudied reset every year
-        streaks = randint(0, 365)            # assuming the streaks reset every year
+        hoursStudied = randint(0, 8760)     # Assuming that the hours Studied reset every year
+        lastStudyDate = date.today() - timedelta(days=1)
+        streaks = randint(0, 365)            # Assuming the streaks reset every year
         description = Faker().text(max_nb_chars=200)
         totalSessions = randint(1, 100)
 
-        self.try_create_user({'firstName': firstName, 'lastName' : lastName, 'email': email, 'username': username, 'hoursStudied': hoursStudied, 'streaks': streaks, 'description': description, 'totalSessions': totalSessions})
+        self.try_create_user({'firstName': firstName, 'lastName' : lastName, 'email': email, 'username': username, 'hoursStudied': hoursStudied,'lastStudyDate': lastStudyDate, 'streaks': streaks, 'description': description, 'totalSessions': totalSessions})
 
     def generating_rewards(self):
+        ''' Generate random rewards (not currently called in handle())'''
         for x in range(self.REWARDS_COUNT):
             print(f"Seeding user {x+1}/{self.REWARDS_COUNT}", end='\r')
             self.generate_random_reward()
 
     def generate_random_reward(self):
+        ''' Create a random reward assignment for a user'''
         user = choice(User.objects.all())
-        reward_id = randint(1,8)      # since there are 8 rewards, it will choose from one of those
+        reward_id = randint(1,8)# Choose from one of 8 possible rewards
         try:
             Rewards.objects.create(user = user, reward_number = reward_id)
         except Exception as e:
             print(f"Failed to create reward: {e}")
 
     def generate_random_toDoLists(self):
-        toDoList_count = toDoList.objects.count()
+        ''' Generate random todo lists until we reach TODOLIST_COUNT'''
+        toDoList_count = Task.objects.count()
         print(f"Initial ToDoList count: {toDoList_count}, Target: {self.TODOLIST_COUNT}")
 
         while toDoList_count < self.TODOLIST_COUNT:
             print(f"Seeding ToDoLists {toDoList_count}/{self.TODOLIST_COUNT}")
             self.generate_toDoLists()
-            toDoList_count = toDoList.objects.count()
+            toDoList_count = Task.objects.count()
         
         print(f"Final ToDoList count: {toDoList_count}, Target: {self.TODOLIST_COUNT}")
         print("ToDoList seeding complete.")
 
     def generate_toDoLists(self):
+        ''' Create a single todo list with random data'''
         titles = ['Finish cw1', 'catch with with week 2', 'Project Task: create a database']
         contents = ['complete week 2 and week3', 'ask TA for help', 'clone github repo', 'understand travelling salesman problem', '']
 
@@ -194,8 +210,9 @@ class Command(BaseCommand):
         })
 
     def create_toDoLists(self, data):
+        ''' Create a todo list with given data'''
         try:
-            toDoLists = toDoList.objects.create(
+            toDoLists = Task.objects.create(
                 list = data["list"],
                 title = data["title"],
                 content = data["content"],
@@ -206,8 +223,8 @@ class Command(BaseCommand):
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error creating ToDoList: {str(e)}'))
 
-
     def generate_random_Lists(self):
+        ''' Generte random lists until we reach LIST_COUNT'''
         toDoList_count = List.objects.count()
         print(
             f"Initial List count: {toDoList_count}, Target: {self.LIST_COUNT}")
@@ -222,6 +239,7 @@ class Command(BaseCommand):
         print("List seeding complete.")
     
     def generate_Lists(self):
+        '''Create a single list with random data'''
         titles = ['Finish cw1', 'catch with with week 2',
                   'Project Task: create a database']
 
@@ -234,6 +252,7 @@ class Command(BaseCommand):
         })
 
     def create_Lists(self, data):
+        ''' Create a list with the given data'''
         try:
             Lists = List.objects.create(
                 name=data["name"],
@@ -246,6 +265,7 @@ class Command(BaseCommand):
 
 
     def generate_toDoListUsers(self):
+        ''' Assign todo list to random user'''
         users = list(User.objects.all())
         toDoLists = list(List.objects.all())
 
@@ -259,10 +279,10 @@ class Command(BaseCommand):
             
             selected_users = sample(users, 1)
 
-            #print(f"{'Shared' if toDo.is_shared else 'Exclusive'} toDoList {toDo.list_id}: Assigning {num_permissions} permissions.")
+            #print(f"{'Shared' if toDo.is_shared else 'Exclusive'} Task {toDo.list_id}: Assigning {num_permissions} permissions.")
 
             for user in selected_users:
-                #print(f"Assigning {permission_type} permission to user {user.user_id} for toDoList {toDo.list_id}.")
+                #print(f"Assigning {permission_type} permission to user {user.user_id} for Task {toDo.list_id}.")
 
                 self.create_toDoListUser({
                     'user_id': user,
@@ -271,6 +291,7 @@ class Command(BaseCommand):
         print("toDoListUser seeding complete")
 
     def create_toDoListUser(self, data):
+        '''  Create a permission relationship between user and list'''
         try:
             Permission.objects.create(
                 user_id = data["user_id"],
@@ -279,18 +300,15 @@ class Command(BaseCommand):
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error creating ToDoListUser: {str(e)}'))
   
-
     def generate_events(self):
-        # Clear existing events
+        ''' Generate random calendar events for all users'''
         Appointments.objects.all().delete()
 
-        # Seed events for each user
         for user in User.objects.all():
             for i in range(5):  # Create 5 events per user
                 naive_start_date = datetime.now() + timedelta(days=random.randint(1, 30))
                 naive_end_date = naive_start_date + timedelta(hours=random.randint(1, 5))
 
-                # Make the datetime objects timezone-aware
                 start_date = make_aware(naive_start_date)
                 end_date = make_aware(naive_end_date)
 
@@ -303,11 +321,11 @@ class Command(BaseCommand):
                 )
         self.stdout.write(self.style.SUCCESS('Successfully seeded events for all users.'))
         
-
     # Helper functions
     def create_username(self, first_name, last_name):
+        ''' Generate a username from first and last name'''
         return '@' + first_name.lower() + last_name.lower()
 
-
     def create_email(self, first_name, last_name):
+        ''' Generate an email from first and last name'''
         return first_name.lower() + '.' + last_name.lower() + '@example.org'
