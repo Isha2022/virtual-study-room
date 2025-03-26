@@ -2,7 +2,7 @@ from rest_framework.test import APIClient
 from django.test import RequestFactory
 from rest_framework import status
 from rest_framework.test import APITestCase
-from api.models import User, List, Permission, toDoList
+from api.models import User, List, Permission, Task
 from api.views.to_do_list import ViewToDoList
 from random import choice
 
@@ -64,11 +64,11 @@ class ListViewTestCase(APITestCase):
         """
         Test if the API correctly delete lists
         """
-        list_to_delete = choice(toDoList.objects.all())
+        list_to_delete = choice(Task.objects.all())
         id = list_to_delete.pk
 
         response = self.client.delete(f'/api/delete_task/{id}/')
-        is_deleted = toDoList.objects.filter(pk=id).exists()
+        is_deleted = Task.objects.filter(pk=id).exists()
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(is_deleted)
@@ -104,7 +104,7 @@ class ListViewTestCase(APITestCase):
         response = self.client.delete(f'/api/delete_list/{id}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(List.objects.filter(id=id).exists())
-        self.assertFalse(toDoList.objects.filter(list=list_to_delete).exists())
+        self.assertFalse(Task.objects.filter(list=list_to_delete).exists())
         self.assertFalse(Permission.objects.filter(
             list_id=list_to_delete).exists())
 
@@ -145,7 +145,7 @@ class ListViewTestCase(APITestCase):
         """
         Make an authenticated PATCH request to update status of the task
         """
-        task = choice(toDoList.objects.all())
+        task = choice(Task.objects.all())
         id = task.pk
         response = self.client.patch(f'/api/update_task/{id}/')
         task.refresh_from_db()
