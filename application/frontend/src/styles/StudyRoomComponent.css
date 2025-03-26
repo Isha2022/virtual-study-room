@@ -23,14 +23,6 @@
     font-family: 'Inter', sans-serif;
 }
 
-.h2{
-    color: black;
-    font-weight: 600;
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    padding: 10px;
-}
-
 .dashboard-panel input:focus {
     border-color: rgba(246, 156, 151, 0.5);
     box-shadow: inset 0 2px 5px rgba(247, 156, 172, 0.3),
@@ -83,7 +75,6 @@
     text-overflow: ellipsis;
 }
 
-/* Decorative flower element in top left corner of button */
 .gsr::before {
     content: '✿';
     position: absolute;
@@ -94,7 +85,6 @@
     line-height: 1;
 }
 
-/* Subtle pattern overlay */
 .gsr::after {
     content: '';
     position: absolute;
@@ -127,7 +117,7 @@
 
 .input-group {
     display: flex;
-    gap: 10px; /* Space between input and button */
+    gap: 10px;
     margin-bottom: 15px;
 }
 
@@ -146,26 +136,5 @@
         padding: 10px;
         font-size: 1rem;
     }
-}
-
-/* Updated title styling with ethereal butterfly-inspired aesthetics */
-
-
-/* Use the same sparkle symbols on both sides for consistency */
-.dashboard-container h2::before,
-.dashboard-container h2::after,
-.profile-section h2::before,
-.profile-section h2::after,
-.study-room-section h2::before,
-.study-room-section h2::after,
-.profile-title::before,
-.profile-title::after,
-.profile-username::before,
-.profile-username::after {
-    content: '✧';
-    display: inline-block;
-    margin: 0 7px;
-    color: #f8c1d0;
-    text-shadow: 0 0 6px rgba(255, 255, 255, 0.9), 0 0 10px rgba(248, 193, 208, 0.6);
 }
 

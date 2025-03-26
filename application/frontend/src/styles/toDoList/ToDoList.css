@@ -590,7 +590,7 @@ button[aria-label="Add Task"]:hover::after {
     border-radius: 35px;
 }
 
-/* Red circular delete buttons with shadows and effects */
+/* Circular delete buttons */
 button[aria-label="Delete Task"],
 button[aria-label="Delete List"],
 .delete-button {
@@ -601,18 +601,18 @@ button[aria-label="Delete List"],
     min-height: 35px !important;
     max-height: 35px !important;
     border-radius: 50% !important;
-    background-color: rgba(255, 107, 129, 0.85) !important;
+    background-color: rgba(186, 215, 245, 0.85) !important;
     background-image: 
-        radial-gradient(circle at center, rgba(255, 137, 159, 0.9) 20%, transparent 70%),
-        radial-gradient(circle at 30% 30%, rgba(255, 167, 189, 0.8) 15%, transparent 50%),
-        radial-gradient(circle at 70% 70%, rgba(255, 127, 149, 0.8) 15%, transparent 50%) !important;
+        radial-gradient(circle at center, rgba(186, 215, 245, 0.9) 20%, transparent 70%),
+        radial-gradient(circle at 30% 30%, rgba(186, 215, 245, 0.8) 15%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(186, 215, 245, 0.8) 15%, transparent 50%) !important;
     padding: 0 !important;
     border: none !important;
     box-shadow: 
         inset 2px 2px 5px rgba(255, 255, 255, 0.8),
         inset -2px -2px 5px rgba(0, 0, 0, 0.1),
-        0 2px 8px rgba(255, 167, 189, 0.6),
-        0 0 15px rgba(255, 107, 129, 0.4) !important;
+        0 2px 8px rgba(186, 215, 245, 0.6),
+        0 0 15px rgba(186, 215, 245, 0.4) !important;
     position: relative !important;
     display: flex !important;
     justify-content: center !important;
@@ -621,29 +621,62 @@ button[aria-label="Delete List"],
     transition: all 0.3s ease !important;
 }
 
-/* Adds trash icon to delete buttons */
+/* Removes default icons from delete buttons */
+button[aria-label="Delete Task"] i,
+button[aria-label="Delete List"] i,
+.delete-button i {
+    display: none !important;
+}
+
+/* Adds trash bin body to delete buttons */
 button[aria-label="Delete Task"]::before,
 button[aria-label="Delete List"]::before,
 .delete-button::before {
-    content: '🗑️' !important;
-    font-size: 16px !important;
-    color: white !important;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5) !important;
+    content: '' !important;
     position: absolute !important;
     top: 50% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
+    width: 12px !important;
+    height: 14px !important;
+    border: 2px solid white !important;
+    border-top: none !important;
+    border-radius: 0 0 2px 2px !important;
+    box-sizing: border-box !important;
 }
 
-/* Scales up delete button on hover */
+/* Adds trash bin lid to delete buttons */
+button[aria-label="Delete Task"]::after,
+button[aria-label="Delete List"]::after,
+.delete-button::after {
+    content: '' !important;
+    position: absolute !important;
+    top: 32% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 16px !important;
+    height: 2px !important;
+    background-color: white !important;
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.5) !important;
+    transition: all 0.5s ease !important;
+}
+
+/* Hides any leftover icon elements */
+button[aria-label="Delete Task"] .delete-icon-line,
+button[aria-label="Delete List"] .delete-icon-line,
+.delete-button .delete-icon-line {
+    display: none !important;
+}
+
+/* Hover effect for delete buttons */
 button[aria-label="Delete Task"]:hover,
 button[aria-label="Delete List"]:hover,
 .delete-button:hover {
     transform: scale(1.05) !important;
-    box-shadow: 0 0 20px rgba(255, 107, 129, 0.6) !important;
+    box-shadow: 0 0 20px rgba(186, 215, 245, 0.6) !important;
 }
 
-/* Scales down delete button when clicked */
+/* Active state for delete buttons */
 button[aria-label="Delete Task"]:active,
 button[aria-label="Delete List"]:active,
 .delete-button:active {
@@ -651,30 +684,10 @@ button[aria-label="Delete List"]:active,
     box-shadow: 
         inset 1px 1px 3px rgba(255, 255, 255, 0.5),
         inset -1px -1px 3px rgba(0, 0, 0, 0.2),
-        0 2px 6px rgba(255, 167, 189, 0.5) !important;
+        0 2px 6px rgba(186, 215, 245, 0.5) !important;
 }
 
-/* Adds shine effect to delete buttons */
-button[aria-label="Delete Task"]::after,
-button[aria-label="Delete List"]::after,
-.delete-button::after {
-    content: '' !important;
-    position: absolute !important;
-    width: 100% !important;
-    height: 100% !important;
-    top: 0 !important;
-    left: 0 !important;
-    background: linear-gradient(135deg, 
-        transparent 0%, 
-        transparent 40%, 
-        rgba(255, 255, 255, 0.3) 50%, 
-        transparent 60%, 
-        transparent 100%) !important;
-    border-radius: 50% !important;
-    transition: all 0.5s ease !important;
-}
-
-/* Animates shine effect on hover */
+/* Hover effect for delete buttons */
 button[aria-label="Delete Task"]:hover::after,
 button[aria-label="Delete List"]:hover::after,
 .delete-button:hover::after {

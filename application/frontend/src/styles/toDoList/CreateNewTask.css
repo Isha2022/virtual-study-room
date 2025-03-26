@@ -113,13 +113,6 @@
     accent-color: #bad7f5;
 }
 
-/* Text next to checkboxes */
-task-span {
-    font-size: 14px;
-    margin-left: 10px;
-    color: #7a7a9a;
-}
-
 /* Base button style */
 .btn {
     padding: 10px 18px;
@@ -172,100 +165,4 @@ task-span {
     box-shadow: 
         0 2px 5px rgba(186, 215, 245, 0.2),
         inset 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-/* Circular delete buttons */
-button[aria-label="Delete Task"],
-button[aria-label="Delete List"],
-.delete-button {
-    height: 35px !important;
-    width: 35px !important;
-    min-width: 35px !important;
-    max-width: 35px !important;
-    min-height: 35px !important;
-    max-height: 35px !important;
-    border-radius: 50% !important;
-    background-color: rgba(186, 215, 245, 0.85) !important;
-    background-image: 
-        radial-gradient(circle at center, rgba(186, 215, 245, 0.9) 20%, transparent 70%),
-        radial-gradient(circle at 30% 30%, rgba(186, 215, 245, 0.8) 15%, transparent 50%),
-        radial-gradient(circle at 70% 70%, rgba(186, 215, 245, 0.8) 15%, transparent 50%) !important;
-    padding: 0 !important;
-    border: none !important;
-    box-shadow: 
-        inset 2px 2px 5px rgba(255, 255, 255, 0.8),
-        inset -2px -2px 5px rgba(0, 0, 0, 0.1),
-        0 2px 8px rgba(186, 215, 245, 0.6),
-        0 0 15px rgba(186, 215, 245, 0.4) !important;
-    position: relative !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    cursor: pointer !important;
-    transition: all 0.3s ease !important;
-}
-
-/* Removes default icons from delete buttons */
-button[aria-label="Delete Task"] i,
-button[aria-label="Delete List"] i,
-.delete-button i {
-    display: none !important;
-}
-
-/* Adds trash bin body to delete buttons */
-button[aria-label="Delete Task"]::before,
-button[aria-label="Delete List"]::before,
-.delete-button::before {
-    content: '' !important;
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: 12px !important;
-    height: 14px !important;
-    border: 2px solid white !important;
-    border-top: none !important;
-    border-radius: 0 0 2px 2px !important;
-    box-sizing: border-box !important;
-}
-
-/* Adds trash bin lid to delete buttons */
-button[aria-label="Delete Task"]::after,
-button[aria-label="Delete List"]::after,
-.delete-button::after {
-    content: '' !important;
-    position: absolute !important;
-    top: 32% !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: 16px !important;
-    height: 2px !important;
-    background-color: white !important;
-    box-shadow: 0 0 3px rgba(255, 255, 255, 0.5) !important;
-}
-
-/* Hides any leftover icon elements */
-button[aria-label="Delete Task"] .delete-icon-line,
-button[aria-label="Delete List"] .delete-icon-line,
-.delete-button .delete-icon-line {
-    display: none !important;
-}
-
-/* Hover effect for delete buttons */
-button[aria-label="Delete Task"]:hover,
-button[aria-label="Delete List"]:hover,
-.delete-button:hover {
-    transform: scale(1.05) !important;
-    box-shadow: 0 0 20px rgba(186, 215, 245, 0.6) !important;
-}
-
-/* Active state for delete buttons */
-button[aria-label="Delete Task"]:active,
-button[aria-label="Delete List"]:active,
-.delete-button:active {
-    transform: scale(0.95) !important;
-    box-shadow: 
-        inset 1px 1px 3px rgba(255, 255, 255, 0.5),
-        inset -1px -1px 3px rgba(0, 0, 0, 0.2),
-        0 2px 6px rgba(186, 215, 245, 0.5) !important;
 }

@@ -1,6 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 .signup-container {
   display: flex;
   justify-content: center;
@@ -41,7 +38,7 @@ body, html {
       radial-gradient(circle at 85% 25%, rgba(251, 192, 155, 0.2) 0%, transparent 30%);
   z-index: 0;
   pointer-events: none;
-  opacity: 1; /* Ensure visibility */
+  opacity: 1;
 }
 
 .signup-container::after {
@@ -59,12 +56,6 @@ body, html {
   pointer-events: none;
 }
 
-.heading1, 
-header, 
-.header, 
-.app-header, 
-.signup-header,
-.signup-container > header,
 .signup-container > .heading1,
 .signup-container > div:first-child:not(.signup-form) {
   position: fixed;
@@ -96,16 +87,6 @@ header,
       0 0 8px rgba(244, 189, 208, 0.6),
       0 0 12px rgba(251, 119, 102, 0.4),
       0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.heading1 *, 
-header *, 
-.header *, 
-.app-header *, 
-.signup-header * {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 700;
-  color: white;
 }
 
 /* Main form container */
@@ -167,23 +148,6 @@ header *,
     display: block;
     padding: 5px;
     overflow: visible;
-}
-
-.signup-form h2 *,
-.signup-form .heading2 *,
-.signup-form .form-title *,
-.signup-form > h2 *,
-.signup-form > div > h2 *,
-.signup-form > .heading2 *,
-.signup-form > div > .heading2 *,
-.signup-form .title *,
-.signup-form > .title *,
-.signup-form form h2 *,
-.signup-form form .heading2 * {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 700;
-    color: transparent;
-    text-shadow: inherit;
 }
 
 /* Form field labels */
@@ -381,21 +345,6 @@ header *,
   gap: 0;
   margin-top: 5px;
   margin-bottom: 15px;
-}
-
-.signup-form::-webkit-scrollbar {
-  width: 8px;
-}
-
-.signup-form::-webkit-scrollbar-track {
-  background: #fef6ae;
-  border-radius: 10px;
-}
-
-.signup-form::-webkit-scrollbar-thumb {
-  background-color: #f4bdd0;
-  border-radius: 10px;
-  border: 2px solid #fef6ae;
 }
 
 .form-row {
