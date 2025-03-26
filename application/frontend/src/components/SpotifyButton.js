@@ -11,7 +11,6 @@ export default class SpotifyButton extends Component {
             tracks: [],
             song: {}  
         };
-        // this.fetchAlbumTracks = this.fetchAlbumTracks.bind(this);
         this.getCurrentSong = this.getCurrentSong.bind(this);
     }
 
@@ -19,7 +18,6 @@ export default class SpotifyButton extends Component {
     //creates an illusion that its getting the user data in real time
     componentDidMount() {
         this.authenticateSpotify();
-        // this.fetchAlbumTracks();
         this.interval = setInterval(this.getCurrentSong, 1000)
     }
 
@@ -64,41 +62,6 @@ export default class SpotifyButton extends Component {
             });
     }
 
-    //fetching the album tracks based on the url 
-    // fetchAlbumTracks = () => {
-    //     const { albumUrl } = this.state;
-    //     console.log("Fetching album tracks for URL:", albumUrl);
-    //     const match = albumUrl.match(/album\/([a-zA-Z0-9]+)/);
-    //     if (match) {
-    //         const albumId = match[1];
-    //         console.log("Extracted album ID:", albumId);
-    //         fetch(`http://localhost:8000/api/get-album-tracks`, {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" },
-    //             credentials: "include",
-    //             body: JSON.stringify({ album_url: albumUrl })
-    //         })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             if (data.error) {
-    //                 console.error("Error fetching tracks:", data.error);
-    //                 this.setState({ error: data.error });
-    //             } else {
-    //                 console.log("Tracks fetched successfully:", data);
-    //                 this.setState({ tracks: data.items });
-    //             }
-    //         })
-    //         .catch(error => {
-    //             console.error("Error fetching tracks:", error);
-    //             this.setState({ error: "Failed to fetch tracks" });
-    //         });
-    //     } else {
-    //         console.error("Invalid Spotify URL", albumUrl);
-    //         this.setState({ error: "Invalid Spotify URL" });
-    //     }
-    // };
-
-    //retreving the current song being played
     getCurrentSong() {
         fetch("http://localhost:8000/api/current-playing", {credentials: "include"}).then((response) => {
             if(!response.ok){
