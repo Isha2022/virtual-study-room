@@ -9,6 +9,8 @@ import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
 import GroupStudyPage from "./pages/GroupStudyPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { FriendsProvider } from "./components/friends/FriendsContext";
+
 
 /**
  * sets up navigation between pages
@@ -17,14 +19,17 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Welcome />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/calendar" element={<CalendarPage />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard/:username" element={<Dashboard />} />
-        <Route path="/group-study/:roomCode" element={<GroupStudyPage />} />
-      </Routes>
+      <FriendsProvider>
+        <Routes>
+          <Route path="/" element={<Welcome />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard/:username" element={<Dashboard />} />
+          <Route path="/group-study/:roomCode" element={<GroupStudyPage />} />
+        </Routes>
+      </FriendsProvider>
+      
     </Router>
   );
 }

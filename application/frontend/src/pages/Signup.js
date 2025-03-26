@@ -6,6 +6,12 @@ import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+/*
+Handles user sign up, creating a new user and storing it in the backend.
+Also handles field authentication.
+*/
+
+
 function Signup() {
   //fields that the user will input
   const [formData, setFormData] = useState({
@@ -22,6 +28,8 @@ function Signup() {
   const [errors, setErrors] = useState({});
 
 
+
+  // Ensures that the email is unique and not already linked to an account
   const checkEmailExists = async (email) => {
     try {
       const { data } = await axios.get(
@@ -36,10 +44,11 @@ function Signup() {
     }
   };
 
+  // Ensures that the username is not already linked to an account
   const checkUsernameExists = async (username) => {
     try {
       const { data } = await axios.get(
-      //"https://studyspot.pythonanywhere.com/api/check-username/",
+        // URL for deployment -> "https://studyspot.pythonanywhere.com/api/check-username/",
         `http://127.0.0.1:8000/api/check-username/`,
         {
           params: { username },
@@ -75,6 +84,7 @@ function Signup() {
         "Username must consist of @ followed by at least three alphanumericals";
     }
 
+    // regex for email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
@@ -82,6 +92,7 @@ function Signup() {
       newErrors.email = "Invalid email format";
     }
 
+    // regex for password
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$/;
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
@@ -101,12 +112,14 @@ function Signup() {
       newErrors.email = "This email is already taken, please enter another";
     }
 
+    // check that the username is unique
     const usernameExists = await checkUsernameExists(formData.username);
     if (usernameExists) {
       newErrors.username =
         "This username is already taken, please enter another";
     }
 
+    // display errors on the screen so the user can correct them
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -131,7 +144,7 @@ function Signup() {
       const isValid = await validate();
       if (isValid) {
         const response = await axios.post(
-//        "https://studyspot.pythonanywhere.com/api/signup/",
+          // URL for deployment -> "https://studyspot.pythonanywhere.com/api/signup/",
           "http://127.0.0.1:8000/api/signup/",
           formData,
           {
@@ -152,15 +165,23 @@ function Signup() {
     }
   };
 
+
+  // Displays the sign up page
   return (
     <div className="signup-container">
+      {/* Positioning for toastify messages */}
       <ToastContainer position='top-center'/>
+
+
       <Link to="/">
         <h1 className="login-heading1">The Study Spot</h1>
       </Link>
+
+
       <form className="signup-form">
         <h1 className="heading2">Signup</h1>
-        
+
+        {/* Input field for firstname */}
         <div className="form-row">
           <div className="field-column">
             <label htmlFor="firstname" className="label-text">
@@ -182,6 +203,8 @@ function Signup() {
             )}
           </div>
 
+
+          {/* Input field for lastname */}
           <div className="field-column">
             <label htmlFor="lastname" className="label-text">
               Last name:
@@ -203,6 +226,8 @@ function Signup() {
           </div>
         </div>
 
+
+        {/* Input field for username */}
         <div className="form-row">
           <div className="field-column">
             <label htmlFor="username" className="label-text">
@@ -224,6 +249,8 @@ function Signup() {
             )}
           </div>
 
+
+          {/* Input field for email */}
           <div className="field-column">
             <label htmlFor="email" className="label-text">
               Email:
@@ -245,6 +272,8 @@ function Signup() {
           </div>
         </div>
 
+
+        {/* Input field for details */}
         <div className="form-row">
           <div className="field-column full-width">
             <label htmlFor="details" className="label-text">
@@ -262,6 +291,8 @@ function Signup() {
           </div>
         </div>
 
+
+        {/* Input field for password */}
         <div className="form-row">
           <div className="field-column">
             <label htmlFor="password" className="label-text">
@@ -283,6 +314,8 @@ function Signup() {
             )}
           </div>
 
+
+          {/* Input field for password confirmation */}
           <div className="field-column">
             <label htmlFor="passwordConfirmation" className="label-text">
               Confirm password:
@@ -305,6 +338,8 @@ function Signup() {
           </div>
         </div>
 
+
+        {/* Checkbox for terms and conditions */}
         <div className="checkbox-container">
           <input
             type="checkbox"
@@ -318,6 +353,7 @@ function Signup() {
           </label>
         </div>
 
+        {/* Button to submit form and complete user signup ( after passing all the checks ) */}
         <button type="button" data-testid="signup-button-click" className="submit-button" onClick={handleSignup}>
           SIGNUP
         </button>
