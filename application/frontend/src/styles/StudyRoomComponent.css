@@ -62,7 +62,7 @@
     color: white;
     border: none;
     border-radius: 40px;
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -136,7 +136,7 @@
     .gsr {
         min-width: 160px;
         padding: 12px;
-        font-size: 0.9rem;
+        font-size: 1.1rem;
     }
 }
 
@@ -144,7 +144,7 @@
     .gsr {
         min-width: 130px;
         padding: 10px;
-        font-size: 0.8rem;
+        font-size: 1rem;
     }
 }
 
