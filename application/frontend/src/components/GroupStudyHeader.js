@@ -2,9 +2,40 @@ import musicLogo from "../assets/music_logo.png";
 import customLogo from "../assets/customisation_logo.png";
 import copyLogo from "../assets/copy_logo.png";
 import exitLogo from "../assets/exit_logo.png";
+import React, { useEffect, useState, useCallback } from "react";
+import "../styles/GroupStudyPage.css";
+import { getAuthenticatedRequest } from "../utils/authService";
+import { toast } from "react-toastify";
+import "../styles/ChatBox.css";
+import "react-toastify/dist/ReactToastify.css";
+import { storage } from "../firebase-config";
+import { ref, listAll, deleteObject } from "firebase/storage";
+import { Dialog, DialogTitle, DialogContent, Button } from "@mui/material";
+import SpotifyButton from "../components/SpotifyButton";
+import FloatingMusicPlayer from "../components/FloatingWindow.js";
+import { useNavigate, useLocation } from "react-router-dom";
 
+function GroupStudyHeader() {
+  const navigate = useNavigate();
+  // Location object used for state
+  const location = useLocation();
 
+  const { roomCode, roomName, roomList } = location.state || {
+    roomCode: "",
+    roomName: "",
+    roomList: "",
+  };
+  // Retrieve roomCode and roomName from state
 
+  // Retrieve roomCode from state if not in URL
+  const stateRoomCode = location.state?.roomCode;
+  const finalRoomCode = roomCode || stateRoomCode;
+  // finalRoomCode is what we should refer to!
+
+  // for websockets
+  const [socket, setSocket] = useState(null);
+  const [participants, setParticipants] = useState([]); // State to store participants
+  const [open, setOpen] = useState(false); //open and close states for pop-up window for spotify button
 
   const handleCopy = () => {
     if (finalRoomCode) {
@@ -29,10 +60,9 @@ import exitLogo from "../assets/exit_logo.png";
     navigate("/dashboard");
   };
 
-
   //handle open for spotify button
   const handleClickOpen = () => {
-    setOpen(prevState => !prevState);
+    setOpen((prevState) => !prevState);
   };
 
   //handle close for spotify button
@@ -42,12 +72,10 @@ import exitLogo from "../assets/exit_logo.png";
 
   const handleOpenMusicButton = () => {
     // Assuming this should toggle the floating music player visibility
-    setOpenMusicPlayer(prevState => !prevState);
+    setOpenMusicPlayer((prevState) => !prevState);
   };
 
   const [openMusicPlayer, setOpenMusicPlayer] = useState(false); //handle open and close for free tracks
-
-
 
   const [isActiveAddMore, setIsActiveAddMore] = useState(false); //initialise both variables: isActive and setIsActive to false
   const [isActiveMusic, setIsActiveMusic] = useState(false);
@@ -55,10 +83,8 @@ import exitLogo from "../assets/exit_logo.png";
   const [isActiveCopy, setIsActiveCopy] = useState(false);
   const [isActiveExit, setIsActiveExit] = useState(false);
 
-
   // Method to leave room
   const leaveRoom = useCallback(async () => {
-
     try {
       // Close the WebSocket connection if it exists
       if (socket) {
@@ -135,7 +161,6 @@ import exitLogo from "../assets/exit_logo.png";
     }
   };
 
-
   const handleMouseDown = (btnType) => {
     //when the button is pressed then the variable setIsActive is set to True
     if (btnType === "addMore") {
@@ -166,70 +191,76 @@ import exitLogo from "../assets/exit_logo.png";
     }
   };
 
-
-return (
-{/* Restructured header */}
-      <div className="study-room-header">
-        <h2 className="heading">Study Room: {roomName}</h2>
-        <div className="header-right-section">
-          <div className="utility-bar">
-            <button
-              type="button"
-              className={`music-button ${isActiveMusic ? "active" : ""}`}
-              onMouseDown={() => handleMouseDown("music")}
-              onMouseUp={() => handleMouseUp("music")}
-              onMouseLeave={() => handleMouseUp("music")}
-              onClick={handleClickOpen}
-            >
-              <img src={musicLogo} alt="Music" />
-            </button>
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>
-                  <div style={{ textAlign: 'center' }}>Spotify Player</div>
-                  <h2 style={{ textAlign: 'center', fontSize: '14px' }} >(playback for premium users only)</h2>
-                </DialogTitle>
-                <DialogContent>
-                    <SpotifyButton />
-                    <Button onClick={handleOpenMusicButton}>Switch to Free Tracks</Button>
-                </DialogContent>
-            </Dialog>
-            <FloatingMusicPlayer isOpen={openMusicPlayer} onClose={() => setOpenMusicPlayer(false)} />
-            <button
-              type="button"
-              className={`customisation-button ${
-                isActiveCustom ? "active" : ""
-              }`}
-              onMouseDown={() => handleMouseDown("custom")}
-              onMouseUp={() => handleMouseUp("custom")}
-              onMouseLeave={() => handleMouseUp("custom")}
-            >
-              <img src={customLogo} alt="Customisation" />
-            </button>
-            <button
-              type="button"
-              className={`copy-button ${isActiveCopy ? "active" : ""}`}
-              onClick={handleCopy}
-              onMouseDown={() => handleMouseDown("copy")}
-              onMouseUp={() => handleMouseUp("copy")}
-              onMouseLeave={() => handleMouseUp("copy")}
-            >
-              <img src={copyLogo} alt="Copy" />
-            </button>
-            <button
-              type="button"
-              className={`exit-button ${isActiveExit ? "active" : ""}`}
-              onMouseDown={() => handleMouseDown("exit")}
-              onMouseUp={() => handleMouseUp("exit")}
-              onMouseLeave={() => handleMouseUp("exit")}
-              onClick={() => leaveRoom()}
-            >
-              <img src={exitLogo} alt="Exit" />
-            </button>
-          </div>
-          <h3 className="gs-heading2">Code: {finalRoomCode}</h3>
+  return (
+    <div className="study-room-header">
+      {" "}
+      {/* Restructured header */}
+      <h2 className="heading">Study Room: {roomName}</h2>
+      <div className="header-right-section">
+        <div className="utility-bar">
+          <button
+            type="button"
+            className={`music-button ${isActiveMusic ? "active" : ""}`}
+            onMouseDown={() => handleMouseDown("music")}
+            onMouseUp={() => handleMouseUp("music")}
+            onMouseLeave={() => handleMouseUp("music")}
+            onClick={handleClickOpen}
+          >
+            <img src={musicLogo} alt="Music" />
+          </button>
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>
+              <div style={{ textAlign: "center" }}>Spotify Player</div>
+              <h2 style={{ textAlign: "center", fontSize: "14px" }}>
+                (playback for premium users only)
+              </h2>
+            </DialogTitle>
+            <DialogContent>
+              <SpotifyButton />
+              <Button onClick={handleOpenMusicButton}>
+                Switch to Free Tracks
+              </Button>
+            </DialogContent>
+          </Dialog>
+          <FloatingMusicPlayer
+            isOpen={openMusicPlayer}
+            onClose={() => setOpenMusicPlayer(false)}
+          />
+          <button
+            type="button"
+            className={`customisation-button ${isActiveCustom ? "active" : ""}`}
+            onMouseDown={() => handleMouseDown("custom")}
+            onMouseUp={() => handleMouseUp("custom")}
+            onMouseLeave={() => handleMouseUp("custom")}
+          >
+            <img src={customLogo} alt="Customisation" />
+          </button>
+          <button
+            type="button"
+            className={`copy-button ${isActiveCopy ? "active" : ""}`}
+            onClick={handleCopy}
+            onMouseDown={() => handleMouseDown("copy")}
+            onMouseUp={() => handleMouseUp("copy")}
+            onMouseLeave={() => handleMouseUp("copy")}
+          >
+            <img src={copyLogo} alt="Copy" />
+          </button>
+          <button
+            type="button"
+            className={`exit-button ${isActiveExit ? "active" : ""}`}
+            onMouseDown={() => handleMouseDown("exit")}
+            onMouseUp={() => handleMouseUp("exit")}
+            onMouseLeave={() => handleMouseUp("exit")}
+            onClick={() => leaveRoom()}
+          >
+            <img src={exitLogo} alt="Exit" />
+          </button>
         </div>
+        <h3 className="gs-heading2">Code: {finalRoomCode}</h3>
       </div>
-
       {/*End of header */}
+    </div>
+  );
+}
 
-)
+export default GroupStudyHeader;

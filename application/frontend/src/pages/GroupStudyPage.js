@@ -19,15 +19,16 @@ import {
   deleteObject,
 } from "firebase/storage";
 import SharedMaterials from "./SharedMaterials.js";
-import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
-import SpotifyButton from '../components/SpotifyButton';
+import ChatBox from "../components/Chat.js";
+import GroupStudyHeader from "../components/GroupStudyHeader.js";
+import { Dialog, DialogTitle, DialogContent, Button } from "@mui/material";
+import SpotifyButton from "../components/SpotifyButton";
 import FloatingMusicPlayer from "../components/FloatingWindow.js";
 
 /*
 Group Study Page for the website. Imports all components, handles users joining and leaving the room.
 Also handles websockets communications
 */
-
 
 function GroupStudyPage() {
   const [open, setOpen] = useState(false); //open and close states for pop-up window for spotify button
@@ -47,8 +48,6 @@ function GroupStudyPage() {
     }
   };
 
-
-
   const { roomCode, roomName, roomList } = location.state || {
     roomCode: "",
     roomName: "",
@@ -64,21 +63,18 @@ function GroupStudyPage() {
   const finalRoomCode = roomCode || stateRoomCode;
   // finalRoomCode is what we should refer to!
 
-
   // for websockets
   const [socket, setSocket] = useState(null);
 
   const [shouldReconnect, setShouldReconnect] = useState(true); // Determines whether or not to auto-reconnect user to websocket server
 
-
   // Updates the websocket saved everytime it changes
-  useEffect(() => {
-    if (socket) {
-      console.log("Socket state updated:", socket);
-    }
-    scrollToBottom();
-  }, [socket, messages]); // This effect runs whenever `socket` changes
-
+  // useEffect(() => {
+  //   if (socket) {
+  //     console.log("Socket state updated:", socket);
+  //   }
+  //   scrollToBottom();
+  // }, [socket, messages]); // This effect runs whenever `socket` changes
 
   useEffect(() => {
     // Ensure room code is given
@@ -133,7 +129,6 @@ function GroupStudyPage() {
     setSocket(ws);
   };
 
-
   const [username, setUsername] = useState("ANON_USER"); // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
 
   //Fetches logged in user's username when component mounts
@@ -146,7 +141,6 @@ function GroupStudyPage() {
       console.error("Error fetching user data", error);
     }
   };
-
 
   //page is designed in columns
   //First Column: todoList, shared materials
@@ -179,18 +173,16 @@ function GroupStudyPage() {
           </div>
         </div>
 
-
         {/*2nd Column */}
         <div className="column" role="column" data-testid="column-2">
           <div
             className="user-list-container"
             data-testid="user-list-container"
           >
-          <StudyParticipants socket={socket} roomCode={finalRoomCode}/>
+            <StudyParticipants socket={socket} roomCode={finalRoomCode} />
           </div>
           <MotivationalMessage data-testid="motivationalMessage-container" />
         </div>
-
 
         {/*3rd Column */}
         <div className="column" role="column" data-testid="column-3">
@@ -203,7 +195,7 @@ function GroupStudyPage() {
           />
           {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
 
-          {/* Need to sort this out*/>}
+          {/* Need to sort this out*/}
           <ChatBox />
         </div>
       </div>
