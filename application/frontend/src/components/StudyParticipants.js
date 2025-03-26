@@ -1,119 +1,157 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { getAuthenticatedRequest } from "../utils/authService";
-import { useNavigate, useParams } from "react-router-dom";
-import "../styles/StudyParticipants.css";
 import { storage } from "../firebase-config";
-import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { ref, getDownloadURL } from "firebase/storage";
 import defaultAvatar from "../assets/avatars/avatar_2.png";
 import { ToastContainer, toast } from "react-toastify";
-//import io from 'socket.io-client';
+import "../styles/StudyParticipants.css";
 
-const StudyParticipants = () => {
-  // Web socket handling
-  const [roomCode, setRoomCode] = useState(""); // Ensure that the room code is defined
-  const [roomName, setRoomName] = useState("");
-  const [participants, setParticipants] = useState([]); // State to store participants
-  const [socket, setSocket] = useState(null);
 
-  // Use to navigate to the created room / joined room
-  const navigate = useNavigate(); // initialise
+/*
+Study Participants handles displaying the users in the room and dynamically changes the layout
+as users join. Fetches user profile pictures and usernames to display on the page.
+Uses websockets to keep track of which users are currently in the room ( joining and leaving )
+*/
 
-  const { roomCode: urlRoomCode } = useParams(); // Get roomCode from URL params
+function StudyParticipants({ socket, roomCode }) {
+  const [participants, setParticipants] = useState([]);
 
-  console.log("The room code is: ", roomCode);
-  // Fetch participants when the component mounts or roomCode changes
-
+  // Fetch initial participants and setup WebSocket listeners
   useEffect(() => {
-    if (urlRoomCode) {
-      setRoomCode(urlRoomCode); // Set the roomCode state
-      fetchParticipants(urlRoomCode);
-      fetchUserData();
-      setupWebSocket(urlRoomCode);
-      }
-  }, [urlRoomCode])
+    if (!roomCode) return;
 
-      // Set up WebSocket connection
-  const setupWebSocket = (roomCode) =>{
-   const socket = new WebSocket(`ws://localhost:8000/ws/room/${roomCode}/`);
-
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === "participants_update") {
-        setParticipants(data.participants);
+    const fetchInitialData = async () => {
+      try {
+        await fetchUserData();
+        await fetchParticipants(roomCode);
+      } catch (error) {
+        console.error("Initial data fetch error:", error);
+        toast.error("Failed to load participants");
       }
     };
 
-    socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
+    fetchInitialData();
+
+    // WebSocket message handler
+    const handleWebSocketMessage = async (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "participants_update") {
+          const updatedParticipants = await Promise.all(
+            data.participants.map(async (username) => {
+              const imageUrl = await fetchParticipantData(username);
+              return { username, imageUrl };
+            })
+          );
+          setParticipants(updatedParticipants);
+        }
+      } catch (error) {
+        console.error("WebSocket message handling error:", error);
+      }
     };
 
-    setSocket(socket);
+    if (socket) {
+      socket.addEventListener('message', handleWebSocketMessage);
+    }
 
     return () => {
-      socket.close();
-      console.log("Study Participants Websocket is closed")
+      if (socket) {
+        socket.removeEventListener('message', handleWebSocketMessage);
+      }
     };
+  }, [roomCode, socket]);
+
+
+  // Method to fetch Username
+  // Defaults to Anonymous user if user is not found
+  const fetchUserData = async () => {
+    try {
+      const data = await getAuthenticatedRequest("/profile/", "GET");
+      return data.username || "Anonymous";
+    } catch (error) {
+      console.error("Error fetching user data", error);
+      return "Anonymous";
+    }
   };
 
-  // Function to fetch participants
+  // Method to fetch all users in the study room
   const fetchParticipants = async (roomCode) => {
     try {
       const response = await getAuthenticatedRequest(
         `/get-participants/?roomCode=${roomCode}`,
         "GET"
       );
-      console.log("Participants", response.participantsList);
 
-      // Fetch profile pictures for each participant
+      // Fetched the profile pictures of all the users from firebase
       const participantsWithImages = await Promise.all(
         response.participantsList.map(async (participant) => {
-          const imageUrl = await fetchUserData(participant.username);
-          return { ...participant, imageUrl }; // Add imageUrl to the participant object
+          const imageUrl = await fetchParticipantData(participant.username);
+          return { username: participant.username, imageUrl };
         })
       );
 
-      setParticipants(participantsWithImages); // Update participants state with image URLs
+      // Sets the participants usernames and profile pictures on the page
+      setParticipants(participantsWithImages);
     } catch (error) {
       console.error("Error fetching participants:", error);
+      throw error;
     }
   };
 
-  // Function to get user profiles
 
-  const fetchUserData = async (username) => {
+  // Method to fetch image from firebase. Used in fetchParticipants
+  const fetchParticipantData = async (username) => {
+    if (!username) return defaultAvatar;
+
     try {
-      const data = await getAuthenticatedRequest("/profile/", "GET");
-
-      //fetch profile picture from firebase using user_id
       const imageRef = ref(storage, `avatars/${username}`);
-      const imageUrl = await getDownloadURL(imageRef).catch(
-        () => defaultAvatar
-      ); //default image if not found
-      return imageUrl; // Return the imageUrl
+      return await getDownloadURL(imageRef).catch(() => defaultAvatar);
     } catch (error) {
-      toast.error("error fetching user data");
-      return defaultAvatar; // IF there is an error return default avatar
+      console.error("Error fetching participant image:", error);
+      return defaultAvatar;
     }
   };
 
   return (
-    <div className="users">
-      {/* Dynamically render participants */}
-      {participants.map((participant, index) => (
-        <div key={index} className="user-circle">
-          <div className="user-image">
-            <img
-              src={participant.imageUrl}
-              alt="profile"
-              className="user-image"
-            />
-          </div>
-          <div className="user-name">{participant.username}</div>
-        </div>
-      ))}
+    <div className="user-list-container">
+
+     {/* Dynamically displays users as they enter the room */}
+      <div className="users">
+        {participants.length > 0 ? (
+          participants.map((participant, index) => (
+
+            // {/* Displays the users */}
+            <div key={`${participant.username}-${index}`} className="user-circle">
+
+              {/* Displays the user profile picture */}
+              <div className="user-image">
+                <img
+                  src={participant.imageUrl || defaultAvatar}
+                  alt={`${participant.username}'s profile`}
+                  onError={(e) => {
+                    e.target.src = defaultAvatar;
+                  }}
+                  className="user-image"
+                />
+              </div>
+
+              {/* Displays the user's username */}
+              <div className="user-name">
+                {participant.username}
+              </div>
+            </div>
+          ))
+        ) : (
+
+          // {/* If no participants in the room, message says no participants */}
+          <div className="no-participants">No participants in this room</div>
+        )}
+      </div>
+
+      {/* Sets toast placement */}
+      <ToastContainer position="bottom-right" />
     </div>
   );
-};
+}
 
 export default StudyParticipants;

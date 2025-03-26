@@ -11,14 +11,6 @@
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.analytics-box h2 {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #1a1a1a;
-    margin-bottom: 3rem;
-    margin-top: -1rem;
-}
-
 .analytics h2{
     color: black;
     font-weight: 600;
@@ -142,16 +134,6 @@
     gap: 1rem;
 }
 
-.analytics-box button {
-    min-width: 96px;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-}
-
 .yes-btn {
     background: #DFFAE1;
     color: #155724;
@@ -232,9 +214,4 @@
 .tooltip-container:hover .tooltip {
     visibility: visible;
     opacity: 1;
-}
-
-.analytics check {
-    height: 3vh;
-    width: 6vw;
 }

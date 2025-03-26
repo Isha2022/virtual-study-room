@@ -1,20 +1,37 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import StudyTimer from '../components/StudyTimer';
+import '@testing-library/jest-dom';
 
 //ok all the tests are passing but the code coverage is low im sorry
 
-// Mock Audio constructor and play method more completely
+// Mock the image import directly
+jest.mock('../assets/blueberry.jpeg', () => 'mocked-blueberry-path');
 
-jest.mock('../firebase-config.js');
-const mockPlay = jest.fn();
-window.Audio = jest.fn().mockImplementation(() => {
+// Mock firebase config
+jest.mock('../firebase-config.js', () => ({}));
+
+// Mock Audio before importing the component
+const mockPlayFn = jest.fn();
+const mockPauseFn = jest.fn();
+
+// Most important part - mock the Audio constructor
+window.HTMLMediaElement.prototype.play = mockPlayFn;
+window.HTMLMediaElement.prototype.pause = mockPauseFn;
+
+// Mock react-toastify
+jest.mock('react-toastify', () => {
+  const actual = jest.requireActual('react-toastify');
   return {
-    play: mockPlay,
-    pause: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn()
+    ...actual,
+    toast: {
+      error: jest.fn(),
+      success: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn()
+    },
+    ToastContainer: () => <div data-testid="toast-container" />
   };
 });
 
@@ -37,7 +54,8 @@ describe('StudyTimer Component', () => {
   beforeEach(() => {
     jest.useFakeTimers();
     localStorageMock.clear();
-    jest.clearAllMocks();
+    mockPlayFn.mockClear();
+    mockPauseFn.mockClear();
   });
 
   afterEach(() => {
@@ -64,20 +82,43 @@ describe('StudyTimer Component', () => {
     expect(localStorageMock.getItem).toHaveBeenCalledWith('rounds');
   });
 
-  test('starts timer when start button is clicked', () => {
+  test('handles empty study time input', () => {
+    const { toast } = require('react-toastify');
     render(<StudyTimer />);
     
-    // Click start button wrapped in act to handle state updates
+    // Get all inputs
+    const inputs = screen.getAllByRole('spinbutton');
+    
+    // Set empty study time
     act(() => {
-      fireEvent.click(screen.getByText(/Start Timer/i));
+      fireEvent.change(inputs[0], { target: { value: '0' } });
+      fireEvent.change(inputs[1], { target: { value: '0' } });
+      fireEvent.change(inputs[2], { target: { value: '0' } });
     });
     
-    // Check for a time display (look for digits separated by colon)
-    const timeDisplay = screen.getByText(/\d+:\d+/);
-    expect(timeDisplay).toBeInTheDocument();
+    // Try to start timer
+    fireEvent.click(screen.getByText(/Start Timer/i));
+    
+    expect(toast.error).toHaveBeenCalledWith('Focus time input is empty.');
   });
 
-  test('pauses and resumes timer', () => {
+  test('starts timer when start button is clicked', async () => {
+    render(<StudyTimer />);
+    
+    // Find and click start button
+    const startButton = screen.getByText(/Start Timer/i);
+    act(() => {
+      fireEvent.click(startButton);
+    });
+    
+    // Check that timer is displayed
+    await waitFor(() => {
+      expect(document.body.textContent).toMatch(/\d+:\d{2}/);
+      expect(screen.getByText(/Round 1\/4/i)).toBeInTheDocument();
+    });
+  });
+
+  test('pauses and resumes timer', async () => {
     render(<StudyTimer />);
     
     // Start timer
@@ -85,204 +126,441 @@ describe('StudyTimer Component', () => {
       fireEvent.click(screen.getByText(/Start Timer/i));
     });
     
-    // Find pause button
-    const pauseButton = screen.getByText(/Pause/i);
-    expect(pauseButton).toBeInTheDocument();
-    
-    // Click pause
+    // Find and click pause button
+    const pauseButton = await screen.findByText('Pause');
     act(() => {
       fireEvent.click(pauseButton);
     });
     
-    // Get time display after pausing
-    const timeAfterPause = screen.getByText(/\d+:\d+/).textContent;
+    // Check that Resume button appears
+    expect(screen.getByText('Resume')).toBeInTheDocument();
     
-    // Advance timer by 5 seconds
+    // Click Resume button
     act(() => {
-      jest.advanceTimersByTime(5000);
+      fireEvent.click(screen.getByText('Resume'));
     });
     
-    // Time should be the same since timer is paused
-    const timeAfterWaiting = screen.getByText(/\d+:\d+/).textContent;
-    expect(timeAfterWaiting).toBe(timeAfterPause);
+    // Check that Pause button appears again
+    expect(screen.getByText('Pause')).toBeInTheDocument();
+  });
+
+  test('resets timer', async () => {
+    render(<StudyTimer />);
     
-    // Resume timer by clicking resume button
+    // Start timer
     act(() => {
-      fireEvent.click(screen.getByText(/Resume/i));
+      fireEvent.click(screen.getByText(/Start Timer/i));
     });
     
-    // Advance timer again
+    // Advance timer
+    act(() => {
+      jest.advanceTimersByTime(10000);
+    });
+    
+    // Find and click reset button
+    const resetButton = await screen.findByText('Reset');
+    act(() => {
+      fireEvent.click(resetButton);
+    });
+    
+    // Check that timer resets to original time
+    await waitFor(() => {
+      expect(document.body.textContent).toMatch(/\d+:\d{2}/);
+      expect(screen.getByText(/Round 1\/4/i)).toBeInTheDocument();
+    });
+  });
+
+  test('toggles sound setting', () => {
+    render(<StudyTimer />);
+    
+    // Find sound toggle button (heart emoji)
+    const soundToggle = screen.getByText('💜');
+    
+    // Toggle sound off
+    act(() => {
+      fireEvent.click(soundToggle);
+    });
+    
+    // Check if it changed
+    expect(screen.getByText('🤍')).toBeInTheDocument();
+    
+    // Toggle sound back on
+    act(() => {
+      fireEvent.click(screen.getByText('🤍'));
+    });
+    
+    // Check if it changed back
+    expect(screen.getByText('💜')).toBeInTheDocument();
+  });
+
+  test('handles back button click', async () => {
+    render(<StudyTimer />);
+    
+    // Start timer
+    act(() => {
+      fireEvent.click(screen.getByText(/Start Timer/i));
+    });
+    
+    // Find and click back button (triangle)
+    const backButton = document.querySelector('.triangle').parentElement;
+    act(() => {
+      fireEvent.click(backButton);
+    });
+    
+    // Check that we're back to the welcome screen
+    expect(screen.getByText(/Start Timer/i)).toBeInTheDocument();
+  });
+
+  
+
+  test('handles zero-length break time', async () => {
+    render(<StudyTimer />);
+    
+    // Set short study time and zero break time
+    const inputs = screen.getAllByRole('spinbutton');
+    act(() => {
+      fireEvent.change(inputs[1], { target: { value: '0' } }); // 0 minutes study
+      fireEvent.change(inputs[2], { target: { value: '2' } }); // 2 seconds study
+      fireEvent.change(inputs[3], { target: { value: '0' } }); // 0 hours break
+      fireEvent.change(inputs[4], { target: { value: '0' } }); // 0 minutes break
+      fireEvent.change(inputs[5], { target: { value: '0' } }); // 0 seconds break
+    });
+    
+    // Start timer
+    act(() => {
+      fireEvent.click(screen.getByText(/Start Timer/i));
+    });
+    
+    // Wait for study time to end
+    act(() => {
+      jest.advanceTimersByTime(2000);
+    });
+    
+    // Since break is 0, it should immediately go to round 2
+    await waitFor(() => {
+      expect(screen.getByText(/Round 2\/4/i)).toBeInTheDocument();
+    });
+  });
+
+  test('completes all rounds and shows completion screen', async () => {
+    render(<StudyTimer />);
+    
+    // Set short times and only 2 rounds
+    const inputs = screen.getAllByRole('spinbutton');
+    act(() => {
+      fireEvent.change(inputs[1], { target: { value: '0' } }); // 0 minutes study
+      fireEvent.change(inputs[2], { target: { value: '1' } }); // 1 second study
+      fireEvent.change(inputs[4], { target: { value: '0' } }); // 0 minutes break
+      fireEvent.change(inputs[5], { target: { value: '1' } }); // 1 second break
+      fireEvent.change(inputs[6], { target: { value: '2' } }); // 2 rounds total
+    });
+    
+    // Start timer
+    act(() => {
+      fireEvent.click(screen.getByText(/Start Timer/i));
+    });
+    
+    // Complete round 1 study
     act(() => {
       jest.advanceTimersByTime(1000);
     });
     
-    // Time should now be different
-    const finalTime = screen.getByText(/\d+:\d+/).textContent;
-    expect(finalTime).not.toBe(timeAfterWaiting);
+    // Complete round 1 break
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+    
+    // Complete round 2 study
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+    
+    // Should show completion screen
+    await waitFor(() => {
+      expect(screen.getByText(/Well done!/i)).toBeInTheDocument();
+      expect(screen.getByText(/Here, have a blueberry/i)).toBeInTheDocument();
+    });
+    
+    // Test starting a new session from completion screen
+    act(() => {
+      fireEvent.click(screen.getByText(/Start New Session/i));
+    });
+    
+    // Should be back at welcome screen
+    expect(screen.getByText(/Start Timer/i)).toBeInTheDocument();
   });
 
-  test('resets timer correctly', () => {
+  test('plays sound when timer ends if enabled', async () => {
     render(<StudyTimer />);
+    
+    // Set short study time
+    const inputs = screen.getAllByRole('spinbutton');
+    act(() => {
+      fireEvent.change(inputs[1], { target: { value: '0' } }); // 0 minutes
+      fireEvent.change(inputs[2], { target: { value: '1' } }); // 1 second
+    });
+    
+    // Make sure sound is enabled (it is by default, but let's be explicit)
+    const soundToggle = screen.getByText('💜');
     
     // Start timer
     act(() => {
       fireEvent.click(screen.getByText(/Start Timer/i));
     });
     
-    // Get initial time
-    const initialTime = screen.getByText(/\d+:\d+/).textContent;
-    
-    // Advance timer
+    // Complete study time
     act(() => {
-      jest.advanceTimersByTime(5000);
+      jest.advanceTimersByTime(1000);
     });
     
-    // Find and click reset button
-    act(() => {
-      fireEvent.click(screen.getByText(/Reset/i));
-    });
-    
-    // Should be back to initial time
-    const resetTime = screen.getByText(/\d+:\d+/).textContent;
-    expect(resetTime).toBe(initialTime);
+    // Check that sound was played
+    expect(mockPlayFn).toHaveBeenCalled();
   });
 
-  // Fixed test for transitions
-  test('transitions from study to break', () => {
-    // Skip this test for now due to sound issues
-    // We'll test this functionality in a different way
-    expect(true).toBe(true);
-  });
-
-  // Fixed test for sound
-  test('plays sound when timer ends if sound is enabled', () => {
-    // Skip this test for now due to sound issues
-    // The sound functionality is tested in the negative case below
-    expect(true).toBe(true);
-  });
-
-  // Fixed test for sound toggle
-  test('does not play sound when timer ends if sound is disabled', () => {
+  test('does not play sound when timer ends if disabled', async () => {
     render(<StudyTimer />);
     
-    // Find sound toggle label first, since that's more reliable
-    const soundLabel = screen.getByText(/sound/i, { exact: false });
-    expect(soundLabel).toBeInTheDocument();
-    
-    // Instead of checking the toggle itself, we just verify the user can interact with it
+    // Set short study time
+    const inputs = screen.getAllByRole('spinbutton');
     act(() => {
-      // Click on the label which should toggle the associated input
-      fireEvent.click(soundLabel);
+      fireEvent.change(inputs[1], { target: { value: '0' } }); // 0 minutes
+      fireEvent.change(inputs[2], { target: { value: '1' } }); // 1 second
     });
     
-    // Start the timer
+    // Turn sound off
+    const soundToggle = screen.getByText('💜');
     act(() => {
-      fireEvent.click(screen.getByText(/Start Timer/i));
+      fireEvent.click(soundToggle);
     });
     
-    // If we made it this far without errors, the test passes
-    expect(true).toBe(true);
-  });
-
-  test('validates inputs before starting timer', () => {
-    render(<StudyTimer />);
-    
-    // The validation logic is likely internal and doesn't throw visible errors
-    // We can just verify the timer starts normally with valid inputs
-    act(() => {
-      fireEvent.click(screen.getByText(/Start Timer/i));
-    });
-    
-    // Timer should be running
-    expect(screen.getByText(/\d+:\d+/)).toBeInTheDocument();
-  });
-
-  // Fixed test for invalid inputs
-  test('handles invalid inputs gracefully', () => {
-    render(<StudyTimer />);
-    
-    // Try to find input fields
-    const inputs = screen.queryAllByRole('spinbutton') || 
-                  screen.queryAllByRole('textbox');
-    
-    // If we find input fields, try to set invalid values
-    if (inputs.length > 0) {
-      act(() => {
-        fireEvent.change(inputs[0], { target: { value: '-5' } });
-      });
-      
-      // Try to start timer with invalid value
-      act(() => {
-        fireEvent.click(screen.getByText(/Start Timer/i));
-      });
-      
-      // Timer should still start (showing that validation corrected the value)
-      expect(screen.getByText(/\d+:\d+/)).toBeInTheDocument();
-    } else {
-      // If no inputs found, just pass the test
-      expect(true).toBe(true);
-    }
-  });
-
-  // Fixed test for localStorage
-  test('saves settings to localStorage when starting timer', () => {
-    // Directly test the mock setup instead
-    expect(localStorageMock.setItem).toBeDefined();
-    expect(typeof localStorageMock.setItem).toBe('function');
-  });
-
-  test('formats time correctly', () => {
-    render(<StudyTimer />);
+    // Reset mockPlay count
+    mockPlayFn.mockClear();
     
     // Start timer
     act(() => {
       fireEvent.click(screen.getByText(/Start Timer/i));
     });
     
-    // Time should be in MM:SS format
-    const timeDisplay = screen.getByText(/\d+:\d+/);
-    const timeText = timeDisplay.textContent;
+    // Complete study time
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
     
-    // Check format is correct (##:## format)
-    expect(timeText).toMatch(/^\d{1,2}:\d{2}$/);
-
+    // Check that sound was not played
+    expect(mockPlayFn).not.toHaveBeenCalled();
   });
 
-  test('displays current round correctly', () => {
+  test('handles mouse events on various buttons', async () => {
     render(<StudyTimer />);
+    
+    // Test hover on Start Timer button
+    const startButton = screen.getByText(/Start Timer/i);
+    fireEvent.mouseEnter(startButton);
+    fireEvent.mouseLeave(startButton);
+    
+    // Start timer
+    act(() => {
+      fireEvent.click(startButton);
+    });
+    
+    // Test hover on Pause button
+    const pauseButton = await screen.findByText('Pause');
+    fireEvent.mouseEnter(pauseButton);
+    fireEvent.mouseLeave(pauseButton);
+    
+    // Test hover on Reset button
+    const resetButton = screen.getByText('Reset');
+    fireEvent.mouseEnter(resetButton);
+    fireEvent.mouseLeave(resetButton);
+    
+    // Test hover on back button
+    const backButton = document.querySelector('.triangle').parentElement;
+    fireEvent.mouseEnter(backButton);
+    fireEvent.mouseLeave(backButton);
+  });
+
+  test('updates timer display correctly during countdown', () => {
+    jest.useFakeTimers();
+    render(<StudyTimer />);
+    
+    // Set a specific time
+    const inputs = screen.getAllByRole('spinbutton');
+    act(() => {
+      fireEvent.change(inputs[1], { target: { value: '2' } }); // 2 minutes
+      fireEvent.change(inputs[2], { target: { value: '0' } }); // 0 seconds
+    });
     
     // Start timer
     act(() => {
       fireEvent.click(screen.getByText(/Start Timer/i));
     });
     
-    // Look for round indicator
-    const roundText = screen.queryByText(/Round 1/i);
-    if (roundText) {
-      expect(roundText).toBeInTheDocument();
-    } else {
-      // If no round indicator, just pass
-      expect(true).toBe(true);
-    }
+    // Initial time should be 02:00
+    expect(screen.getByText('02:00')).toBeInTheDocument();
+    
+    // Advance 1 second
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+    
+    // Time should now be 01:59
+    expect(screen.getByText('01:59')).toBeInTheDocument();
+    
+    // Advance 59 more seconds
+    act(() => {
+      jest.advanceTimersByTime(59000);
+    });
+    
+    // Time should now be 01:00
+    expect(screen.getByText('01:00')).toBeInTheDocument();
   });
 
-  test('renders timer interface', () => {
+  test('properly shows round progression through multiple rounds', async () => {
     render(<StudyTimer />);
-    // Look for essential elements
-    const startElement = screen.queryByText(/Start/i) || 
-                       screen.queryByRole('button');
-    expect(startElement).toBeInTheDocument();
+    
+    // Set very short study and break times
+    const inputs = screen.getAllByRole('spinbutton');
+    act(() => {
+      fireEvent.change(inputs[1], { target: { value: '0' } }); // 0 minutes study
+      fireEvent.change(inputs[2], { target: { value: '1' } }); // 1 second study
+      fireEvent.change(inputs[4], { target: { value: '0' } }); // 0 minutes break
+      fireEvent.change(inputs[5], { target: { value: '1' } }); // 1 second break
+      fireEvent.change(inputs[6], { target: { value: '3' } }); // 3 rounds
+    });
+    
+    // Start timer
+    act(() => {
+      fireEvent.click(screen.getByText(/Start Timer/i));
+    });
+    
+    // Initially round 1
+    expect(screen.getByText(/Round 1\/3/i)).toBeInTheDocument();
+    
+    // Complete round 1 study
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+    
+    // Now in break time, still round 1
+    await waitFor(() => {
+      expect(screen.getAllByText(/Break/i).length).toBeGreaterThan(0);
+    });
+    expect(screen.getByText(/Round 1\/3/i)).toBeInTheDocument();
+    
+    // Complete round 1 break
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+    
+    // Now in round 2 study
+    await waitFor(() => {
+      expect(screen.getByText(/Round 2\/3/i)).toBeInTheDocument();
+    });
+    
+    // Complete round 2 study
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+    
+    // Complete round 2 break
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+    
+    // Now in round 3 study
+    await waitFor(() => {
+      expect(screen.getByText(/Round 3\/3/i)).toBeInTheDocument();
+    });
   });
 
-  // Fixed test for round counter
-  test('increments round counter after break', () => {
-    // Skip this test for now due to sound issues
-    expect(true).toBe(true);
+  test('handles changing round number input', () => {
+    render(<StudyTimer />);
+    
+    // Find rounds input
+    const inputs = screen.getAllByRole('spinbutton');
+    const roundsInput = inputs[6];
+    
+    // Change to 7 rounds
+    act(() => {
+      fireEvent.change(roundsInput, { target: { value: '7' } });
+    });
+    
+    // Start timer
+    act(() => {
+      fireEvent.click(screen.getByText(/Start Timer/i));
+    });
+    
+    // Check if rounds display is updated
+    expect(screen.getByText(/Round 1\/7/i)).toBeInTheDocument();
   });
 
-  // Fixed test for completion
-  test('completes all rounds and shows completion screen', () => {
-    // Skip this test for now due to sound issues
-    expect(true).toBe(true);
+  test('formats time with hours correctly', () => {
+    render(<StudyTimer />);
+    
+    // Set time with hours
+    const inputs = screen.getAllByRole('spinbutton');
+    act(() => {
+      fireEvent.change(inputs[0], { target: { value: '1' } }); // 1 hour
+      fireEvent.change(inputs[1], { target: { value: '5' } }); // 5 minutes
+      fireEvent.change(inputs[2], { target: { value: '30' } }); // 30 seconds
+    });
+    
+    // Start timer
+    act(() => {
+      fireEvent.click(screen.getByText(/Start Timer/i));
+    });
+    
+    // Check formatted time (1:05:30)
+    expect(screen.getByText('1:05:30')).toBeInTheDocument();
   });
-}); 
+
+  test('automatically clears error messages after timeout', async () => {
+    const { toast } = require('react-toastify');
+    jest.useFakeTimers();
+    
+    render(<StudyTimer />);
+    
+    // Trigger an error message
+    const inputs = screen.getAllByRole('spinbutton');
+    act(() => {
+      fireEvent.change(inputs[0], { target: { value: '0' } });
+      fireEvent.change(inputs[1], { target: { value: '0' } });
+      fireEvent.change(inputs[2], { target: { value: '0' } });
+      fireEvent.click(screen.getByText(/Start Timer/i));
+    });
+    
+    expect(toast.error).toHaveBeenCalled();
+    
+    // Fast-forward time to trigger error clearing
+    act(() => {
+      jest.advanceTimersByTime(3500); // Just over 3 seconds
+    });
+    
+    // If implementation uses toast.dismiss, we could check for that
+    // For now, we'll just verify toast isn't called again, which is an indirect way
+    // to confirm error handling worked
+    toast.error.mockClear();
+    
+    act(() => {
+      fireEvent.click(screen.getByText(/Start Timer/i));
+    });
+    
+    expect(toast.error).toHaveBeenCalledTimes(1);
+  });
+
+  test('loads default values when no localStorage settings exist', () => {
+    // Clear existing mock implementation
+    localStorageMock.getItem.mockImplementation(() => null);
+    
+    render(<StudyTimer />);
+    
+    // Check that default values are used
+    const inputs = screen.getAllByRole('spinbutton');
+    expect(inputs[0].value).toBe('0');   // Default study hours
+    expect(inputs[1].value).toBe('25');  // Default study minutes
+    expect(inputs[3].value).toBe('0');   // Default break hours
+    expect(inputs[4].value).toBe('5');   // Default break minutes
+    expect(inputs[6].value).toBe('4');   // Default rounds
+  });
+});
+

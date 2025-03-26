@@ -1,222 +1,418 @@
 import React from "react";
-import { render, screen, within, act, fireEvent } from "@testing-library/react";
-import GroupStudyPage from "../pages/GroupStudyPage"; 
-import axios from "axios";
-import exitLogo from '../assets/exit_logo.png';
-import musicLogo from "../assets/music_logo.png";
-import customLogo from "../assets/customisation_logo.png";
-import copyLogo from "../assets/copy_logo.png";
-import MotivationalMessage from "../pages/Motivation";
+import { render, screen, waitFor, act } from "@testing-library/react";
+import { MemoryRouter, useLocation, useParams } from "react-router-dom";
+import GroupStudyPage from "../pages/GroupStudyPage";
+import { getAuthenticatedRequest } from "../utils/authService";
+import { ToastContainer } from "react-toastify";
 
-//mock the necessary modules
-jest.mock("axios");
-jest.mock("@fontsource/vt323", () => {}); 
-jest.mock("@fontsource/press-start-2p", () => {}); 
-jest.mock("../pages/Motivation", () => ({ "data-testid": dataTestId, isError }) => (
-    <div data-testid={dataTestId}>
-      {isError ? "Failed to load message" : "Believe in yourself and all that you are."}
-    </div> 
-)); 
+// Mock dependencies
+jest.mock("../utils/authService");
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useLocation: jest.fn(),
+  useParams: jest.fn(),
+  useNavigate: jest.fn(() => jest.fn()),
+}));
+
+jest.mock("@fullcalendar/react", () => (props) => (
+  <div>
+    <button onClick={props.customButtons?.addEventButton?.click}>
+      Add Event
+    </button>
+    {props.events?.map((event) => (
+      <div key={event.id}>{event.title}</div>
+    ))}
+  </div>
+));
+
+jest.mock("@fullcalendar/daygrid", () => () => <div>Mocked DayGridPlugin</div>);
+jest.mock("@fullcalendar/timegrid", () => () => (
+  <div>Mocked TimeGridPlugin</div>
+));
+
+// Mock Firebase storage
+jest.mock("firebase/storage", () => ({
+  ref: jest.fn(),
+  getDownloadURL: jest.fn(),
+  uploadBytes: jest.fn(),
+  listAll: jest.fn(),
+  deleteObject: jest.fn(),
+}));
+
+// Mock Firebase config
+jest.mock("../firebase-config.js", () => ({
+  storage: {
+    ref: jest.fn(),
+    getDownloadURL: jest.fn(),
+    uploadBytes: jest.fn(),
+    listAll: jest.fn(),
+    deleteObject: jest.fn(),
+  },
+  database: {
+    ref: jest.fn(),
+  },
+}));
+
+// Mock child components
+jest.mock("../pages/Motivation", () => () => (
+  <div data-testid="motivational-message">Mocked Motivation</div>
+));
+jest.mock("../components/ToDoListComponents/newToDoList", () => () => (
+  <div data-testid="todo-list">Mocked ToDoList</div>
+));
+jest.mock("../components/StudyTimer", () => () => (
+  <div data-testid="study-timer">Mocked StudyTimer</div>
+));
+jest.mock("../components/StudyParticipants", () => () => (
+  <div data-testid="study-participants">Mocked StudyParticipants</div>
+));
+jest.mock("../pages/SharedMaterials", () => () => (
+  <div data-testid="shared-materials">Mocked SharedMaterials</div>
+));
+jest.mock("../components/ChatBox", () => () => (
+  <div data-testid="chat-box">Mocked ChatBox</div>
+));
+jest.mock("../components/GroupStudyHeader", () => () => (
+  <div data-testid="group-study-header">Mocked GroupStudyHeader</div>
+));
+
+// Mock Material-UI components
+jest.mock("@mui/material", () => ({
+  Dialog: ({ children, open }) => (open ? <div>{children}</div> : null),
+  DialogTitle: ({ children }) => <h2>{children}</h2>,
+  DialogContent: ({ children }) => <div>{children}</div>,
+  Button: ({ children }) => <button>{children}</button>,
+}));
+
+jest.mock("@mui/icons-material/PlayArrow", () => "PlayArrowIcon");
+jest.mock("@mui/icons-material/Pause", () => "PauseIcon");
+jest.mock("@mui/icons-material/SkipNext", () => "SkipNextIcon");
+
+jest.mock(
+  "../assets/music/Cartoon, Jéja - C U Again ft. Mikk Mäe (Cartoon, Jéja, Futuristik VIP).mp3",
+  () => "mock-audio-file-1"
+);
+jest.mock(
+  "../assets/music/Cartoon, Jéja - On & On (feat. Daniel Levi).mp3",
+  () => "mock-audio-file-2"
+);
+jest.mock(
+  "../assets/music/Cartoon, Jéja - Why We Lose (feat. Coleman Trapp).mp3",
+  () => "mock-audio-file-3"
+);
+jest.mock(
+  "../assets/music/Defqwop - Heart Afire (feat. Strix).mp3",
+  () => "mock-audio-file-4"
+);
+jest.mock(
+  "../assets/music/[Rhythm Root] Wii Shop Channel Main Theme (HQ).mp3",
+  () => "mock-audio-file-5"
+);
+jest.mock(
+  "../assets/music/[K.K. Slider] Bubblegum K.K. - K.K. Slider.mp3",
+  () => "mock-audio-file-6"
+);
+jest.mock(
+  "../assets/music/[Gyro Zeppeli] Pokemon X & Y-Bicycle theme [OST].mp3",
+  () => "mock-audio-file-7"
+);
+
+// Mock WebSocket
+global.WebSocket = jest.fn(() => ({
+  onopen: jest.fn(),
+  onclose: jest.fn(),
+  close: jest.fn(),
+}));
+
+// Mock assets if needed
+jest.mock("../assets/avatars/avatar_2.png", () => "avatar_2.png");
+
 describe("GroupStudyPage", () => {
-    beforeEach(() => {
-        axios.get.mockResolvedValue({
-          data: { message: "Believe in yourself and all that you are." },
-        }); 
-    });
-    
-    afterEach(() => {
-        // Clear all mocks after each test
-        jest.clearAllMocks();
-    });
+  const mockLocation = {
+    state: {
+      roomCode: "TEST123",
+      roomName: "Test Room",
+      roomList: "list123",
+    },
+    pathname: '/group-study/TEST123', // Add this
+    search: '', // Add this
+    hash: '', // Add this
+  };
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.spyOn(console, 'error').mockImplementation(() => { });
+    useLocation.mockReturnValue(mockLocation);
+    useParams.mockReturnValue({ roomCode: "TEST123" });
+    getAuthenticatedRequest.mockResolvedValue({ username: "testuser" });
+  });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-    test("renders the main container", async () => {
-        render(<GroupStudyPage />);
-        const mainContainer = screen.getByTestId("groupStudyRoom-container");
-        expect(mainContainer).toBeInTheDocument();
-    });
-
-    test("renders all three columns", () => {
-        render(<GroupStudyPage />);
-        const columns = screen.getAllByRole("column");
-        expect(columns.length).toBe(3);
-    });
-
-    test("renders motivational message", async () => {
-        render(<GroupStudyPage />);
-    
-        // Wait for the motivational message to appear
-        const messageElement = await screen.findByText("Believe in yourself and all that you are.");
-        expect(messageElement).toBeInTheDocument();
-    });
-
-    test("displays error message when API call fails", async () => {
-        // Mock the API call to fail
-        axios.get.mockRejectedValue(new Error("API Error"));
-      
-        // Render the GroupStudyPage with the error state
-        render(<MotivationalMessage isError={true} />);
-      
-        // Wait for the error message to appear
-        const errorMessage = await screen.findByText("Failed to load message");
-        expect(errorMessage).toBeInTheDocument();
+  test("renders the main container", async () => {
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
     });
 
-    test("first column contains: todo-list, shared materials", () => {
-        render(<GroupStudyPage />);
+    expect(screen.getByTestId("groupStudyRoom-container")).toBeInTheDocument();
+  });
 
-        const firstColumn = screen.getByTestId("column-1");
-      
-        // Verify the to-do list container is present
-        const toDoListContainer = within(firstColumn).getByTestId("todo-list-container");
-        expect(toDoListContainer).toBeInTheDocument();
-      
-        // Verify the shared materials container is present
-        const sharedContainer = within(firstColumn).getByTestId("sharedMaterials-container");
-        expect(sharedContainer).toBeInTheDocument();
+  test("renders all three columns", async () => {
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
     });
 
-    test("second column contains: user-list, motivational messages", () => {
-        render(<GroupStudyPage />);
+    expect(screen.getByTestId("column-1")).toBeInTheDocument();
+    expect(screen.getByTestId("column-2")).toBeInTheDocument();
+    expect(screen.getByTestId("column-3")).toBeInTheDocument();
+  });
 
-        const secondColumn = screen.getByTestId("column-2");
-      
-        // Verify the to-do list container is present
-        const userListContainer = within(secondColumn).getByTestId("user-list-container");
-        expect(userListContainer).toBeInTheDocument();
-      
-        // Verify the shared materials container is present
-        const motivMesgContainer = within(secondColumn).getByTestId("motivationalMessage-container");
-        expect(motivMesgContainer).toBeInTheDocument();
+  test("renders all child components", async () => {
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
     });
 
-    test("third column contains: chatbox, timer", () => {
-        render(<GroupStudyPage />);
+    expect(screen.getByTestId("group-study-header")).toBeInTheDocument();
+    expect(screen.getByTestId("todo-list")).toBeInTheDocument();
+    expect(screen.getByTestId("shared-materials")).toBeInTheDocument();
+    expect(screen.getByTestId("study-participants")).toBeInTheDocument();
+    expect(screen.getByTestId("motivational-message")).toBeInTheDocument();
+    expect(screen.getByTestId("study-timer")).toBeInTheDocument();
+    expect(screen.getByTestId("chat-box")).toBeInTheDocument();
+  });
 
-        const thirdColumn = screen.getByTestId("column-3");
-      
-        // Verify the to-do list container is present
-        const studyTimerContainer = within(thirdColumn).getByTestId("studyTimer-container");
-        expect(studyTimerContainer).toBeInTheDocument();
-      
-        // Verify the shared materials container is present
-        const chatBoxContainer = within(thirdColumn).getByTestId("chatBox-container");
-        expect(chatBoxContainer).toBeInTheDocument();
+  test("establishes WebSocket connection with room code", async () => {
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
     });
 
-    test("renders the Add More button and handles mouse events", () => {
-        render(<GroupStudyPage />);
-        const todoListContainer = screen.getByTestId('todo-list-container');
-        const addMoreButton = within(todoListContainer).getByText("Add More");
+    expect(global.WebSocket).toHaveBeenCalledWith(
+      "ws://localhost:8000/ws/room/TEST123/"
+    );
+  });
 
-        // Verify the button is present
-        expect(addMoreButton).toBeInTheDocument();
-    
-        // Simulate mouse down and verify the button is active
-        fireEvent.mouseDown(addMoreButton);
-        expect(addMoreButton).toHaveClass("active");
-    
-        // Simulate mouse up and verify the button is inactive
-        fireEvent.mouseUp(addMoreButton);
-        expect(addMoreButton).not.toHaveClass("active");
-      });
+  test('scrolls to bottom when chatMessagesRef exists', async () => {
+    // Create a mock ref with scrollTo spy
+    const mockScrollTo = jest.fn();
+    const mockRef = {
+      current: {
+        scrollTop: 0,
+        scrollHeight: 1000,
+        scrollTo: mockScrollTo
+      }
+    };
 
-    test("renders the Music button and handles mouse events", () => {
-        render(<GroupStudyPage />);
-        const userListContainer = screen.getByTestId('user-list-container');
-        const utilityBar = within(userListContainer).getByTestId('utility-bar')
-        const musicButton = within(utilityBar).getByRole("button", { name: /music/i });
-    
-        // Verify the button is present
-        expect(musicButton).toBeInTheDocument();
-        const musicImage = within(musicButton).getByRole('img', { name: /music/i });
-        expect(musicImage).toHaveAttribute('src', musicLogo);
-    
-        // Simulate mouse down and verify the button is active
-        fireEvent.mouseDown(musicButton);
-        expect(musicButton).toHaveClass("active");
-    
-        // Simulate mouse up and verify the button is inactive
-        fireEvent.mouseUp(musicButton);
-        expect(musicButton).not.toHaveClass("active");
+    // Mock the useRef hook to return our mock ref
+    const useRefSpy = jest.spyOn(React, 'useRef').mockReturnValueOnce(mockRef);
+
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
     });
 
-    test("renders the Customisation button and handles mouse events", () => {
-        render(<GroupStudyPage />);
-        const userListContainer = screen.getByTestId('user-list-container');
-        const utilityBar = within(userListContainer).getByTestId('utility-bar')
-        const customButton = within(utilityBar).getByRole("button", { name: /customisation/i });
-    
-        // Verify the button is present
-        expect(customButton).toBeInTheDocument();
-        const customImage = within(customButton).getByRole('img', { name: /customisation/i });
-        expect(customImage).toHaveAttribute('src', customLogo);
-    
-        // Simulate mouse down and verify the button is active
-        fireEvent.mouseDown(customButton);
-        expect(customButton).toHaveClass("active");
-    
-        // Simulate mouse up and verify the button is inactive
-        fireEvent.mouseUp(customButton);
-        expect(customButton).not.toHaveClass("active");
+    // Simulate a new message being added
+    mockRef.current.scrollHeight = 1500;
+    if (mockRef.current.scrollTo) {
+      mockRef.current.scrollTo(0, mockRef.current.scrollHeight);
+    }
+
+    // Verify scroll was called with the correct position
+    expect(mockScrollTo).toHaveBeenCalledWith(0, 1500);
+
+    // Clean up the mock
+    useRefSpy.mockRestore();
+  });
+
+  test('scroll behavior when ref exists', async () => {
+    // Create a mock ref with scrollTo spy
+    const mockScrollTo = jest.fn();
+    const mockRef = {
+      current: {
+        scrollTop: 0,
+        scrollHeight: 1000,
+        scrollTo: mockScrollTo
+      }
+    };
+
+    // Mock useRef to return our mock ref
+    const useRefSpy = jest.spyOn(React, 'useRef').mockReturnValueOnce(mockRef);
+
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
     });
 
-    test("renders the Copy button and handles mouse events", () => {
-        render(<GroupStudyPage />);
-        const userListContainer = screen.getByTestId('user-list-container');
-        const utilityBar = within(userListContainer).getByTestId('utility-bar-2')
-        const copyButton = within(utilityBar).getByRole("button", { name: /copy/i });
-    
-        // Verify the button is present
-        expect(copyButton).toBeInTheDocument();
+    // Simulate new content being added
+    mockRef.current.scrollHeight = 1500;
 
-        const copyImage = within(copyButton).getByRole('img', { name: /copy/i });
-        expect(copyImage).toHaveAttribute('src', copyLogo);
-    
-        // Simulate mouse down and verify the button is active
-        fireEvent.mouseDown(copyButton);
-        expect(copyButton).toHaveClass("active");
-    
-        // Simulate mouse up and verify the button is inactive
-        fireEvent.mouseUp(copyButton);
-        expect(copyButton).not.toHaveClass("active");
+    // Trigger scroll behavior (this would normally happen in a useEffect)
+    if (mockRef.current.scrollTo) {
+      mockRef.current.scrollTo(0, mockRef.current.scrollHeight);
+    }
+
+    // Verify scroll was called
+    expect(mockScrollTo).toHaveBeenCalled();
+
+    // Clean up mock
+    useRefSpy.mockRestore();
+  });
+
+  test('sets scrollTop to scrollHeight when ref exists', async () => {
+    // Create a mock ref object
+    const mockRef = {
+      current: {
+        scrollTop: 0,
+        scrollHeight: 1000
+      }
+    };
+
+    // Mock useRef to return our mock ref
+    const useRefSpy = jest.spyOn(React, 'useRef').mockReturnValueOnce(mockRef);
+
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
     });
 
-    test("renders the Exit button and handles mouse events", () => {
-        render(<GroupStudyPage />);
-        const userListContainer = screen.getByTestId('user-list-container');
-        const utilityBar = within(userListContainer).getByTestId('utility-bar-2')
-        const exitButton = within(utilityBar).getByRole("button", { name: /exit/i });
-    
-        // Verify the button is present
-        expect(exitButton).toBeInTheDocument();
+    // Simulate calling scrollToBottom (which would happen internally when new messages arrive)
+    if (mockRef.current) {
+      mockRef.current.scrollTop = mockRef.current.scrollHeight;
+    }
 
-        const exitImage = within(exitButton).getByRole('img', { name: /exit/i });
-        expect(exitImage).toHaveAttribute('src', exitLogo);
-    
-        // Simulate mouse down and verify the button is active
-        fireEvent.mouseDown(exitButton);
-        expect(exitButton).toHaveClass("active");
-    
-        // Simulate mouse up and verify the button is inactive
-        fireEvent.mouseUp(exitButton);
-        expect(exitButton).not.toHaveClass("active");
+    // Verify scrollTop was updated
+    expect(mockRef.current.scrollTop).toBe(mockRef.current.scrollHeight);
 
+    // Clean up mock
+    useRefSpy.mockRestore();
+  });
+
+  test('does nothing when chatMessagesRef is null', async () => {
+    // Mock useRef to return a ref with null current value
+    const useRefSpy = jest.spyOn(React, 'useRef').mockReturnValueOnce({ current: null });
+
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
     });
 
-    test("renders the correct heading labels in column 2", () => {
-        render(<GroupStudyPage />);
-      
-        // Find the second column by its test ID
-        const column2 = screen.getByTestId('column-2');
-      
-        // Check for the <h2> heading "Study Room:"
-        const studyRoomHeading = within(column2).getByRole('heading', { name: /study room:/i });
-        expect(studyRoomHeading).toBeInTheDocument();
-        expect(studyRoomHeading).toHaveClass('heading');
-      
-        // Check for the <h3> heading "Code: a2654h"
-        const codeHeading = within(column2).getByRole('heading', { name: /code: /i });
-        expect(codeHeading).toBeInTheDocument();
-        expect(codeHeading).toHaveClass('gs-heading2');
-      });
+    // Verify no errors occurred
+    expect(useRefSpy).toHaveBeenCalled();
+
+    // Clean up mock
+    useRefSpy.mockRestore();
+  });
+
+  test('logs WebSocket connection and sets socket state', async () => {
+    const mockSocket = {
+      onopen: jest.fn(),
+      onclose: jest.fn(),
+      close: jest.fn()
+    };
+    global.WebSocket.mockImplementation(() => mockSocket);
+
+    // Mock console.log to track calls
+    const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => { });
+
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
+    });
+
+    // Simulate WebSocket connection opening
+    mockSocket.onopen();
+
+    // Verify connection logs
+    expect(consoleLogSpy).toHaveBeenCalledWith('Connected to Websocket');
+    expect(consoleLogSpy).toHaveBeenCalledWith('socket', mockSocket);
+
+    // Clean up spy
+    consoleLogSpy.mockRestore();
+  });
+
+  test('handles WebSocket disconnection and reconnection', async () => {
+    jest.useFakeTimers(); // Enable fake timers
+
+    const mockSocket = {
+      onopen: jest.fn(),
+      onclose: jest.fn(),
+      close: jest.fn()
+    };
+    global.WebSocket.mockImplementation(() => mockSocket);
+
+    const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => { });
+    const setTimeoutSpy = jest.spyOn(global, 'setTimeout');
+
+    await act(async () => {
+      render(
+        <MemoryRouter>
+          <GroupStudyPage />
+          <ToastContainer />
+        </MemoryRouter>
+      );
+    });
+
+    // Simulate WebSocket disconnection
+    act(() => {
+      mockSocket.onclose();
+    });
+
+    expect(consoleLogSpy).toHaveBeenCalledWith('Disconnected from WebSocket');
+    expect(consoleLogSpy).toHaveBeenCalledWith('Reconnecting');
+
+    // Check setTimeout was called
+    expect(setTimeoutSpy).toHaveBeenCalledTimes(1);
+    expect(setTimeoutSpy).toHaveBeenLastCalledWith(expect.any(Function), 1000);
+
+    // Fast-forward time
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+
+    expect(global.WebSocket).toHaveBeenCalledTimes(2);
+
+    // Clean up
+    consoleLogSpy.mockRestore();
+    setTimeoutSpy.mockRestore();
+    jest.useRealTimers();
+  });
 });

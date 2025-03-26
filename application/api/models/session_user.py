@@ -13,7 +13,7 @@ class SessionUser(models.Model):
     ''' Foreign keys from other models to store which user is in which session '''
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='session_users')
     session = models.ForeignKey(StudySession, on_delete=models.CASCADE, related_name='session_users')
-   
+    join_sequence = models.PositiveIntegerField(default=1)
    
     ''' Tracking when the user joined and left the session '''
     joined_at = models.DateTimeField(default=now)
