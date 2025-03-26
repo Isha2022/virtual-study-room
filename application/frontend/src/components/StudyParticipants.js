@@ -9,12 +9,10 @@ import defaultAvatar from "../assets/avatars/avatar_2.png";
 import { ToastContainer, toast } from "react-toastify";
 //import io from 'socket.io-client';
 
-const StudyParticipants = () => {
-  // Web socket handling
+function StudyParticipants({ socket, roomCode }) {
   const [roomCode, setRoomCode] = useState(""); // Ensure that the room code is defined
   const [roomName, setRoomName] = useState("");
   const [participants, setParticipants] = useState([]); // State to store participants
-  const [socket, setSocket] = useState(null);
 
   // Use to navigate to the created room / joined room
   const navigate = useNavigate(); // initialise
@@ -23,6 +21,33 @@ const StudyParticipants = () => {
 
   console.log("The room code is: ", roomCode);
   // Fetch participants when the component mounts or roomCode changes
+
+
+
+
+
+    // put this somewhere
+          if (data.type === "participants_update") {
+        console.log("Re-rendering the participants on the page...");
+        // Update the participants list
+        // Update the participants list
+        const updatedParticipants = await Promise.all(
+          data.participants.map(async (username) => {
+            const imageUrl = await fetchParticipantData(username);
+            return { username, imageUrl };
+          })
+        );
+        setParticipants(updatedParticipants);
+
+
+    if (finalRoomCode) {
+      // Get the logged in user's data
+      fetchUserData();
+
+      // Retrieves the room participants currently in the room when joining
+      // Fetches the data for each user ( username and profile picture from firebase )
+      fetchParticipants(finalRoomCode);
+    }
 
   useEffect(() => {
     if (urlRoomCode) {
@@ -58,6 +83,8 @@ const StudyParticipants = () => {
 
   // Function to fetch participants
   const fetchParticipants = async (roomCode) => {
+    console.log("Fetching participants");
+
     try {
       const response = await getAuthenticatedRequest(
         `/get-participants/?roomCode=${roomCode}`,
@@ -68,20 +95,25 @@ const StudyParticipants = () => {
       // Fetch profile pictures for each participant
       const participantsWithImages = await Promise.all(
         response.participantsList.map(async (participant) => {
-          const imageUrl = await fetchUserData(participant.username);
+          const imageUrl = await fetchParticipantData(participant.username);
           return { ...participant, imageUrl }; // Add imageUrl to the participant object
         })
       );
 
       setParticipants(participantsWithImages); // Update participants state with image URLs
+      console.log("num Participants", participants);
     } catch (error) {
       console.error("Error fetching participants:", error);
     }
   };
 
   // Function to get user profiles
+  const fetchParticipantData = async (username) => {
+    if (!username) {
+      return defaultAvatar; // Return a default avatar if username is undefined
+    }
+    console.log("fetched user data", username);
 
-  const fetchUserData = async (username) => {
     try {
       const data = await getAuthenticatedRequest("/profile/", "GET");
 
@@ -92,7 +124,7 @@ const StudyParticipants = () => {
       ); //default image if not found
       return imageUrl; // Return the imageUrl
     } catch (error) {
-      toast.error("error fetching user data");
+      toast.error("Error fetching user data");
       return defaultAvatar; // IF there is an error return default avatar
     }
   };
@@ -109,6 +141,7 @@ const StudyParticipants = () => {
               className="user-image"
             />
           </div>
+
           <div className="user-name">{participant.username}</div>
         </div>
       ))}
