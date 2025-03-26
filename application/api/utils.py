@@ -21,8 +21,6 @@ from .models.spotify_token import SpotifyToken
 from django.utils import timezone
 from api.credentials import CLIENT_ID, CLIENT_SECRET
 from requests import post, get, put
-from datetime import timedelta
-
 
 BASE_URL = "https://api.spotify.com/v1/me/"
 
