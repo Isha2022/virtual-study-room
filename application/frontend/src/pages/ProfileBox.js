@@ -10,22 +10,37 @@ import "../styles/ProfileBox.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
+/*
+The profile box is the profile panel on the dashboard, it displays the username,
+profile picture, description and user badges. It also has a link to the calendar.
+
+The profile box also allows the user to upload their own profile picture or change their
+description.
+*/
+
+
 function ProfileBox() {
+
+  // useNavigate for page navigation
   const navigate = useNavigate();
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
   const [showInventory, setShowInventory] = useState(false);
   const [userBadges, setUserBadges] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  // Stores user data
   const [userData, setUserData] = useState({
     username: null,
     description: "",
     image: defaultAvatar, //default image
     avatarSrc: null, //represents selectable PFPs
   });
+  // Stores the edited description
   const [editedDescription, setEditedDescription] = useState(
     userData.description
   );
 
+  // Method to navigate the the calendar page
   const gotoCalendar = () => {
     const user_id = localStorage.getItem("user_id");
     console.log(user_id);
@@ -34,6 +49,7 @@ function ProfileBox() {
     });
   };
 
+  // Fetches user data on page loading ( user profile picture, data, badges )
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -64,6 +80,8 @@ function ProfileBox() {
     fetchUserData();
   }, []);
 
+
+  // Method to change the user's profile picture or avatar
   const handleChangeAvatar = async (event) => {
     //get the selected file
     const file = event.target.files[0];
@@ -93,6 +111,8 @@ function ProfileBox() {
     }
   };
 
+
+  // Method to log out and redirect to the welcome page
   const handleLogOff = async () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
@@ -102,6 +122,7 @@ function ProfileBox() {
     navigate("/");
   };
 
+  // Method to update the user description and save it in the backend
   const handleSaveDescription = async () => {
     try {
       //update new description in the backend
@@ -109,6 +130,7 @@ function ProfileBox() {
         description: editedDescription,
       });
 
+      // set new user description
       setUserData((prevData) => ({
         ...prevData,
         description: data.description,
@@ -120,6 +142,9 @@ function ProfileBox() {
     }
   };
 
+  // allows the user to change to one of the default profile pictures
+  // this is updated and saved in the backend
+  // alternatively the user can upload their own picture which is added to firebase and saved there
   const handleDefaultPFP = async (avatarSrc) => {
     const fileRef = ref(storage, `avatars/${userData.username}`);
     try {
@@ -144,6 +169,7 @@ function ProfileBox() {
     }
   };
 
+  // retrieves the user's badges
   const getUserBadges = async () => {
     try {
       //get badges from rewards model in backend
@@ -155,6 +181,8 @@ function ProfileBox() {
     }
   };
 
+
+
   return (
     <div className="profile-container">
       <ToastContainer position="top-center" />
@@ -162,8 +190,15 @@ function ProfileBox() {
         <h1 className="profile-title">Profile</h1>
         <div className="picture-container">
           <div className="container1">
+
+            {/* Displays the user's profile picture */}
             <img src={userData.image} alt="logo" className="profile-pic" data-testid="image-profile-src" />
+
+            {/* Displays the user's username*/}
             <h1 className="profile-username">{userData.username}</h1>
+
+            {/* Allows the user to access their inventory, showing their badge collection */}
+            {/* Badges are study achievements which the users can collect */}
             <button
               className="inventory-button"
               onClick={() => setShowInventory(!showInventory)}
@@ -175,6 +210,8 @@ function ProfileBox() {
             >
               🏆
             </button>
+
+            {/* Button which redirects to the calendar page */}
             <button
               className="CalendarButton"
               data-testid="calendar-button-profile"
@@ -182,6 +219,8 @@ function ProfileBox() {
             >
               📅
             </button>
+
+            {/* Allows the user to change their avatar / profile picture */}
             <input
               type="file"
               accept="image/*"
@@ -192,10 +231,16 @@ function ProfileBox() {
               style={{ display: "none" }}
             />
           </div>
+
+          {/* Container which displays the user's description, log off and profile edit buttons*/}
           <div className="main-profile-container">
+
+            {/* Displays the user's description*/}
             <div className="description-display-container">
               <p className="description-display">{userData.description}</p>
             </div>
+
+            {/* Button allows the user to log out and redirects the home / welcome page */}
             <div className="profile-button-container">
               <button
                 type="button"
@@ -204,6 +249,8 @@ function ProfileBox() {
               >
                 Logout
               </button>
+
+              {/* Button opening popup to allow users to edit their profile */}
               <button
                 type="button"
                 data-testid="show-more-button"
@@ -216,15 +263,21 @@ function ProfileBox() {
           </div>
         </div>
 
+
+        {/* This handles the popup which allows users to edit their profile*/}
         {showModal && (
           <div className="modal-profile">
             <div className="modal-content-profile">
+
+              {/* Button to close popup */}
               <span
                 className="close-button"
                 onClick={() => setShowModal(false)}
               >
                 &times;
               </span>
+
+              {/* Change default avatar or upload your own */}
               <div className="profile-popup-container">
                 <div className="inventory-align">
                   <label htmlFor="change-avatar" className="upload-button">
@@ -237,6 +290,7 @@ function ProfileBox() {
                     DEFAULT AVATARS
                   </button>
                 </div>
+                {/* Select from default avatars*/}
                 {showAvatarSelector && (
                   <div className="avatar-selector">
                     <UserAvatar
@@ -246,12 +300,16 @@ function ProfileBox() {
                   </div>
                 )}
               </div>
+
+              {/* Update profile description by typing and saving */}
               <textarea
                 className="profile-description"
                 value={editedDescription}
                 onChange={(e) => setEditedDescription(e.target.value)}
                 placeholder="Please Enter Description"
               />
+
+              {/* Save new description and new profile picture */}
               <button
                 type="button"
                 className="save-desc-button"
@@ -263,6 +321,9 @@ function ProfileBox() {
           </div>
         )}
 
+
+        {/* Handles popup which shows badge inventory */}
+        {/* Again the badges are study acheivements which the users can collect*/}
         {showInventory && (
           <div className="inventory-content">
             <div className="inventory-display-content">
