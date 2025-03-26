@@ -71,8 +71,8 @@ class toDoListModelTest(TestCase):
 
    
     def test_boolean_field_invalid(self):
-         """ Testing whether an invalid boolean field is correctly shown as invalid """
-         with self.assertRaises(ValidationError):
+        """ Testing whether an invalid boolean field is correctly shown as invalid """
+        with self.assertRaises(ValidationError):
             todo3 = Task.objects.create(title="Invalid Bool", is_completed="yes")
             todo3.full_clean()
 

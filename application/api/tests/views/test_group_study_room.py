@@ -177,17 +177,3 @@ class GroupStudyRoomViewsTests(TestCase):
         self.user.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(self.user.streaks, 7)  # Streak should remain unchanged
-
-    # def test_notify_participants(self):
-    #     """
-    #     Test the notify_participants function.
-    #     """
-    #     # Mock the channel layer
-    #     channel_layer = get_channel_layer()
-    #     async_to_sync(channel_layer.group_send) = lambda group, message: None
-    #
-    #     participants = self.study_session.participants.all()
-    #     notify_participants(self.study_session.roomCode, participants)
-    #
-    #     # Verify the function was called (no exceptions raised)
-    #     self.assertTrue(True)
