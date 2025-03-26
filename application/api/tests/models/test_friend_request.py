@@ -45,11 +45,16 @@ class FriendsModelTestCase(TestCase):
         self.friendship_accepted .status = 'x' * 11
         self._assert_user_is_invalid(self.friendship_accepted)
 
+    def _assert_user_save_invalid(self, friendship):
+        with self.assertRaises(ValidationError):
+            friendship.save()
+
     def test_invalid_requested_by(self):
         """ Test to check if the requested_by attribute is invalid """
         self.friendship_accepted.requested_by = self.user3
-        self.friendship_accepted.save()
-        self._assert_user_is_invalid(self.friendship_accepted)
+        #self.friendship_accepted.save()
+        self._assert_user_save_invalid(self.friendship_accepted)
+        #self._assert_user_is_invalid(self.friendship_accepted)
 
     def test_friends_should_be_unique(self):
         """Test that friendship between two users should be unique"""
