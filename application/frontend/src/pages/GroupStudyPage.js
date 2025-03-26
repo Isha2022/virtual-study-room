@@ -19,7 +19,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import SharedMaterials from "./SharedMaterials.js";
-import ChatBox from "../components/Chat.js";
+import ChatBox from "../components/ChatBox.js";
 import GroupStudyHeader from "../components/GroupStudyHeader.js";
 import { Dialog, DialogTitle, DialogContent, Button } from "@mui/material";
 import SpotifyButton from "../components/SpotifyButton";
@@ -196,7 +196,7 @@ function GroupStudyPage() {
           {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
 
           {/* Need to sort this out*/}
-          <ChatBox />
+          <ChatBox socket={socket} roomCode={finalRoomCode} />
         </div>
       </div>
       <ToastContainer />
