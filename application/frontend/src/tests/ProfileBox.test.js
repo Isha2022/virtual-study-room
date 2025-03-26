@@ -46,9 +46,14 @@ describe("ProfileBox", () => {
     navigateMock = jest.fn();
     useNavigate.mockReturnValue(navigateMock);
 
-    Storage.prototype.getItem = jest.fn((key) => {
-      if (key === "user_id") return "123";
-      return null;
+    Object.defineProperty(window, "localStorage", {
+      value: {
+        getItem: jest.fn((key) => (key === "user_id" ? "123" : null)),
+        setItem: jest.fn(),
+        removeItem: jest.fn(),
+        clear: jest.fn(),
+      },
+      writable: true,
     });
 
     getDownloadURL.mockResolvedValue("https://example.com/avatar.png");
@@ -59,8 +64,6 @@ describe("ProfileBox", () => {
         blob: () => Promise.resolve(new Blob(["avatar"])), // Mock the blob response
       })
     );
-
-    jest.spyOn(Storage.prototype, "removeItem");
   });
 
   test("renders ProfileBox component", async () => {
@@ -131,7 +134,7 @@ describe("ProfileBox", () => {
       fireEvent.click(uploadLabel);
     });
     //find the hidden file input and simulate file selection
-    const input = screen.getByTestId("file-input"); // Change this to match your input's label
+    const input = screen.getByTestId("file-input");
     await act(async () => {
       fireEvent.change(input, { target: { files: [file] } }); // Simulate file selection
     });

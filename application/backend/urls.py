@@ -25,10 +25,16 @@ from api.views.profile_view import get_logged_in_user, save_description, get_use
 from api.views.analytics import get_analytics, update_analytics
 from api.views.groupStudyRoom import create_room, join_room
 from api.views.calendar import EventViewSet
-event_list = EventViewSet.as_view({'get': 'list', 'post': 'create'})  
+from api.views.shared_materials_view import get_current_session
+
+
+from api.views.spotify_view import AuthURL, spotify_callback, IsAuthenticated
+event_list = EventViewSet.as_view({'get': 'list', 'post': 'create'})
 event_detail = EventViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})
 
-from api.views.shared_materials_view import get_current_session
+
+router = DefaultRouter()
+router.register(r'events', EventViewSet, basename='event')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,7 +43,8 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html')),
     
     path('api/signup/', views.SignUpView.as_view(), name='signup'),
-    # Default for logged-in user
+    path('api/login/', views.login, name='login'),
+
     path("api/analytics/", get_analytics, name="analytics"),
     path("api/share_analytics/", update_analytics, name="update_analytics"),
 
@@ -45,7 +52,9 @@ urlpatterns = [
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
     path('api/motivational-message/', views.motivationalMessage, name='motivation'),
+
     path('api/create-room/', create_room),
     path('api/join-room/', join_room),
     path('api/get-room-details/', get_room_details),
@@ -55,7 +64,6 @@ urlpatterns = [
 
     path('api/todolists/', views.ViewToDoList.as_view(), name='to_do_list'),
     path('api/todolists/<int:id>/', views.ViewToDoList.as_view(), name='group_to_do_list'),
-
 
     path('api/update_task/<int:task_id>/', views.ViewToDoList.as_view(), name='update_task_status'),
     path('api/new_task/', views.ViewToDoList.as_view(), name='create_new_task'),
@@ -80,7 +88,6 @@ urlpatterns = [
     path('api/profile/', get_logged_in_user, name='get_logged_in_user'),
     path('api/description/', save_description, name='save_description'),
     path('api/badges/', get_user_badges, name='get_user_badges'),
-
 
     path('api/shared_materials/', get_current_session, name='get_current_session'),
 

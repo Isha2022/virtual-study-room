@@ -46,7 +46,7 @@ class FriendsModelTestCase(TestCase):
         self._assert_user_is_invalid(self.friendship_accepted)
 
     def test_invalid_requested_by(self):
-        """Test to check if the requested_by attribute is invalid"""
+        """ Test to check if the requested_by attribute is invalid """
         self.friendship_accepted.requested_by = self.user3
         self.friendship_accepted.save()
         self._assert_user_is_invalid(self.friendship_accepted)
@@ -147,7 +147,7 @@ class FriendsModelTestCase(TestCase):
         self.assertEqual(str(context.exception), "Friendship not found.")
 
     def test_delete_friend(self):
-        """ Check if the  """
+        """ Check if the method to change friendship status works as expected """
         Friends.delete_friend(self.friendship_pending_received.pk)
         self.assertNotIn(self.friendship_pending_received, Friends.objects.all())
         
@@ -156,6 +156,7 @@ class FriendsModelTestCase(TestCase):
         self.assertEqual(self.friendship_accepted.status, Status.PENDING)
 
     def test_invalid_delete_friend(self):
+        """ Check if the method to change friendship status gives the correct error when given invalid input data """
         with self.assertRaises(ValueError) as context:
             Friends.delete_friend(9999)
 

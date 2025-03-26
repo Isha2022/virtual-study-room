@@ -23,9 +23,18 @@ import {
   deleteObject,
 } from "firebase/storage";
 import SharedMaterials from "./SharedMaterials.js";
+import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
+import SpotifyButton from '../components/SpotifyButton';
+import FloatingMusicPlayer from "../components/FloatingWindow.js";
+
+/*
+Group Study Page for the website. Imports all components, handles users joining and leaving the room.
+Also handles websockets communications
+*/
 
 function GroupStudyPage() {
   const [participants, setParticipants] = useState([]); // State to store participants
+  const [open, setOpen] = useState(false); //open and close states for pop-up window for spotify button
 
   // Location object used for state
   const location = useLocation();
@@ -74,6 +83,23 @@ function GroupStudyPage() {
 
   const [shouldReconnect, setShouldReconnect] = useState(true); // Determines whether or not to auto-reconnect user to websocket server
 
+  //handle open for spotify button
+  const handleClickOpen = () => {
+    setOpen(prevState => !prevState);
+  };
+
+  //handle close for spotify button
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpenMusicButton = () => {
+    // Assuming this should toggle the floating music player visibility
+    setOpenMusicPlayer(prevState => !prevState);
+};
+
+  const [openMusicPlayer, setOpenMusicPlayer] = useState(false); //handle open and close for free tracks
+
   const stringToColor = (str) => {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -94,6 +120,7 @@ function GroupStudyPage() {
     }
     scrollToBottom();
   }, [socket, messages]); // This effect runs whenever `socket` changes
+
 
   useEffect(() => {
     // Ensure room code is given
@@ -439,9 +466,21 @@ function GroupStudyPage() {
               onMouseDown={() => handleMouseDown("music")}
               onMouseUp={() => handleMouseUp("music")}
               onMouseLeave={() => handleMouseUp("music")}
+              onClick={handleClickOpen}
             >
               <img src={musicLogo} alt="Music" />
             </button>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>
+                  <div style={{ textAlign: 'center' }}>Spotify Player</div>
+                  <h2 style={{ textAlign: 'center', fontSize: '14px' }} >(playback for premium users only)</h2>
+                </DialogTitle>
+                <DialogContent>
+                    <SpotifyButton />
+                    <Button onClick={handleOpenMusicButton}>Switch to Free Tracks</Button>
+                </DialogContent>
+            </Dialog>
+            <FloatingMusicPlayer isOpen={openMusicPlayer} onClose={() => setOpenMusicPlayer(false)} />
             <button
               type="button"
               className={`customisation-button ${
@@ -560,7 +599,7 @@ function GroupStudyPage() {
                   </div>
                 );
               })}
-              {typingUser && typingUser !== username && (
+              {typingUser && (
                 <p className="typing-indicator">
                   {" "}
                   <strong>{typingUser}</strong> is typing...

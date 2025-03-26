@@ -1,28 +1,31 @@
-import React, { useState, useEffect } from 'react'; 
-import { getDatabase, ref, set, onValue } from 'firebase/database';
-import { database } from '../firebase-config';
+import React, { useState, useEffect } from 'react';
 import 'tailwindcss';
 import '@fontsource/vt323';
 import '@fontsource/press-start-2p';
+import blueberryImg from '../assets/blueberry.jpeg';
 
+// Study Timer in the Group Study Room
 const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
-  const [studyLength, setStudyLength] = useState(25);
+  // State variables for timer settings
+  const [studyLength, setStudyLength] = useState(25); // Study duration - deafault 25 mins
   const [breakLength, setBreakLength] = useState(5);
-  const [rounds, setRounds] = useState(4);
+  const [rounds, setRounds] = useState(4);  // Total no. of rounds of study+break
   const [currentRound, setCurrentRound] = useState(1);
   const [isBreak, setIsBreak] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(studyLength * 60);
-  const [isRunning, setIsRunning] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(studyLength * 60); // Time left in seconds
+  const [isRunning, setIsRunning] = useState(false);  // Whether timer is running or not
   const [currentPage, setCurrentPage] = useState('welcome');
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);  // If timer is minimised or not
   const [isPaused, setIsPaused] = useState(false);
-  const [playSound, setPlaySound] = useState(true);
-  const [studyTime, setStudyTime] = useState({ hours: 0, minutes: 25, seconds: 0 });
+  const [playSound, setPlaySound] = useState(true); //Play sound on timer completion
+  const [studyTime, setStudyTime] = useState({ hours: 0, minutes: 25, seconds: 0 });  // Study time input
   const [breakTime, setBreakTime] = useState({ hours: 0, minutes: 5, seconds: 0 });
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // Error message for invalid inputs
 
+  // Sound effect for timer completion
   const completionSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
 
+  // On component mount, load the saved settings from localStorage
   useEffect(() => {
     const savedStudyLength = localStorage.getItem('studyLength');
     const savedBreakLength = localStorage.getItem('breakLength');
@@ -33,12 +36,14 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     if (savedRounds) setRounds(parseInt(savedRounds));
   }, []);
 
+  // Save settings to localStorage
   const saveSettings = () => {
     localStorage.setItem('studyLength', studyLength);
     localStorage.setItem('breakLength', breakLength);
     localStorage.setItem('rounds', rounds);
   };
 
+  // Handle exit button click
   const handleExit = () => {
     if (onClose) {
       onClose();
@@ -47,14 +52,17 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     }
   };
 
+  // Handle minimise button click
   const handleMinimize = () => {
     setIsMinimized(true);
   };
 
+  // Handle restore button click
   const handleRestore = () => {
     setIsMinimized(false);
   };
 
+  // Validate time input values
   const validateTimeInput = (time, type) => {
     if (time.hours < 0 || time.hours > 99) {
       setErrorMessage(`Invalid ${type} hours. Please enter a value between 0 and 99.`);
@@ -71,6 +79,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     return true;
   };
 
+  // Start the timer if all valid
   const startTimer = () => {
     if (!validateTimeInput(studyTime, 'study') || !validateTimeInput(breakTime, 'break')) {
       return;
@@ -81,18 +90,20 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
       return;
     }
 
+    // Conversion to seconds
     const totalStudySeconds = (
-      studyTime.hours * 3600 + 
-      studyTime.minutes * 60 + 
+      studyTime.hours * 3600 +
+      studyTime.minutes * 60 +
       studyTime.seconds
     );
-    
+
     const totalBreakSeconds = (
-      breakTime.hours * 3600 + 
-      breakTime.minutes * 60 + 
+      breakTime.hours * 3600 +
+      breakTime.minutes * 60 +
       breakTime.seconds
     );
 
+    // Set timer state
     setTimeLeft(totalStudySeconds);
     setStudyLength(totalStudySeconds);
     setBreakLength(totalBreakSeconds);
@@ -112,7 +123,8 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
             if (playSound) {
               completionSound.play();
             }
-            
+
+            // When timer is completed
             if (!isBreak) {
               if (currentRound >= rounds) {
                 setCurrentPage('completed');
@@ -138,24 +150,26 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    
+
     if (hours > 0) {
       return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Toggle pause/resume
   const toggleTimer = () => {
     setIsPaused(!isPaused);
   };
 
+  // Reset the timer
   const resetTimer = () => {
     const totalStudySeconds = (
-      studyTime.hours * 3600 + 
-      studyTime.minutes * 60 + 
+      studyTime.hours * 3600 +
+      studyTime.minutes * 60 +
       studyTime.seconds
     );
-    
+
     setTimeLeft(totalStudySeconds);
     setCurrentRound(1);
     setIsBreak(false);
@@ -163,6 +177,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     setIsPaused(false);
   };
 
+  // Handle back button click
   const handleBack = () => {
     setIsRunning(false);
     setIsPaused(false);
@@ -175,12 +190,13 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     setErrorMessage('');
   };
 
+  // Automatically clear error message after 3 seconds
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => {
         setErrorMessage('');
       }, 3000);
-      
+
       return () => clearTimeout(timer);
     }
   }, [errorMessage]);
@@ -198,6 +214,9 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     }
   `;
 
+  // a CSS class for minimised state
+  const timerWrapperClass = isMinimized ? "study-timer-wrapper minimized" : "study-timer-wrapper";
+
   return (
     <div className="study-timer-container">
       <style>
@@ -205,97 +224,132 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
           ${errorMessageAnimation}
           
           .study-timer-container {
-            width: 100% !important;
-            height: 100% !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
+            width: 100% ;
+            height: 100% ;
+            display: flex ;
+            justify-content: center ;
+            align-items: center ;
           }
           
           .study-timer-wrapper {
-            background-color: #F0F3FC !important;
-            border: 4px solid #E2E8FF !important;
-            padding: 20px !important;
-            border-radius: 30px !important;
-            box-shadow: 0 0 10px #E2E8FF, inset 0 0 10px #E2E8FF, 0 0 20px rgba(226, 232, 255, 0.4), 0 0 30px rgba(186, 198, 241, 0.2) !important;
-            filter: blur(0.3px) !important;
-            outline: 4px solid rgba(186, 198, 241, 0.3) !important;
-            outline-offset: 4px !important;
-            -webkit-filter: drop-shadow(0 0 40px rgba(186, 198, 241, 0.4)) !important;
-            z-index: 1000 !important;
-            width: 315px !important;
-            height: 370px !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            margin: 0 auto !important;
+            background-color: #F0F3FC ;
+            border: 4px solid #E2E8FF ;
+            padding: 20px ;
+            border-radius: 30px ;
+            box-shadow: 0 0 10px #E2E8FF, inset 0 0 10px #E2E8FF, 0 0 20px rgba(226, 232, 255, 0.4), 0 0 30px rgba(186, 198, 241, 0.2) ;
+            filter: blur(0.3px) ;
+            outline: 4px solid rgba(186, 198, 241, 0.3) ;
+            outline-offset: 4px ;
+            -webkit-filter: drop-shadow(0 0 40px rgba(186, 198, 241, 0.4)) ;
+            z-index: 900 ;
+            width: 315px ;
+            height: 370px ;
+            display: flex ;
+            flex-direction: column ;
+            align-items: center ;
+            margin: 0 auto ;
+            overflow: hidden ; /* Prevent content from spilling out */
+            transition: all 0.3s ease ;
+          }
+          
+          /* Minimized state styles */
+          .study-timer-wrapper.minimized {
+            height: 50px ;
+            width: 250px ;
+            padding: 10px ;
+            transform: translateY(-10px) ;
+            cursor: pointer ;
+          }
+          
+          /* Hide content in minimized state except for the mini-header */
+          .study-timer-wrapper.minimized .timer-content {
+            display: none ;
+          }
+          
+          /* Mini header for minimized state */
+          .mini-header {
+            display: none ;
+            width: 100% ;
+            text-align: center ;
+            color: #bac6f1 ;
+            font-family: "Press Start 2P", monospace ;
+            font-size: 14px ;
+            white-space: nowrap ;
+          }
+          
+          .study-timer-wrapper.minimized .mini-header {
+            display: flex ;
+            align-items: center ;
+            justify-content: center ;
+            height: 100% ;
           }
 
           .study-timer-wrapper .vt323 {
-            font-family: "VT323", monospace !important;
+            font-family: "VT323", monospace ;
           }
 
           .study-timer-wrapper .press-start {
-            font-family: "Press Start 2P", monospace !important;
+            font-family: "Press Start 2P", monospace ;
           }
 
           .study-timer-wrapper input[type="number"] {
-            width: 3rem !important;
-            height: 2.5rem !important;
-            text-align: center !important;
-            border: 2px solid #d1cbed !important;
-            border-radius: 8px !important;
-            background-color: transparent !important;
-            color: #b2b2b2 !important;
-            font-family: "Press Start 2P", monospace !important;
-            font-size: 0.875rem !important;
-            margin: 0 0.5rem !important;
-            outline: none !important;
+            width: 3rem ;
+            height: 2.5rem ;
+            text-align: center ;
+            border: 2px solid #d1cbed ;
+            border-radius: 8px ;
+            background-color: transparent ;
+            color: #b2b2b2 ;
+            font-family: "Press Start 2P", monospace ;
+            font-size: 0.875rem ;
+            margin: 0 0.5rem ;
+            outline: none ;
           }
 
           .study-timer-wrapper input[type="number"]:focus {
-            border-color: #bac6f1 !important;
+            border-color: #bac6f1 ;
           }
 
           .study-timer-wrapper .input-label {
-            font-family: "VT323", monospace !important;
-            color: #d1cbed !important;
+            font-family: "VT323", monospace ;
+            color: #d1cbed ;
           }
 
           .study-timer-wrapper .start-timer-button {
-            font-family: "Press Start 2P", monospace !important;
-            background-color: #d1cbed !important;
-            color: white !important;
-            width: 80% !important;
-            padding: 0.5rem !important;
-            border-radius: 0.5rem !important;
-            font-size: 0.875rem !important;
-            margin-top: 1rem !important;
-            text-align: center !important;
-            transition: background-color 0.3s, transform 0.3s !important;
+            font-family: "Press Start 2P", monospace ;
+            background-color: #d1cbed ;
+            color: white ;
+            width: 80% ;
+            padding: 0.5rem ;
+            border-radius: 0.5rem ;
+            font-size: 0.875rem ;
+            margin-top: 1rem ;
+            text-align: center ;
+            transition: background-color 0.3s, transform 0.3s ;
           }
 
           .study-timer-wrapper .start-timer-button:hover {
-            background-color: #8e99e3 !important;
-            transform: scale(1.05) !important;
+            background-color: #8e99e3 ;
+            transform: scale(1.05) ;
           }
 
           .study-timer-wrapper .timer-title {
-            font-family: "VT323", monospace !important;
-            color: #b2b2b2 !important;
+            font-family: "VT323", monospace ;
+            color: #b2b2b2 ;
           }
 
           .study-timer-wrapper .timer-subtitle {
-            font-family: "Press Start 2P", monospace !important;
-            color: #bac6f1 !important;
+            font-family: "Press Start 2P", monospace ;
+            color: #bac6f1 ;
           }
         `}
       </style>
-      
+
+      {/* Error message display */}
       {errorMessage && (
-        <div 
+        <div
           className="fixed p-3 z-50 flex items-center justify-center"
-          style={{ 
+          style={{
             backgroundColor: '#e2e8ff',
             borderBottom: '2px solid rgba(209, 203, 237, 0.5)',
             borderRadius: '8px',
@@ -309,9 +363,9 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
             margin: '0 auto'
           }}
         >
-          <span 
-            style={{ 
-              color: '#99a8c7', 
+          <span
+            style={{
+              color: '#99a8c7',
               fontFamily: 'VT323, monospace',
               fontSize: '18px'
             }}
@@ -321,20 +375,43 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
         </div>
       )}
       
-      <div className="study-timer-wrapper">
+      <div className={timerWrapperClass} onClick={isMinimized ? handleRestore : null}>
+        {/* Mini header for minimized state */}
+        <div className="mini-header">
+          {isRunning ? 
+            `${isBreak ? 'Break' : 'Focus'} - ${formatTime(timeLeft)}` : 
+            'Study Timer'}
+        </div>
+        
         <div className="timer-content">
           {currentPage === 'completed' ? (
             <div className="p-4 w-80 flex flex-col bg-[#F0F3FC] timer-handle" style={{ height: "350px", position: "relative" }}>
-              <div className="text-2xl mt-8 text-center" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+              <div className="mt-8 text-center" style={{ 
+                color: '#bac6f1', 
+                fontFamily: '"Press Start 2P", monospace',
+                fontSize: '15px'
+              }}>
                 Well done!
                 <br />
                 Here, have a blueberry
               </div>
               
+              <img 
+                src={blueberryImg} 
+                alt="Blueberry"
+                style={{
+                  display: 'block',
+                  width: '160px',
+                  margin: '20px auto 15px auto',
+                  background: 'none',
+                  backgroundColor: 'transparent'
+                }}
+              />
+              
               <div style={{ 
                 position: "absolute", 
                 bottom: "10px",
-                left: "0", 
+                left: "0",
                 width: "100%",
                 padding: "0 10px 20px 10px"
               }}>
@@ -347,8 +424,8 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                     setIsRunning(false);
                   }}
                   className="w-full text-white rounded-lg"
-                  style={{ 
-                    backgroundColor: '#d1cbed', 
+                  style={{
+                    backgroundColor: '#d1cbed',
                     fontFamily: '"Press Start 2P", monospace',
                     transition: 'background-color 0.3s, transform 0.3s',
                     color: 'white',
@@ -375,10 +452,10 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                 <div className="text-2xl mb-4 press-start" style={{ color: '#bac6f1' }}>
                   Set Your Study Timer
                 </div>
-                
+
                 <div className="w-full space-y-3">
                   <div className="flex flex-col items-center space-y-2">
-                    <label className="input-label" style={{ 
+                    <label className="input-label" style={{
                       color: '#d1cbed',
                       fontSize: '20px'
                     }}>Study Time</label>
@@ -389,7 +466,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                         onChange={(e) => {
                           const value = parseInt(e.target.value) || 0;
                           if (value >= 0 && value <= 99) {
-                            setStudyTime({...studyTime, hours: value});
+                            setStudyTime({ ...studyTime, hours: value });
                           }
                         }}
                         min="0"
@@ -402,7 +479,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                         onChange={(e) => {
                           const value = parseInt(e.target.value) || 0;
                           if (value >= 0 && value <= 59) {
-                            setStudyTime({...studyTime, minutes: value});
+                            setStudyTime({ ...studyTime, minutes: value });
                           }
                         }}
                         min="0"
@@ -415,7 +492,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                         onChange={(e) => {
                           const value = parseInt(e.target.value) || 0;
                           if (value >= 0 && value <= 59) {
-                            setStudyTime({...studyTime, seconds: value});
+                            setStudyTime({ ...studyTime, seconds: value });
                           }
                         }}
                         min="0"
@@ -426,7 +503,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                   </div>
 
                   <div className="flex flex-col items-center space-y-2">
-                    <label className="input-label" style={{ 
+                    <label className="input-label" style={{
                       color: '#d1cbed',
                       fontSize: '20px'
                     }}>Break Time</label>
@@ -437,7 +514,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                         onChange={(e) => {
                           const value = parseInt(e.target.value) || 0;
                           if (value >= 0 && value <= 99) {
-                            setBreakTime({...breakTime, hours: value});
+                            setBreakTime({ ...breakTime, hours: value });
                           }
                         }}
                         min="0"
@@ -450,7 +527,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                         onChange={(e) => {
                           const value = parseInt(e.target.value) || 0;
                           if (value >= 0 && value <= 59) {
-                            setBreakTime({...breakTime, minutes: value});
+                            setBreakTime({ ...breakTime, minutes: value });
                           }
                         }}
                         min="0"
@@ -461,9 +538,9 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                         type="number"
                         value={breakTime.seconds}
                         onChange={(e) => {
-                          const                           value = parseInt(e.target.value) || 0;
+                          const value = parseInt(e.target.value) || 0;
                           if (value >= 0 && value <= 59) {
-                            setBreakTime({...breakTime, seconds: value});
+                            setBreakTime({ ...breakTime, seconds: value });
                           }
                         }}
                         min="0"
@@ -474,11 +551,11 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                   </div>
 
                   <div className="flex flex-col items-center" style={{ width: 'auto', position: 'relative' }}>
-                    <label className="input-label" style={{ 
+                    <label className="input-label" style={{
                       color: '#d1cbed',
                       fontSize: '20px'
                     }}>Rounds</label>
-                    
+
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0' }}>
                       <input
                         type="number"
@@ -488,9 +565,9 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                         placeholder="4"
                         style={{ width: '3rem' }}
                       />
-                      <div style={{ 
-                        display: 'flex', 
-                        flexDirection: 'row', 
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'row',
                         alignItems: 'center',
                         marginLeft: '0',
                         position: 'absolute',
@@ -510,7 +587,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                         >
                           {playSound ? '💜' : '🤍'}
                         </button>
-                        <span className="input-label" style={{ 
+                        <span className="input-label" style={{
                           color: '#d1cbed',
                           fontSize: '20px',
                           marginLeft: '10px',
@@ -553,7 +630,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                 flexDirection: 'row',
                 flexWrap: 'nowrap'
               }}>
-                <button 
+                <button
                   onClick={handleBack}
                   style={{
                     position: 'absolute',
@@ -575,8 +652,8 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                     e.currentTarget.querySelector('.triangle').style.borderRightColor = '#d1cbed';
                   }}
                 >
-                  <div 
-                    className="triangle" 
+                  <div
+                    className="triangle"
                     style={{
                       width: 0,
                       height: 0,
@@ -587,8 +664,8 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                     }}
                   />
                 </button>
-                
-                <h2 className="press-start" style={{ 
+
+                <h2 className="press-start" style={{
                   color: '#bac6f1',
                   fontSize: '20px',
                   lineHeight: 1.2,
@@ -611,14 +688,14 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                   )}
                 </h2>
               </div>
-              
+
               <div className="absolute w-full" style={{
                 bottom: '140px',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-                <div style={{ 
+                <div style={{
                   color: '#bac6f1',
                   fontFamily: '"Press Start 2P", monospace',
                   fontSize: '50px',
@@ -639,15 +716,15 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                 alignItems: 'center',
                 padding: '0 24px'
               }}>
-                <div style={{ 
+                <div style={{
                   width: '100%',
                   marginBottom: '15px',
                   textAlign: 'center',
                   transform: 'translateY(10px)',
                   position: 'relative',
                 }}>
-                  <span style={{ 
-                    color: '#d1cbed', 
+                  <span style={{
+                    color: '#d1cbed',
                     fontFamily: 'VT323, monospace',
                     fontSize: '20px',
                     display: 'block',
@@ -663,7 +740,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                   gap: '24px',
                   width: '100%'
                 }}>
-                  <button 
+                  <button
                     onClick={toggleTimer}
                     style={{
                       backgroundColor: '#d1cbed',
@@ -693,8 +770,8 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                       {isPaused ? 'Resume' : 'Pause'}
                     </span>
                   </button>
-                  
-                  <button 
+
+                  <button
                     onClick={resetTimer}
                     style={{
                       backgroundColor: '#d1cbed',

@@ -9,6 +9,8 @@ jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
 }));
 
+jest.mock('../assets/thestudyspot.jpeg', () => 'thestudyspot.jpeg');
+
 describe('Welcome Component', () => {
   let navigateMock;
 

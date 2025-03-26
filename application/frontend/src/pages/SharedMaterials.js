@@ -13,6 +13,14 @@ import {
 import { getAuthenticatedRequest, getAccessToken } from "../utils/authService";
 import "../styles/SharedMaterials.css";
 
+
+/*
+This handles the shared materials box in the group study page.
+Allows users to upload images or files which can be viewed by all users.
+After all users have left the study room all of these files are deleted.
+All files are stored on firebase, and the page updates for all users via websocket publishers and consumers.
+*/
+
 function SharedMaterials({ socket }) {
   const [files, setFiles] = useState([]);
   const [fileModalOpen, setFileModalOpen] = useState(false);
@@ -22,6 +30,7 @@ function SharedMaterials({ socket }) {
   // Fetch files and setup websocket receiver
   useEffect(() => {
     const fetchFiles = async () => {
+      // Fetches files from backend
       const data = await getAuthenticatedRequest("/shared_materials/", "GET");
       setRoomCode(data.roomCode);
       const listRef = ref(storage, `shared-materials/${roomCode}/`);
@@ -109,10 +118,6 @@ function SharedMaterials({ socket }) {
       const fileUrl = await getDownloadURL(fileRef);
       const newFile = { name: file.name, url: fileUrl, type: file.type };
 
-      // setFiles((prevFiles) => [
-      //   ...prevFiles,
-      //   { name: file.name, url: fileUrl, type: file.type },
-      // ]);
 
       // Notify other users via WebSocket
       if (socket && socket.readyState === WebSocket.OPEN) {
@@ -179,21 +184,31 @@ function SharedMaterials({ socket }) {
     }
   };
 
+
+  // Popup to view shared file
   const openFileModal = (file) => {
     setSelectedFile(file);
     setFileModalOpen(true);
+    toast.dismiss();
+    toast.clearWaitingQueue();
   };
 
+  // Close popup
   const closeFileModal = () => {
     setFileModalOpen(false);
     setSelectedFile(null);
+    toast.dismiss();
+    toast.clearWaitingQueue();
   };
 
   return (
     <div className="shared-materials-container">
       <ToastContainer position="top-center" />
+
       <div className="shared-materials-content">
         <h1 className="sm-title">Shared Materials</h1>
+
+        {/* Button to upload a material */}
         <input
           type="file"
           accept=".doc,.docx,.ppt,.pptx,.pdf,image/*"
@@ -210,6 +225,8 @@ function SharedMaterials({ socket }) {
         >
           +
         </label>
+
+        {/* Displays all shared files in a scrollable list */}
         <div className="display-files-container" data-testid="display-files-container">
           {files.map((file, index) => (
             <div key={index} className="file-item">
@@ -230,6 +247,8 @@ function SharedMaterials({ socket }) {
             </div>
           ))}
         </div>
+
+        {/* Popup to view shared file */}
         {fileModalOpen && (
           <div className="file-modal-container">
             <div className="file-modal-content">

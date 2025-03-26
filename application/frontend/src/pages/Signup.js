@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import "../styles/Signup.css";
+import "../styles/Login.css";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+/*
+Handles user sign up, creating a new user and storing it in the backend.
+Also handles field authentication.
+*/
+
 
 function Signup() {
   //fields that the user will input
@@ -21,6 +28,8 @@ function Signup() {
   const [errors, setErrors] = useState({});
 
 
+
+  // Ensures that the email is unique and not already linked to an account
   const checkEmailExists = async (email) => {
     try {
       const { data } = await axios.get(
@@ -35,10 +44,11 @@ function Signup() {
     }
   };
 
+  // Ensures that the username is not already linked to an account
   const checkUsernameExists = async (username) => {
     try {
       const { data } = await axios.get(
-      //"https://studyspot.pythonanywhere.com/api/check-username/",
+        // URL for deployment -> "https://studyspot.pythonanywhere.com/api/check-username/",
         `http://127.0.0.1:8000/api/check-username/`,
         {
           params: { username },
@@ -74,6 +84,7 @@ function Signup() {
         "Username must consist of @ followed by at least three alphanumericals";
     }
 
+    // regex for email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
@@ -81,6 +92,7 @@ function Signup() {
       newErrors.email = "Invalid email format";
     }
 
+    // regex for password
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$/;
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
@@ -100,12 +112,14 @@ function Signup() {
       newErrors.email = "This email is already taken, please enter another";
     }
 
+    // check that the username is unique
     const usernameExists = await checkUsernameExists(formData.username);
     if (usernameExists) {
       newErrors.username =
         "This username is already taken, please enter another";
     }
 
+    // display errors on the screen so the user can correct them
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -130,7 +144,7 @@ function Signup() {
       const isValid = await validate();
       if (isValid) {
         const response = await axios.post(
-//        "https://studyspot.pythonanywhere.com/api/signup/",
+          // URL for deployment -> "https://studyspot.pythonanywhere.com/api/signup/",
           "http://127.0.0.1:8000/api/signup/",
           formData,
           {
@@ -151,143 +165,181 @@ function Signup() {
     }
   };
 
+
+  // Displays the sign up page
   return (
-    <div className="login-container">
+    <div className="signup-container">
+      {/* Positioning for toastify messages */}
       <ToastContainer position='top-center'/>
+
+
       <Link to="/">
-        <h1 className="heading1">The Study Spot</h1>
+        <h1 className="login-heading1">The Study Spot</h1>
       </Link>
+
+
       <form className="signup-form">
-        <div className="field">
-          <h1 className="heading2">Signup</h1>
-          <label htmlFor="firstname" className="label-text">
-            First name:
-          </label>
-          <input
-            id="firstname"
-            type="text"
-            name="firstname"
-            className="input-field"
-            value={formData.firstname}
-            onChange={handleChange}
-          />
-          {errors.firstname && (
-            <p data-testid="error-message-firstname" className="error-message">
-              {errors.firstname}
+        <h1 className="heading2">Signup</h1>
+
+        {/* Input field for firstname */}
+        <div className="form-row">
+          <div className="field-column">
+            <label htmlFor="firstname" className="label-text">
+              First name:
+            </label>
+            <input
+              id="firstname"
+              type="text"
+              name="firstname"
+              className="input-field"
+              value={formData.firstname}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            {errors.firstname && (
+              <p data-testid="error-message-firstname" className="error-message">
+                {errors.firstname}
+              </p>
+            )}
+          </div>
+
+
+          {/* Input field for lastname */}
+          <div className="field-column">
+            <label htmlFor="lastname" className="label-text">
+              Last name:
+            </label>
+            <input
+              id="lastname"
+              type="text"
+              name="lastname"
+              className="input-field"
+              value={formData.lastname}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            {errors.lastname && (
+              <p data-testid="error-message-lastname" className="error-message">
+                {errors.lastname}
+              </p>
+            )}
+          </div>
+        </div>
+
+
+        {/* Input field for username */}
+        <div className="form-row">
+          <div className="field-column">
+            <label htmlFor="username" className="label-text">
+              Username:
+            </label>
+            <input
+              id="username"
+              type="text" 
+              name="username"
+              className="input-field"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            {errors.username && (
+              <p data-testid="error-message-username" className="error-message">
+                {errors.username}
+              </p>
+            )}
+          </div>
+
+
+          {/* Input field for email */}
+          <div className="field-column">
+            <label htmlFor="email" className="label-text">
+              Email:
+            </label>
+            <input
+              id="email"
+              type="text"
+              name="email"
+              className="input-field"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            {errors.email && (
+              <p data-testid="error-message-email" className="error-message">
+                {errors.email}
+              </p>
+            )}
+          </div>
+        </div>
+
+
+        {/* Input field for details */}
+        <div className="form-row">
+          <div className="field-column full-width">
+            <label htmlFor="details" className="label-text">
+              Your motto in life :):
+            </label>
+            <input
+              id="details"
+              type="text"
+              name="description"
+              className="input-field"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder=" "
+            />
+          </div>
+        </div>
+
+
+        {/* Input field for password */}
+        <div className="form-row">
+          <div className="field-column">
+            <label htmlFor="password" className="label-text">
+              Password:
+            </label>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              className="input-field"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            {errors.password && (
+              <p data-testid="error-message-password" className="error-message">
+                {errors.password}
+              </p>
+            )}
+          </div>
+
+
+          {/* Input field for password confirmation */}
+          <div className="field-column">
+            <label htmlFor="passwordConfirmation" className="label-text">
+              Confirm password:
+            </label>
+            <input
+              id="passwordConfirmation"
+              type="password"
+              name="passwordConfirmation"
+              className="input-field"
+              value={formData.passwordConfirmation}
+              onChange={handleChange}
+              placeholder=" "
+            />
+            <p
+              data-testid="error-message-passwordConfirmation"
+              className="error-message"
+            >
+              {errors.passwordConfirmation}
             </p>
-          )}
+          </div>
         </div>
 
-        <div className="field">
-          <label htmlFor="lastname" className="label-text">
-            Last name:
-          </label>
-          <input
-            id="lastname"
-            type="text"
-            name="lastname"
-            className="input-field"
-            value={formData.lastname}
-            onChange={handleChange}
-          />
-          {errors.lastname && (
-            <p data-testid="error-message-lastname" className="error-message">
-              {errors.lastname}
-            </p>
-          )}
-        </div>
 
-        <div className="field">
-          <label htmlFor="username" className="label-text">
-            Username:
-          </label>
-          <input
-            id="username"
-            type="text" 
-            name="username"
-            className="input-field"
-            value={formData.username}
-            onChange={handleChange}
-          />
-          {errors.username && (
-            <p data-testid="error-message-username" className="error-message">
-              {errors.username}
-            </p>
-          )}
-        </div>
-
-        <div className="field">
-          <label htmlFor="email" className="label-text">
-            Email:
-          </label>
-          <input
-            id="email"
-            type="text"
-            name="email"
-            className="input-field"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          {errors.email && (
-            <p data-testid="error-message-email" className="error-message">
-              {errors.email}
-            </p>
-          )}
-        </div>
-
-        <div className="field">
-          <label htmlFor="details" className="label-text">
-            Your motto in life :):
-          </label>
-          <input
-            id="details"
-            type="text"
-            name="description"
-            className="input-field"
-            value={formData.description}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="password" className="label-text">
-            Password:
-          </label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            className="input-field"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          {errors.password && (
-            <p data-testid="error-message-password" className="error-message">
-              {errors.password}
-            </p>
-          )}
-        </div>
-
-        <div className="field">
-          <label htmlFor="passwordConfirmation" className="label-text">
-            Confirm password:
-          </label>
-          <input
-            id="passwordConfirmation"
-            type="password"
-            name="passwordConfirmation"
-            className="input-field"
-            value={formData.passwordConfirmation}
-            onChange={handleChange}
-          />
-          <p
-            data-testid="error-message-passwordConfirmation"
-            className="error-message"
-          >
-            {errors.passwordConfirmation}
-          </p>
-        </div>
-
+        {/* Checkbox for terms and conditions */}
         <div className="checkbox-container">
           <input
             type="checkbox"
@@ -301,6 +353,7 @@ function Signup() {
           </label>
         </div>
 
+        {/* Button to submit form and complete user signup ( after passing all the checks ) */}
         <button type="button" data-testid="signup-button-click" className="submit-button" onClick={handleSignup}>
           SIGNUP
         </button>

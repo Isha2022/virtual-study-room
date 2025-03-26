@@ -57,6 +57,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,7 +65,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 SIMPLE_JWT = {
@@ -94,7 +94,7 @@ ROOT_URLCONF = 'backend.urls'
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React frontend
-    #"http://127.0.0.1:8000/api",
+    "http://127.0.0.1:8000",
     "https://virtual-study-room-phi.vercel.app", # real website
 ]
 
@@ -107,6 +107,10 @@ CSRF_TRUSTED_ORIGINS = [
     
 
 ]
+
+SESSION_COOKIE_SAMESITE = 'Lax'  # or 'None' for testing
+SESSION_COOKIE_SECURE = False    # True if you're using HTTPS
+
 
 # If you don't want to require CSRF tokens for your API calls (use with caution)
 CSRF_COOKIE_SECURE = False  # Ensures CSRF cookie is sent over HTTP (set to True for production)
