@@ -1,4 +1,4 @@
-# Sleek Template
+    # Sleek Template
 
 This document template is adapted from the Sleek template.
 
