@@ -61,6 +61,7 @@ REACT_APP_FIREBASE_APP_ID=1:1008040192146:web:22905256f16b423a445e4b
 $ virtualenv venv
 $ source venv/bin/activate
 ```
+Note: On windows please user venv\Scripts\activate
 
 ### 3. Install Dependencies
 ```
@@ -73,35 +74,29 @@ $ cd application/frontend/
 $ npm install
 ```
 
-### 5. Build the React Project
-```
-$ cd application/frontend/ npm run build
-```
-
-
-### 6. Run the Django Backend
+### 7. Run the Django Backend
 _Note: Run the backend on a new terminal_
 ```
 $ cd application/
 ```
 
-### 7. Migrate the Database
+### 8. Migrate the Database
 ```
 $ python3 manage.py makemigrations
 $ python3 manage.py migrate
 ```
 
-### 8. Seed the Development Database
+### 9. Seed the Development Database
 ```
 $ python3 manage.py seed
 ```
 
-### 9. Run the Django Project
+### 10. Run the Django Project
 ```
 $ python3 manage.py runserver
 ```
 
-### 10. Run the React Project
+### 11. Run the React Project
 ```
 $ cd application/frontend/
 $ npm start
