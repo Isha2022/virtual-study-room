@@ -23,11 +23,9 @@ class ViewToDoList(APIView):
         user = request.user
         url_name = request.resolver_match.view_name
 
-        print(url_name)
         if url_name == "group_to_do_list":
             # Fetch a specific group to-do list
             user_lists = List.objects.filter(pk=id)
-            print(user_lists)
         else:
             # Fetch all personal to-do-lists for the user
             user_permissions = Permission.objects.filter(user_id=user)

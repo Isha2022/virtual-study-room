@@ -102,6 +102,13 @@ _Note: Navigate back into the virtual environment (see above)_
 ```
 $(venv) python3 manage.py test
 ```
+##### Spotify API Feature
+To run the background music / Spotify API feature, you need to log in using an authenticated account. Below is a testing account for checking Spotify. Use the provided details:
+Username: ahsannatalia04@gmail.com
+Password: HighScore0
+
+_Note: A track needs to be playing on a device logged into the above account for the feature to show. Only premium users have access to playback control._
+_Note2: This feature currently does not work on the deployed website, but works fine on the local version._
 
 #### Unseeding the Database
 ```
