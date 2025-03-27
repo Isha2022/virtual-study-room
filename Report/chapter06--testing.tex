@@ -1,35 +1,108 @@
 \chapter{Testing}
 \label{chap:testing}
 
-\defaultInstructions
+\section{Testing Approach}
+Our testing approach was a mix of unit testing, integration testing, and manual user testing. We aimed for high test coverage while keeping the process efficient and practical.
 
-\begin{length}
-There are no strict length requirements for this chapter.  However, it is important that the writing is clear and concise.  Avoid repeating yourself.  Make sure to clearly signpost evidence for claims.  It is expected that a typical project needs 1--5 pages, but this can vary considerably from project to project.
-\end{length}
-
-\begin{expectations}
-This chapter discusses how the software has been tested.  
-
-Start by identifying the different ways the team has used to test the software, including the tools used in each approach.  Below, a section title ``Approach and tools'' is provided a suggestion for a header under which to cover this.  The purpose of this section is to help the reader understand what testing is included in the software.  For each distinct testing approach, clearly identify its purpose, and the extent to which you relied on it.  Also, identify where in the source code or the report the reader can find evidence of each type of testing.
-
-The team may have used certain processes to ensure the quality of testing.  If so, explain what these were and how effective these approaches were.  If you decide to discuss this, it is important to identify evidence of the processes you employed.  For example, you could identify minuted meeting decisions that clearly demonstrate your team's application of a particular appraoch.  Unsupported claims tend not to be so convincing.
-
-A good report includes a critical evaluation covering both strengths and weaknesses.  Claims made in this evaluation should also be justified with evidence.  If your team has code coverage results, make sure to present summary results in the report, but identify the location of the source report (typically HTML pages) in the source code.  Again, unsupported claims remain unconvincing.
-
-If your team used manual testing as well as automated testing, it is important to include the following:
 \begin{itemize}
-\item What did your rely on manual testing for?  In other words, what was the purpose of manual testing.
-\item To what extent did you rely on manual testing for aspects of software testing that would ideally be automated.
-\item What are the respective limits of automated and manual testing.
-\item An appendix listing each manual test.  For each manual test, describe precisely the actions the tester must undertake and what they are expected to observe.  Also add when the test was last performed and whether it was successful.
+    \item \textbf{Unit Testing:} We used Django’s built-in testing framework to cover backend logic and API endpoints, while Jest was used to test React components on the frontend.
+    \item \textbf{Integration Testing:} WebSockets and API interactions were tested to ensure that real-time updates worked correctly.
+    \item \textbf{User Testing:} We conducted manual user testing to validate the UI, interactions, and overall user experience.
 \end{itemize}
-\end{expectations}
 
-\section{Approach and tools}
-\label{sect:testing:approach}
+We followed a test-as-you-go approach, meaning tests were written as soon as a feature was implemented. This helped us identify issues early rather than waiting until the end of development.
+
+\subsection{Automated Tests}
+Our automated tests included:
+
+\begin{itemize}
+    \item \textbf{Backend:} Django tests covered key functionalities, including authentication, WebSocket communication, and database operations.
+    \item \textbf{Frontend:} Jest tests focused on user interface components, user interactions, and state updates.
+    \item \textbf{End-to-End (E2E) Testing:} Some integration tests were performed manually, particularly for WebSocket-driven features in real time.
+\end{itemize}
+
+Currently, our test coverage stands at:
+\begin{itemize}
+    \item \textbf{Backend:} 93\%
+    \item \textbf{Frontend:} 85\%
+\end{itemize}
+
+\textbf{Commands to Run Tests:}
+
+\textbf{Backend (Django):}
+\begin{verbatim}
+python manage.py test
+\end{verbatim}
+
+\textbf{To generate a backend coverage report:}
+\begin{verbatim}
+coverage run manage.py test 
+coverage report -m (or coverage html)
+\end{verbatim}
+
+\textbf{Frontend (React, Jest):}
+\begin{verbatim}
+npm test
+\end{verbatim}
+
+\textbf{To generate a frontend coverage report:}
+\begin{verbatim}
+npm test -- --coverage  (or npx test -- --coverage)
+\end{verbatim}
+
+\section{Manual Testing Appendix}
+\label{sect:manual:testing}
+\begin{itemize}
+    \item WebSocket Real-Time Update
+    \begin{itemize}
+        \item \textbf{Test Steps:} Open two browser tabs, perform an action (send a message in the chatbox, upload a shared material, update the shared to-do list) in one, check if the updates reflect in the other.
+        \item \textbf{Expected Outcome:} Updates should appear instantly in both tabs.
+        \item \textbf{Last Performed:} 2025-03-26
+        \item \textbf{Result:} Pass
+    \end{itemize}
+
+    \item UI Responsiveness
+    \begin{itemize}
+        \item \textbf{Test Steps:} Resize the window and check that all the components are still visible / usable on the page or can be scrolled to.
+        \item \textbf{Expected Outcome:} UI should adjust properly for different window sizes.
+        \item \textbf{Last Performed:} 2025-03-26
+        \item \textbf{Result:} Pass
+    \end{itemize}
+
+    \item User Authentication and Toast Error Messages
+    \begin{itemize}
+        \item \textbf{Test Steps:} Attempt to login with correct and incorrect credentials
+        \item \textbf{Expected Outcome:} Correct credentials should log in, incorrect should show a toast error.
+        \item \textbf{Last Performed:} 2025-03-26
+        \item \textbf{Result:} Pass
+    \end{itemize}
+\end{itemize}
 
 \section{Quality assurance processes}
 \label{sect:testing:process}
+\textbf{1. Code Reviews}
+    \begin{itemize}
+        \item Every test written had to go through a quick review before it was push onto main, which made sure that tests were correctly implemented and efficient.
+    \end{itemize}
+\textbf{2. Meeting Minutes}
+    \begin{itemize}
+        \item Major testing decisions were documented in team meetings.
+    \end{itemize}
 
 \section{Evaluation of testing}
 \label{sect:testing:evaluation}
+\textbf{What Worked Well:}
+\begin{itemize}
+    \item \textbf{High test coverage:} With the 93\% back-end and 85\% front-end coverage, we achieved strong validation for most functionalities.
+    \item \textbf{Early testing:} Writing tests alongside development helped us catch issues quickly.
+    \item \textbf{Automated checks:} Tests helped prevent regressions before deployment.
+\end{itemize}
+
+\textbf{Challenges:}
+\begin{itemize}
+    \item \textbf{Test Maintenance:} One downside was that whenever we refactored React components to make them cleaner and more efficient, existing Jest tests often broke and had to be updated.
+    \item \textbf{Real-time testing:} WebSocket features required manual testing in some cases, as automating real-time interactions can be complex.
+\end{itemize}
+
+\textbf{Conclusion:}  
+Overall, our testing strategy gave us confidence in the reliability of the system. The main challenge was keeping frontend tests up-to-date during refactoring. In the future, we could improve this by using more snapshot testing and writing tests that are less dependent on specific component structures.
