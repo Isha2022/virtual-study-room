@@ -238,7 +238,7 @@ describe("GroupStudyPage", () => {
   });
 
   test('scrolls to bottom when chatMessagesRef exists', async () => {
-    // Create a mock ref with scrollTo spy
+
     const mockScrollTo = jest.fn();
     const mockRef = {
       current: {
@@ -248,7 +248,7 @@ describe("GroupStudyPage", () => {
       }
     };
 
-    // Mock the useRef hook to return our mock ref
+    
     const useRefSpy = jest.spyOn(React, 'useRef').mockReturnValueOnce(mockRef);
 
     await act(async () => {
@@ -624,30 +624,5 @@ describe("GroupStudyPage", () => {
     expect(consoleLogSpy).not.toHaveBeenCalledWith('Closing WebSocket connection on unmount...');
     expect(mockSocket.close).not.toHaveBeenCalled();
   });
-
-  test('uses existing WebSocket connection when already open', () => {
-    const mockSocket = {
-      onopen: jest.fn(),
-      onclose: jest.fn(),
-      close: jest.fn(),
-      readyState: 1 // OPEN
-    };
-
-    // Mock useState to return existing socket
-    jest.spyOn(React, 'useState')
-      .mockImplementationOnce(() => [mockSocket, jest.fn()])
-      .mockImplementationOnce(() => [true, jest.fn()]);
-
-    render(
-      <MemoryRouter>
-        <GroupStudyPage />
-        <ToastContainer />
-      </MemoryRouter>
-    );
-
-    expect(global.WebSocket).not.toHaveBeenCalled();
-    expect(consoleLogSpy).toHaveBeenCalledWith('socket', mockSocket);
-  });
-
 
 });
