@@ -60,6 +60,7 @@ REACT_APP_FIREBASE_STORAGE_BUCKET=virtual-study-room-db.firebasestorage.app
 REACT_APP_FIREBASE_MESSAGING_SENDER_ID=1008040192146
 REACT_APP_FIREBASE_APP_ID=1:1008040192146:web:22905256f16b423a445e4b
 ```
+Please put this inside frontend
 
 ### 2. Set Up a Virtual Environment
 ```
