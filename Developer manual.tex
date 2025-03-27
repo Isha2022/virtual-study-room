@@ -391,7 +391,8 @@ Run unit tests for the API: (located in api/tests/)
 
 \begin{verbatim}
 
-python manage.py test
+coverage run --omit='*/tests/*,*/migrations/*,manage.py' manage.py test
+coverage html
 
 \end{verbatim}
 
@@ -405,7 +406,8 @@ Run Jest tests for React components: (located in frontend/src/tests/)
 
 cd frontend
 
-npm test  # or npx jest --coverage
+npm test
+npx jest --coverage
 
 \end{verbatim}
 
