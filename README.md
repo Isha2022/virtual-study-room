@@ -114,7 +114,7 @@ Notes:
 $ cd application/frontend/
 $ npx jest --coverage
 ```
-You can see the ful lcoverage report in the generated html file.
+You can see the full coverage report in the generated html file.
 ##### Backend
 _Note: Navigate back into the virtual environment (see above)_
 ```
