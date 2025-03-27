@@ -47,7 +47,7 @@ From the root of the project:
 ### 1. Create a .env file for Firebase with the following code
 
 ```
-EACT_APP_FIREBASE_API_KEY=AIzaSyCPFx0pzYIwMqsMslp8omjC5hnBp3pTvOA
+REACT_APP_FIREBASE_API_KEY=AIzaSyCPFx0pzYIwMqsMslp8omjC5hnBp3pTvOA
 REACT_APP_FIREBASE_AUTH_DOMAIN=virtual-study-room-db.firebaseapp.com
 REACT_APP_FIREBASE_DATABASE_URL=https://virtual-study-room-db-default-rtdb.firebaseio.com
 REACT_APP_FIREBASE_PROJECT_ID=virtual-study-room-db
