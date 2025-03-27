@@ -108,7 +108,8 @@ Username: ahsannatalia04@gmail.com
 Password: HighScore0
 
 _Note: A track needs to be playing on a device logged into the above account for the feature to show. Only premium users have access to playback control._
-_Note2: This feature currently does not work on the deployed website, but works fine on the local version._
+
+_Note2: This feature currently does not work on the deployed website, but it works fine on the local version._
 
 #### Unseeding the Database
 ```
