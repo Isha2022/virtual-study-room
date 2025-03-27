@@ -44,47 +44,64 @@ To install the software and use it in your local development environment, you mu
 
 From the root of the project:
 
-### 1. Set Up a Virtual Environment
+### 1. Create a .env file for Firebase with the following code
+
+```
+EACT_APP_FIREBASE_API_KEY=AIzaSyCPFx0pzYIwMqsMslp8omjC5hnBp3pTvOA
+REACT_APP_FIREBASE_AUTH_DOMAIN=virtual-study-room-db.firebaseapp.com
+REACT_APP_FIREBASE_DATABASE_URL=https://virtual-study-room-db-default-rtdb.firebaseio.com
+REACT_APP_FIREBASE_PROJECT_ID=virtual-study-room-db
+REACT_APP_FIREBASE_STORAGE_BUCKET=virtual-study-room-db.firebasestorage.app
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=1008040192146
+REACT_APP_FIREBASE_APP_ID=1:1008040192146:web:22905256f16b423a445e4b
+```
+
+### 2. Set Up a Virtual Environment
 ```
 $ virtualenv venv
 $ source venv/bin/activate
 ```
 
-### 2. Install Dependencies
+### 3. Install Dependencies
 ```
 $ pip3 install -r requirements.txt
 ```
 
-### 3. Install React.js Dependencies
+### 4. Install React.js Dependencies
 ```
 $ cd application/frontend/
 $ npm install
 ```
 
-### 4. Build the React Project
+### 5. Build the React Project
 ```
 $ cd application/frontend/ npm run build
 ```
 
-### 5. Run the Django Backend
+
+### 6. Run the Django Backend
 _Note: Run the backend on a new terminal_
 ```
 $ cd application/
-$ python3 manage.py runserver
 ```
 
-### 6. Migrate the Database
+### 7. Migrate the Database
 ```
 $ python3 manage.py makemigrations
 $ python3 manage.py migrate
 ```
 
-### 7. Seed the Development Database
+### 8. Seed the Development Database
 ```
 $ python3 manage.py seed
 ```
 
-### 8. Run the React Project
+### 9. Run the Django Project
+```
+$ python3 manage.py runserver
+```
+
+### 10. Run the React Project
 ```
 $ cd application/frontend/
 $ npm start
