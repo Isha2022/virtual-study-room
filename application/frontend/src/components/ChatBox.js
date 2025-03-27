@@ -115,7 +115,7 @@ function ChatBox({ socket, roomCode }) {
     socket.send(JSON.stringify({ type: "typing", sender: username }));
 
     // Prevent multiple events from being sent too frequently
-    if (isTyping) {
+    if (!isTyping) {
       setIsTyping(true);
     }
     clearTimeout(typingTimeout);
@@ -153,7 +153,7 @@ function ChatBox({ socket, roomCode }) {
         })}
 
         {/* User is typing indicator ... */}
-        {typingUser && (
+        {typingUser && typingUser !== username &&(
           <p className="typing-indicator">
             {typingUser} is typing...
           </p>
