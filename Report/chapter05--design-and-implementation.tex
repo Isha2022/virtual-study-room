@@ -98,6 +98,35 @@ HI ONESSA, THIS IS FROM THE PROJECT MANAGEMENT SECTION BUT IT EXPLAINS SOME THIN
     \item The design of the website evolving as time went on, especially after the advisors feedback
 \end{itemize}
 
+\textbf{Changes in design (UI)}
+
+The base design of the original UI utilised a limited range of colours and was slightly more flat in appearance, in addition to the repeated use of the black sans serif font. Our advisor suggested that we should ensure the UI was more cohesive, and that the study room component should be placed in the center of the dashboard as it was our website’s unique selling point, as opposed to the profile component; consequently, we implemented this advice, and our profile box component was placed to the left. 
+One of Onessa’s tasks was to ensure the UI flowed more and cultivated a more dynamic, inviting feel to the website. For the welcome page, her aim was to create a “mango” aesthetic true to the mango cat logo/ mascot of the website, utilising a range of reds and oranges for the upper and lower borders, with little mango emojis in the corner of the welcome box! This choice of bold and bright colours for the first page the users would see, intends to evoke a burst of energy and elation towards the notion of studying, which is universally seen as a boring task. 
+
+The login and signup pages had more of a “peach” aesthetic with a range of pinks, yellows and light oranges. This would then transition into the “lighter” pink and blue aesthetic used for the dashboard, maintaining the same subtle and light colour theme throughout that was originally intended for the UI. Then it seamlessly morphs into the benevolent, rich deep purple and soft purpley-blue colour schemes on the group study room page, to allow the room to feel immersive and inviting while also elevating user concentration. On this page the music, customisation, exit and copy code buttons were placed on the border as opposed to in the middle of the group study page where you can see the users in the room which was the case earlier, with the icons being buttons themselves as opposed to being on rounded buttons, as they are auxiliary to the room’s key components, and to ensure the central study area was less cluttered. 
+
+The “Orbitron” font, with a subtle greyish shadow, was a unique choice that she used for the titles of each page in the borders; its geometric, futuristic style intends to motivate students to aim for the brightest future that they dream of having, which correlates with wanting to study/ focus more to achieve this. As for the other text on the pages, she kept the inter sans serif fonts but capitalised them and added subtle playful, pinkish shadows, accentuating the dynamic and cosy overall effect of the website. 
+
+Finally, there was a smiley face slider that was originally going to be on the group study page but it was relocated to the analytics container on the dashboard, allowing the user to choose whether their friends could see their study statistics. This was an effective design choice; it ensured the dashboard was more streamlined while also enabling users to have more control over their privacy. 
+
+\textbf{Changes in implementation}
+
+\textbf{Deployment Challenges} 
+
+Upon first deployment to PythonAnywhere, a limitation we faced was that there was a paid tier for supporting Websockets, which a plethora of the key real-time features of our website relied upon. Thus, we mitigated by relocating the app to Vercel and Render, which possessed more scalable methods of hosting and real-time functionality, enabling us to achieve this for free. This uninterrupted, free inclusion of WebSockets fulfilled the technical and financial limitations of the project.
+
+\textbf{Adapting Music Feature Integration for Accessibility}
+
+The Spotify API used for the music component of the group study room possessed a large limitation, which we were initially unaware of. The reliance on Spotify Premium caused accessibility problems for users without this subscription. Hence after pondering over this as a team, we transitioned to integrating free music sources, giving us a nice availability of audio content; we were able to include a range of tracks that members of our group enjoyed, and as students ourselves, believed created the perfect ambience for studying as a group, from 2010 summer themed tracks to Pokemon and Animal Crossing tracks, adored by a range of students. From a user's standpoint, initially sticking to the Spotify Premium API may dissuade them from wanting to use the group study room if they frequently listen to music while studying and dislike ads, so the inclusivity incurred from this change was essential.
+
+\textbf{User Authentication Workflow Refinements}
+
+User authentication at first had issues with various accounts logged into the same browser using multiple tabs, resulting in token collision and unauthorised overridings, so only the most recently logged in user would be logged in on all tabs. We solved this by enforcing one active session per browser. However, lingering authentication cookies would sometimes prevent the user from logging in after partial sign-outs (for e.g, if the user lost connection, causing them to unintentionally log out). This was solved by implementing an automatic logout feature of all the user's logged in accounts triggered by them refreshing the page; this change was pivotal as it would encourage more consistent session management for the user.
+
+\textbf{Evolution of the Calendar Feature}
+
+The calendar feature, which started off as a feature that has a smaller preview on the dashboard and a large view when clicked on, evolved considerably during development. We replaced this preview with a streamlined calendar emoji button, reclaiming space on the interface for higher priority components. It also previously required manually changing the status of an event on the calendar to facilitate event colour coding, however that was optimised to be automatic given when the events took place: events in the past, present and future were represented with different colours. The feature's expansion points to how it has grown into a central tool for time management within the application, allowing users to visually prioritise tasks with more ease.
+
 \section{Alternative Considerations}
 \label{sect:alternative-considerations}
 We researched and discussed many possibilities for different aspects of the project, from our tech stack to which features we should implement.
