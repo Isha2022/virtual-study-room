@@ -17,7 +17,10 @@ The members of the team are:
 The deployed version of the application can be found at [*virtual-study-room-phi.vercel.app*](virtual-study-room-phi.vercel.app).
 
 ## Link to Report on Overleaf
-[*https://www.overleaf.com/read/spwdstnrjkyt#0aa2c9*)
+*https://www.overleaf.com/read/spwdstnrjkyt#0aa2c9*
+
+## LInk to Developers Manual on Overleaf
+
 
 ## Default Logins for Testing
 Please note that in order to log in as multiple users you must use a new incognito window for each additional member, as only one user can be logged in at a time per browser. If you have forgotten to log out before closing the tab please refresh the login page to auto log out of all logged in accounts.
@@ -111,10 +114,12 @@ Notes:
 $ cd application/frontend/
 $ npx jest --coverage
 ```
+You can see the ful lcoverage report in the generated html file.
 ##### Backend
 _Note: Navigate back into the virtual environment (see above)_
 ```
-$(venv) python3 manage.py test
+$(venv) coverage run --omit='*/tests/*,*/migrations/*,manage.py' manage.py test
+$(venv) coverage html 
 ```
 ##### Spotify API Feature
 To run the background music / Spotify API feature, you need to log in using an authenticated account. Below is a testing account for checking Spotify. Use the provided details:
