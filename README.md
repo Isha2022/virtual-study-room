@@ -1,15 +1,4 @@
 # THE STUDY SPOT ~ Team MANGOCAT
-
-## My Contributions
-- Developed key React frontend components, including:
-  - Chat Box
-  - Analytics Component
-- Wrote and integrated Django backend models to support study rooms, tasks, and analytics
-- Implemented backend and frontend unit testing using Django’s test framework and Jest for React components
-- Created custom seed scripts to populate the database with sample data for testing/demo purposes
-- Integrated Firebase for user authentication and/or real-time data syncing
-- Deployed the full-stack app using Vercel for the frontend and configured environment variables and API integration
-- Participated in Agile development using GitHub Projects for task tracking and collaborative sprint planning
   
 ## Team members
 The members of the team are:
